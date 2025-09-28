@@ -73,7 +73,5 @@ Emphasising both **theory and practice**, the module’s assessment consists of:
 **Graduate Teaching Assistants (GTAs)**  
 - Camilo Carvajal Reyes (Department of Mathematics)  
 - Joshua Ong (Department of Electrical and Electronic Engineering)  
----
 
-## 📜 License
-Materials are provided for educational use. Please check individual files for licensing information.
+
