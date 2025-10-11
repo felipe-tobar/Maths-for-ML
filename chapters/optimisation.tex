@@ -1,0 +1,157 @@
+%!TEX root = ../lecture_notes.tex
+
+
+\section{Optimisation}
+\label{cap:optimisation}
+
+\textbf{NB:} in this chapter, we follow \cite{pml1Book}.\\
+
+\noindent Optimisation is central to ML, since models are \emph{trained} by minimising a loss function (or optimising a reward function). In general, model design involves the definition of a training objective, that is, a function that denotes how good a model is. This training objective is a function of the training data and a model, the latter usually represented by its parameters. The best model is is the chosen by optimising this function. 
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Linear regression (LR)}]
+
+In the LR setting, we aim to determine the function
+\begin{align}
+  f \colon \R^M &\to \R\nonumber\\
+  x &\mapsto f(x)=a^\top x + b,\quad a\in\R^M,b\in\R
+   \label{eq:reg_lin_fn} 
+\end{align}
+conditional to a set of observations
+\begin{equation}
+	\datos=\{(x_i,y_i)\}_{i=1}^N\subset \R^M \times \R.
+	\label{eq:training_set}
+\end{equation}
+ Using least squares, the function $f$ is chosen via minimisation of the sum of the square differences between observations $\{y_i\}_{i=1}^N$ and predictions $\{f(x_i)\}_{i=1}^N$. That is, we aim to minimise he loss:
+\begin{equation}
+	J(\datos,f) = \sum_{i=1}^N(y_i-f(x_i))^2 = \sum_{i=1}^N(y_i-a^
+	\top x_i - b)^2.
+	\label{eq:least_squares_cost}
+\end{equation}
+\felipe{Camilo, por favor generar figura aqui. Mira la fig 1 del apunte del curso de AM}
+
+\end{mdframed}
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Logistic regression}]
+
+Here, we aim to determine the function
+\begin{align}
+  f \colon \R^M &\to \R\nonumber\\
+  x &\mapsto f(x)= \frac{1}{1 + e^{-\theta^\top x+b}},\quad \theta\in\R^M, b\in\R
+   \label{eq:log_reg_fn} 
+\end{align}
+conditional to the  observations
+\begin{equation}
+	\datos=\{(x_i,c_i)\}_{i=1}^N\subset \R^M \times \{0,1\}.
+	\label{eq:training_set_classif}
+\end{equation}
+ The standard loss function for the classification problem is the cross entropy, given by:
+\begin{align}
+	J(\datos,f) &= -\frac{1}{N} \sum_{i=1}^N \left(c_i\log f(x_i) + (1-c_i)\log(1-f(x_i))\right)\\
+				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x+b}) -y_i(-\theta^\top x+b)  \right)
+	\label{eq:x_entropy_cost}
+\end{align}
+\felipe{Camilo, por favor generar figura aqui}
+
+\end{mdframed}
+
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Clustering (K-means)}]
+
+Given a set of observations
+\begin{equation}
+	\datos=\{x_i\}_{i=1}^N\subset \R^M,
+	\label{eq:training_set_clustering}
+\end{equation}
+we aim to find cluster centres (or prototypes) $\mu_1,\mu_2,\ldots, \mu_K$ and \emph{assignment variables} $\{r_{ik}\}_{i,k=1}^{N,K}$, to minimise the following loss 
+\begin{align}
+	J(\datos,f) = \sum_{i=1}^N\sum_{k=1}^K r_{ik} ||x_i-\mu_k||^2\\
+	\label{eq:clustering_cost} 
+\end{align}
+\felipe{Camilo, por favor generar figura aqui}
+
+\end{mdframed}
+
+\subsection{Terminology} % (fold)
+\label{sub:opt_terminology}
+
+We denote an optimisation problem as follows: 
+
+\begin{equation}
+	\min_{x\in\cX} f(x) \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J.
+\end{equation}
+We describe the components of this statement in detail: 
+
+\begin{itemize}
+	\item \textbf{Objective function:} The function $f:\cX\to \R$ is the quantity to be minimised, with respect to $x$. 
+	\item \textbf{Optimisation variable:} Minimising $f$ requires fining the value of $x$ such that $f(x)$ is minimum. This is also written as
+	\begin{equation}
+	x_\star = \argmin_{x\in\cX} f(x) \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0.
+	\end{equation}
+	\item \textbf{Restrictions:} These are denoted by the functions $g_i$ and $h_i$ above, which describe the requirements for the optimiser in the form of equalities and inequalities, respectively. 
+	\item \textbf{Feasible region:}  This is the subset of the domain that complies with the restrictions, that is 
+	\begin{equation}
+		C = \{x\in\cX, \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J \}
+	\end{equation}
+	\item \textbf{Local / global optima.} Values for the optimisation variable that solve the optimisation problem wither locally or globally. More formally: 
+	\begin{align}
+		\text{$x_\star$ is a local optima} &\iff \exists \lambda>0 \text{~ s.t.~ }  x_\star = \argmin_{ x\in\cX \text{~ s.t.~ } ||x-x_\star||\leq \lambda } f(x). \\
+		\text{$x_\star$ is a global optima} &\iff x_\star = \argmin_{ x\in\cX } f(x). 
+	\end{align}
+\end{itemize}
+
+\begin{mdframed}[style=discusion, frametitle={\center Interplay between constrains and local/global optima}]
+\felipe{Camilo, por favor una ilustracion de como las differentes restriccines cambian la cantidad y tipo de minimos}
+
+\end{mdframed}
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: XXX}]
+\felipe{Camilo: Present a few parametric functions and indicate their (closed-form) minima}
+
+\end{mdframed}
+
+% subsection terminology (end)
+
+\section{Continuous unconstrained optimisation} % (fold)
+\label{sec:continuous_optimisation}
+
+We will ignore constrains in this section, and we will focus on problems of the form
+
+\begin{equation}
+	\theta \in \argmin_{\theta\in\Theta} L(\theta).
+\end{equation}
+We emphasise that if $\theta_\star$ satisfies the above, then
+\begin{equation}
+	\forall \theta\in\Theta,~ L(\theta_\star) \leq L(\theta),
+\end{equation}
+meaning that it is a \textbf{global} optimum. However, as this might be very hard to find, we are also interested in local optima, that is, $\theta_\star$  such that 
+\begin{equation}
+\exists\, \delta > 0 \;\; \forall\, \theta \in \Theta \;\; 
+\text{s.t.} \;\; 
+\|\theta - \theta_\star\| < \delta 
+\;\Rightarrow\;
+L(\theta_\star) \le L(\theta).
+\end{equation}
+
+
+\subsection{Optimality Conditions}
+\label{subsec:optimality_conditions}
+
+
+\begin{assumption}
+The loss function $L$ is twice differentiable.
+\end{assumption}
+
+Denoting $g(\theta) = \nabla_\theta L(\theta)$ and $H(\theta) = \nabla_\theta^2L(\theta)$, we can state the following optimality conditions. 
+
+
+% section continuous_optimisation (end)
+
+
+
+
+
+
+
