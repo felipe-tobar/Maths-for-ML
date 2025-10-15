@@ -27,7 +27,7 @@ conditional to a set of observations
 	\top x_i - b)^2.
 	\label{eq:least_squares_cost}
 \end{equation}
-\felipe{Camilo, por favor generar figura aqui. Mira la fig 1 del apunte del curso de AM}
+\felipe{Generate figure: Check fig 1 ML lecture notes}
 
 \end{mdframed}
 
@@ -51,7 +51,7 @@ conditional to the  observations
 				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x+b}) -y_i(-\theta^\top x+b)  \right)
 	\label{eq:x_entropy_cost}
 \end{align}
-\felipe{Camilo, por favor generar figura aqui}
+\felipe{Generate figure}
 
 \end{mdframed}
 
@@ -69,7 +69,7 @@ we aim to find cluster centres (or prototypes) $\mu_1,\mu_2,\ldots, \mu_K$ and \
 	J(\datos,f) = \sum_{i=1}^N\sum_{k=1}^K r_{ik} ||x_i-\mu_k||^2\\
 	\label{eq:clustering_cost} 
 \end{align}
-\felipe{Camilo, por favor generar figura aqui}
+\felipe{Generate figure}
 
 \end{mdframed}
 
@@ -102,13 +102,13 @@ We describe the components of this statement in detail:
 \end{itemize}
 
 \begin{mdframed}[style=discusion, frametitle={\center Interplay between constrains and local/global optima}]
-\felipe{Camilo, por favor una ilustracion de como las differentes restriccines cambian la cantidad y tipo de minimos}
+\felipe{generate figure, how different restrictions change the number and type of optima}
 
 \end{mdframed}
 
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: XXX}]
-\felipe{Camilo: Present a few parametric functions and indicate their (closed-form) minima}
+\felipe{Show a few parametric functions and indicate their (closed-form) minima}
 
 \end{mdframed}
 
@@ -146,10 +146,110 @@ The loss function $L$ is twice differentiable.
 
 Denoting $g(\theta) = \nabla_\theta L(\theta)$ and $H(\theta) = \nabla_\theta^2L(\theta)$, we can state the following optimality conditions. 
 
-\textbf{Necessary condition:} If $\theta_\star$ is a local minimum, then we must have 
+\begin{itemize}
+	\item \textbf{First order necessary condition:} If $\theta_\star$ is a local minimum, then 
+	\begin{itemize}
+		\item $\nabla_\theta L(\theta_\star)=0$
+	\end{itemize}
+	\item \textbf{Second order necessary condition:} If $\theta_\star$ is a local minimum, then 
+	\begin{itemize}
+		\item $\nabla_\theta L(\theta_\star)=0$
+		\item $\nabla^ 2_\theta L(\theta_\star)$ is positive semidefinite
+	\end{itemize}
+	\item \textbf{Second order sufficient condition:} If $\theta_\star$ is a local minimum if and only if 
+	\begin{itemize}
+		\item $\nabla_\theta L(\theta_\star)=0$
+		\item $\nabla^ 2_\theta L(\theta_\star)$ is positive definite
+	\end{itemize}
+\end{itemize}
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: different stationary points}]
+
+Let us consider the function
+\begin{align}
+  f \colon \R^2 &\to \R\nonumber\\
+  x &\mapsto f(x)=(p-1)x^2 + (p+1)y^2,\quad p\in\R
+   \label{eq:example_fn_stationary_points} 
+\end{align}
+Observe that
+\begin{equation}
+	\nabla f = \begin{bmatrix}   2(p-1)x \\ 2(p+1)y   \end{bmatrix},
+	\label{eq:nabla_example_fn_stationary_points}
+\end{equation}
+meaning that the only stationary points is  $(x,y) = (0,0)$. Furthermore, 
+\begin{equation}
+	\nabla^2 f = \begin{bmatrix}   2(p-1) & 0 \\ 0 & 2(p+1)   \end{bmatrix},
+	\label{eq:nabla2_example_fn_stationary_points}
+\end{equation}
+where we have 3 possible cases: 
+
+\begin{itemize}
+	\item $p>1$: The stationary point is a minimum
+	\item $-1<p<1$: The stationary point is a \emph{saddle point}
+		\item $p<-1$: The stationary point is a maximum
+\end{itemize}
+
+\felipe{generate figure for all three cases, discuss case $|p|=1$}
+
+\end{mdframed}
+
+
+\subsection{Convex optimisation}
+\label{subsec:convex_opt}
+
+
+This setting is defined by having a convex objective function and a convex feasible region. Critically, in the setting of convex optimisation a local minimum (according to the first/second order conditions presented above) is a global minimum. We next formally provide the relevant definitions.
+
+\begin{definition}[Convex set] $\cS$ is a convex set if $\forall x,x'\in\cS$, we have:
+\begin{equation}
+	\lambda x + (1 - \lambda)x' \in \mathcal{S},
+	\quad \forall\, \lambda \in [0, 1].
+\end{equation}
+\end{definition}
+
+\felipe{Generate figures for convex and non-convex sets}
+
+
+\begin{definition}[Epigraph of a function] The epigraph of a function $f:\cX\to\R$ is the set defined by the region above the graph of the function, that is, 
+\begin{equation}
+	\operatorname{epi}(f) = \{\, (x, t) \in \cX \times \R \mid f(x) \le t \,\}.
+\end{equation}
+
+
+\begin{definition}[Convex function] $f$ is a convex function if its epigraph is convex. Equivalently, $f$ is convex is it is supported on a convex set and $\forall x,x'\in\cX$
+\begin{equation}
+	f\bigl(\lambda x + (1 - \lambda)x'\bigr)
+	\;\leq\;
+	\lambda f(x) + (1 - \lambda) f(x'),
+	\quad \forall\, \lambda \in [0, 1].
+\end{equation}
+Furthermore, is the inequality is strict, we say that the function is \textbf{strictly convex}.
+\end{definition}
+
+\end{definition}
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Convex functions (in 1D)}]
+
+The following are convex function from $\R$ to $\R$:
+
+\begin{itemize}
+	\item $f(x) = x^2$
+	\item $f(x) = e^{ax},\, a\in\R$
+	\item $f(x) = -\log x$
+	\item $f(x) = x^a,\, a>1,\, x>0$
+	\item $f(x) = |x|^a,\, a\geq 1$
+	\item $f(x) = x\log x,\, x>0$
+\end{itemize}
+\felipe{Generate figures, indicate epigraph (for convex and non-convex functions}
+
+\end{mdframed}
+
+
+We now review some important results in convex optimisation that ...
 
 % section continuous_optimisation (end)
-
 
 
 
