@@ -114,7 +114,7 @@ We describe the components of this statement in detail:
 
 % subsection terminology (end)
 
-\section{Continuous unconstrained optimisation} % (fold)
+\subsection{Continuous unconstrained optimisation} % (fold)
 \label{sec:continuous_optimisation}
 
 We will ignore constrains in this section, and we will focus on problems of the form
@@ -135,10 +135,7 @@ meaning that it is a \textbf{global} optimum. However, as this might be very har
 L(\theta_\star) \le L(\theta).
 \end{equation}
 
-
-\subsection{Optimality Conditions}
-\label{subsec:optimality_conditions}
-
+We now review the optimality conditions.
 
 \begin{assumption}
 The loss function $L$ is twice differentiable.
@@ -310,10 +307,17 @@ Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summin
 
 \end{mdframed}
 
+\subsection{First order methods}
+\label{sub:first_order_methods}
 
+\subsubsection{Role of the step size}
+\label{ssub:stepsize}
 
-% section continuous_optimisation (end)
+\subsubsection{Momentum}
+\label{ssub:momentum}
 
+\subsection{Stochastic gradient descent}
+\label{sub:SGD}
 
 
 
