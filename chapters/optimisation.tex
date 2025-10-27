@@ -247,7 +247,70 @@ The following are convex function from $\R$ to $\R$:
 \end{mdframed}
 
 
-We now review some important results in convex optimisation that ...
+We now review some important results in convex optimisation
+
+\begin{proposition}
+Consider $f:\cX\subset\R\to\R$ differentiable. We have that if $f'(x)\geq 0\, \forall x\in\R$, $f$ is non-decreasing
+\end{proposition}
+\begin{proof}
+	By the fundamental theorem of calculus, we have that for $a,b\in\R, a<b,$
+	\begin{equation}
+		f(b)-f(a) = \int_a^b f'(x)dx,
+	\end{equation}
+	since $f'(x)\geq 0, \forall x\in[a,b]$, we have $\int_a^b f'(x)dx\geq 0$, therefore $f(b)\geq f(a)$, which means that $f$ is non-decreasing.
+\end{proof}
+
+
+\begin{proposition}
+Consider $f:\cX\subset\R^d\to\R$ differentiable. The direction of maximum growth of $f$ at $x_0$ is along its gradient $\nabla f(x_0)$
+\end{proposition}
+\begin{proof}
+	Let us consider $x' = x_0 + \rho u$, where $u\in\cX, ||u||=1$, and $\rho>0$ is a small constant. We find the maximum growth direction by maximising $f(x')-f(x_0)$ with respect to $u$. We consider the Taylor expansion
+	\begin{equation}
+		f(x') = f(x_0) + \nabla f(x_0)\rho u  + \mathcal{O}(\rho^2),
+	\end{equation}
+	and thus conclude that $f(x') - f(x_0) \simeq \nabla f(x_0)\rho u$, meaning that the maximum growth can be achieved by choosing $u$ parallel to $\nabla f(x_0)$. That is, $\nabla f(x_0)$ is the direction of maximum growth for $f$ at $x_0$. 
+\end{proof}
+
+
+\begin{theorem}
+Suppose $f:\cX\subset\R^d\to\R$ twice differentiable, then $f$ is convex if and only if $\nabla^2$ is positive semi definite.
+\end{theorem}
+\begin{proof}
+We consider $d=1$. Using the FTC, 
+\begin{equation}
+	f'(b) - f'(a) = \int_a^b f''(x)dx \geq 0,
+ \end{equation}
+ which implies that $f'$ is non-decreasing. Therefore (using FTC again),
+ \begin{equation}
+ 	f(b) - f(a) = \int_a^b f'(x)dx \geq (b-a)f'(a),
+ \end{equation}
+ equivalently, 
+\begin{equation}
+	f(b)\geq f(a) ' (b-a)f'(a), \label{eq:tanget_PD1}
+\end{equation}
+meaning that the function $f$ \emph{is always above its tangent}. Evaluating \eqref{eq:tanget_PD1} for $(a,z)$ and $(b,z)$, where $z=(1-t)a + tb$, we have
+\begin{align}
+	f(z) &\geq f(a) + (z-a)f'(a)\\
+	f(z) &\geq f(b) + (z-b)f'(b).
+\end{align}
+Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summing them, we obtain: 
+\begin{align}
+	f(z) &\geq (1-t)f(a) + tf(b) + (1-t)(tb-ta)f'(a) +t[(1-t)a - (1-t)b]f'(b)\\
+	     &=    (1-t)f(a) + tf(b) + (1-t)t(b-a) [f'(a) - f'(b)]\\
+	     &\geq (1-t)f(a) + tf(b)
+\end{align}
+\end{proof}
+
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Explore some functions}]
+
+\felipe{Choose some functions, compute the derivative and Hessian, analyse them}
+
+\end{mdframed}
+
+
 
 % section continuous_optimisation (end)
 
