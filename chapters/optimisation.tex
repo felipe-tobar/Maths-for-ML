@@ -310,11 +310,81 @@ Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summin
 \subsection{First order methods}
 \label{sub:first_order_methods}
 
+In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is not possible. For that reason, we will consider iterative methods based on gradients. 
+
+The idea here is to go \emph{downhill} following the gradient towards the minimum (ignoring the curvature information for now). 
+
+We will specify a starting point $x_0$ and calculate
+
+\begin{equation}
+	x_{t+1} = x_t + \eta_t d_t,
+\end{equation}
+where $\eta_t$ is a \emph{step size} and $d_t$ is a \emph{descent direction}, such as $-\nabla f$. Here, the subindex $\cdot_t$ represents the iteration number (starting from iteration $t=0$). We iterate until convergence, that is, until the elements in the sequence $x_t,x_{t+1}, x_{t+2},\ldots$ become constant (or very similar). If convergence is achieved, we will assume the minimum has been found. 
+
+Note that there are several \emph{descent directions}, that is, directions $d_t$ such that 
+\begin{equation}
+	L( x_t + \eta_t d_t) \leq L(x_t).
+\end{equation}
+In fact, as long as $d_t^\top\nabla f \leq 0$, $d_t$ is a descent direction. Clearly, choosing $d_t = -\nabla f(x_t)$ is the \emph{steepest descent direction}.
+
+
 \subsubsection{Role of the step size}
 \label{ssub:stepsize}
 
+The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule.
+
+We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to this choice: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, it may not converge at all. 
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola}]
+
+\felipe{Plot the level sets of a parabola (or another convex function). Show how the steepest descent converges/diverges for different learning rates}
+
+\end{mdframed}
+
+The learning rate is usually tuned with heuristics. Since we will usually implement 
+\begin{equation}
+	x_{t+1} = x_t + \eta \nabla f(x_t),
+\end{equation}
+we will usually set $\nabla<||\nabla f||^{-1}$, as this will result in a stable autoregresive system for the sequence $x_t$. 
+
+
+
 \subsubsection{Momentum}
 \label{ssub:momentum}
+
+In higher dimensions, we want to move faster in some directions and slow in other directions, depending on the value of the gradient in each coordinate. This can be achieved by: 
+\begin{align}
+	m_t &= \beta m_{t-1} + \nabla f(x_{t-1})\\
+	x_t = x_{t-1} - \nabla_t m_t,
+\end{align}
+where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient is consistently large, then that coordinate will receive updated of a higher magnitude. This is particularly useful when the evaluation of the gradient is noisy. 
+
+\subsubsection{Newton method}
+\label{ssub:newton}
+Newton's method is
+
+\begin{equation}
+	x_{t+1} = x_t -\eta_t H_t^{-1}\nabla f(x_t),	
+\end{equation}
+where recall that $H_t = \nabla^2 f(x_t)$ denots the Hessian of $f$ at $x_t$. This update follows from considering the second order approximation of the loss function arond the current point, that is: 
+
+\begin{equation}
+	L(x) \simeq L(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t),
+\end{equation}
+the minimum of which is given by 
+\begin{equation}
+	x_\star = x_t - H^{-1}_t\nabla L(x_t),
+\end{equation}
+where the learning rate can also be used. 
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola (2)}]
+
+\felipe{Same a previous example, but with momentum and/or Newton}
+
+\end{mdframed}
+
+
 
 \subsection{Stochastic gradient descent}
 \label{sub:SGD}
