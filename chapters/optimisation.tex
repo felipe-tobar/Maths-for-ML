@@ -390,6 +390,31 @@ where the learning rate can also be used.
 \label{sub:SGD}
 
 
+We now consider stochastic optimisation, where
+\begin{equation}
+	L(x) = \E_{q(z)}L(x,z),
+\end{equation}
+that is, when the loss function is random and we aim to minimise its expected value. 
+
+For instance, in linear regression we have $L(\theta)=\E_{q(y|x)}(y-\theta^\top x)$.
+
+In practice we are unable to compute this expectation since we don't know the law $q(z)$. However, since we usually have samples of $q$, we can do a sample approximation og the expectation. In fact, we will consider
+\begin{equation}
+	L(\theta) = \frac{1}{N}\sum_{i=1}^nL(x,z_i).
+\end{equation}
+In the linear regression example, this would be $L(\theta) = \frac{1}{N}\sum_{i=1}^n(y_i-\theta^\top x_i)^2.$ 
+
+The gradient is then also approximated using a batch of, say, $B$ samples. That is, 
+
+\begin{equation}
+	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i)
+\end{equation}
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: random loss function for linear regression}]
+
+\felipe{Plot a q function: its theoretial value and sample approximations using a finite set of datapoints}
+
+\end{mdframed}
 
 
 
