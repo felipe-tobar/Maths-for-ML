@@ -346,7 +346,7 @@ The learning rate is usually tuned with heuristics. Since we will usually implem
 \begin{equation}
 	x_{t+1} = x_t + \eta \nabla f(x_t),
 \end{equation}
-we will usually set $\nabla<||\nabla f||^{-1}$, as this will result in a stable autoregresive system for the sequence $x_t$. 
+we will usually set $\eta<||\nabla f||^{-1}$, as this will result in a stable autoregressive system for the sequence $x_t$. 
 
 
 
@@ -412,8 +412,59 @@ The gradient is then also approximated using a batch of, say, $B$ samples. That 
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: random loss function for linear regression}]
 
-\felipe{Plot a q function: its theoretial value and sample approximations using a finite set of datapoints}
+\felipe{Plot a q function: its theoretical value and sample approximations using a finite set of datapoints}
 
+\end{mdframed}
+
+Recall that in general we will consider parameter updates of the form 
+
+\begin{equation}
+	\theta_{t+1} = \theta_t -M_t^{-1} g_t
+\end{equation}
+where $M_t$ is an estimate of the norm of the gradient $g_t$, as this ensures convergence (or prevents divergence). We next explore some different choices of this estimate.
+
+\subsubsection{Adagrad}
+
+This considers the following iterative rule ($d$ denotes the coordinate):  
+\begin{equation}
+	\theta_{t+1,d} = \theta_{t,d} - \eta_t \frac{1}{\sqrt{s_{t,d}+\epsilon}} g_{t,d},
+\end{equation}
+where $s_{t,d} = \sum_{i=1}^t g_{i,d}^2$. This can also be expressed in vector format as
+\begin{equation}
+	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
+\end{equation}
+The aim of this update rule is that control the magnitude of the step size for each coordinate of the parameter independently, based on a rolling estimate using previous gradient evaluations. Notice that the computation of $s_{t,d}$ assigns the same importance to all gradient evaluations in time.
+
+
+\subsubsection{RMSProp}
+
+Adagrad might fail to represent the current gradient magnitude by not emphasising current evaluations of the gradient. This can be solved by replacing the sum in the computation of $s_{t,d}$  by a moving average. That is, 
+
+\begin{equation}
+	s_{t+1,d} = \beta s_{t,d} + (1-\beta) g_{t,d}^2,
+\end{equation}
+where the \emph{forgetting factor} $\beta$ is usually chosen closer to 0.9. Then, the update rule also follows
+\begin{equation}
+	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
+\end{equation}
+ 
+\subsubsection{Adam}
+
+The de facto optimiser in deep learning is Adam (Adaptive Moment Estimation), which combines RMSProp and momentum. Adam's update follows: 
+\begin{align}
+	m_t = \beta_m m_{t-1} + (1-\beta_m) g_{t}\\
+	s_t = \beta_s s_{t-1} + (1-\beta_s) g^2_{t}.
+\end{align}
+Then, 
+\begin{equation}
+	\theta_{t} = \theta_{t-1} - \eta_t \frac{m_t}{\sqrt{s_t} + \epsilon}
+\end{equation}
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: different optimisers}]
+	
+	\felipe{If possible, show different optimisers in a toy example}
+	
 \end{mdframed}
 
 
