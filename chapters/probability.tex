@@ -166,8 +166,28 @@ Lastly, if the cdf is \textbf{strictly monotonically increasing}, its inverse ex
 \end{mdframed}
 
 
+\subsubsection{Properties and identities}
+\label{cap:prob_properties}
 
+Probability can be thought of as an extension of logical reasoning. The following properties are consistent with such extension. Let us first consider, in the same was as we did when we defined event probabilities, the following. 
 
+Both for discrete (pmf) and discrete (pdf) RVs, we can denote $p(x,y)$ the joint pdf/pmf for RVs $X\in\cX$ and $Y\in\cY$. This can be seen as the probability of the \emph{intersection} event, where $X=x$ and $Y=y$. 
+
+Furthermore, we can write 
+\begin{align}
+	p_X(x) &=  \sum_{y\in\cY}p(x,y)\quad \text{(discrete)}\\
+	p_X(x) &=  \int_{\cY}p(x,y)dy\quad \text{(continuous)}.
+\end{align}
+
+In the ML community, this is known as \textbf{sum rule}, since it allows us to express the density $p(y)$ from a joint density by summing over all possible values.
+
+A related expression is the so called \textbf{law of total probability}, which reads  
+
+\begin{align}
+		p_X(x) &=  \sum_{y\in\cY}p(x|y)p(y)\quad \text{(discrete)}\\
+	p_X(x) &=  \int_{\cY}p(x|y)p(y)dy\quad \text{(continuous)}.
+\end{align}
+This operation is usually called \textbf{marginalisation}, or \textbf{disintegration} (of $y$).
 
 
 
