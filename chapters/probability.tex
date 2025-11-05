@@ -1,0 +1,175 @@
+%!TEX root = ../lecture_notes.tex
+
+
+\section{Probability}
+\label{cap:probability}
+
+\subsection{Introduction}
+\label{cap:prob_intro}
+
+\textbf{NB:} in this chapter, we follow \cite{pml1Book}.\\
+
+\noindent The field of probability studies, from a quantitative perspective, how \emph{likely} an event is. Conceptually, and perhaps historically, there are two main interpretations of probability. The first one is \textbf{frequentist probability}, which relates to frequency of occurrence, and then applies only to event that can be repeated an infinite number of times, such as throwing a dice or flopping a coin. As a consequence, this standpoint fails to assign a probability to events that are impossible to repeat, such as the average temperature of the Earth's surface reaching an all-time maximum in the year 2025. A second interpretation is that of \textbf{Bayesian probability}, which represents uncertainty about the occurrence of an event. This uncertainty might come from different sources, such unknown features in the experiments (epistemological uncertainty) or random components (aleatoric uncertainty). In this case, events need not be repeatable be be assigned with a probability.
+
+A basic knowledge of probability theory, definitions and results in fundamental in ML. This is because in ML we design, train and deploy mathematical models that i) aim to capture/quantify uncertainty, and ii) deal with noise-corrupted training data. Therefore, a rigorous account of uncertainty is central to real-world ML applications.
+
+
+\subsubsection{Definitions}
+\label{cap:prob_defs}
+
+To start studying probability, we will focus on the outcome $\omega$ of a hypothetical experiment, e.g., throwing a dice, where $\omega$ can take values $\{1,2,3,4,5,6\}$. In this context, we can define: 
+
+\begin{definition}[Sample space] The set containing all the possible outcomes $\omega$ of an experiment is called sample space and is denoted by $\Omega$.
+\end{definition}
+
+\begin{definition}[Event space] The set $\cA$, referred to as event space, contains all possible subset of the sample space $\Omega$. Therefore, each element $A\in\cA$ represents a possible results of the experiment.
+\end{definition}
+
+\begin{definition}[Probability] The function
+\begin{align}
+ 	 \Pb: \cA &\to [0,1]\\
+ 	 x &\mapsto \Pb(x)
+ \end{align}
+  denotes the probability of the result of the experiment falling inside the elements of $\cA$, that is, $\Pb(A) = \Pb(\omega\in A)$. The function $\Pb$ needs to fulfil some standard properties such as $\Pb(\Omega) = 1, \Pb(\emptyset) = 0,$ and $\Pb(A^c) = 1-\Pb(A)$.
+\end{definition}
+
+\begin{mdframed}[style=discusion, frametitle={\center $\cA$ vs $\Omega$}]
+
+Why is the probability defined over $\cA$ and not over $\Omega$? Discuss via some examples
+
+\end{mdframed}
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\felipe{Consider basic examples (dice, coin, uniform, rain), and present the sample space, event space, and probability}
+\end{mdframed}
+
+We refer to the triplet $(\Omega,\cA,\Pb)$ as \textbf{probability space}. 
+
+\subsubsection{Basic properties}
+\label{cap:prob_basicprop}
+
+The joint probability of events $A$ and $B$ is denoted by
+\begin{equation}
+	\Pb(A\wedge B) =\Pb(A\cap B) = \Pb(A,B),
+\end{equation}
+note that if $\omega\in A$ and $\omega\in B$, then, $\omega\in A\cap B$.
+
+The conditional probability of the event $A$ occurring, given that the event $B$ occurred is denoted by 
+\begin{equation}
+	\Pb(A|B) = \frac{\Pb(A,B)}{\Pb(B)},
+\end{equation}
+which is only valid when $\Pb(B)>0$.
+
+Additionally, we say that events $A$ and $B$ are \textbf{independent} iff $\Pb(A,B)=\Pb(A)\Pb(B)$. Observe that this implies that 
+\begin{equation}
+	\Pb(A|B) = \frac{\Pb(A,B)}{\Pb(B)}= \frac{\Pb(A)\Pb(B)}{\Pb(B)} = \Pb(A),
+\end{equation}
+meaning that when $A$ and $B$ are independent, the latter provides no \textbf{information} for $A$.
+
+Lastly, the probability of intersection, i.e., the probability of the events $\omega\in A$ or $\omega\in B$ is given by 
+\begin{equation}
+	\Pb(A \vee B) = \Pb(A) + \Pb(B) - \Pb(A \wedge B).
+\end{equation}
+
+\subsection{Random variables}
+\label{cap:prob_RV}
+
+In general, other than basic toy examples, we do not refer to the underlying experiment and its sample/event spaces. We instead consider \emph{quantities of interest} that result from the outcome of the experiment. Therefore, let us consider a map from the sample space to a target space $\cT$, e.g., $\cT=\R$, $\cT=\N$ or $\cT=\{1,2,3,\ldots,N\}$.
+
+
+\begin{definition}[Random variable] A function 
+\begin{align}
+ 	X: \Omega &\to \cT\\
+ 	\omega &\mapsto X(\omega)
+ \end{align} 
+is referred to as random variable. In general, we will denote the function as $X$ and its value as $x$, ignoring the explicit dependence on $\omega$.
+\end{definition}
+
+\begin{remark}
+From now on, we will consider the outcome of the experiment (living in the sample space) as the value of the RV, this aims to have a more streamlined setup avoiding the need of a map from $\Omega$ to $\cT$. Accordingly, the event space $\cA$ and the probability $\Pb$ correspond to the outcomes (values) of $X$, we will usually denote the sample space by $\cX$. 
+\end{remark}
+
+\subsubsection{Discrete RVs}
+\label{cap:prob_disc_RV}
+
+If the sample space is finite or countably infinite, we will say that the RVis discrete. In this case, we denote the probability of the event $X=x$ by $\Pb(X=x)$. We define de following. 
+
+\begin{definition}[Probability mass function (pmf)] 
+\label{def:pmf}
+For a discrete RV $X\in\cX$ the function 
+\begin{align}
+ 	p_X: \cX &\to [0,1]\\
+ 	x &\mapsto p_X(x)=\Pb(X=x)
+ \end{align} 
+denotes the probability of the event in which the RV $X$ takes the value $x\in\cX$. Evidently, 
+\begin{equation}
+	\sum_{x\in\cX} p_X(x) = 1.
+\end{equation}
+\end{definition}
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Discrete RV}]
+\felipe{Give an example, e.g., a dice, picking items and/or a infinite state space one}
+\end{mdframed}
+
+\subsubsection{Continuous RVs}
+\label{cap:prob_cont_RV}
+
+If $\cX = \R^d$, with $d>1$, or any other infinitely uncountable space, we say that the RV is continuous. Observe that in this case we cannot defined a pmf as in Def.~\ref{def:pmf}. This is because since there is an uncountable number of symbols in the sample space $\cX$, we cannot assign each of them with a probability strictly greater than zero and still a total probability mass equal to one. Therefore, we make use of the event space and assign probabilities to intervals rather tan particular values. 
+
+\begin{definition}[Cumulative distribution function (cdf)] 
+\label{def:cdf}
+For a continuous RV $X\in\cX$, we can define the probability of $X$ to be less or equal that a given value $x\in\cX$ by 
+\begin{align}
+ 	P_X: \cX &\to [0,1]\\
+ 	x &\mapsto P_X(x)=\Pb(X\leq x).
+ \end{align} 
+Observe that this also allows to denote the probability of $X$ lying in a bounded interval, that is, 
+\begin{equation}
+	\Pb(a\leq X \leq b) = P_X(b) - P_X(a).
+\end{equation}
+The cdf is monotonically non-decreasing by construction, and, when $\cX = \R$, we have 
+\begin{align}
+	\lim_{x\to -\inf} P_X(x) & = 0\\
+	\lim_{x\to \inf} P_X(x) & = 1.
+\end{align}
+\end{definition}
+
+The idea to assign probabilities to intervals, suggest that there exists a density of probability, that is, an amount of probability mass per unit of length. This is formalised via the following definition. 
+
+
+\begin{definition}[Probability density function (pdf)] 
+\label{def:pdf}
+For a continuous RV $X\in\cX$, the probability density function of $X$ is given by the function 
+\begin{align}
+ 	p_X: \cX &\to \R\\
+ 	x &\mapsto p_X(x)=\frac{d}{dx} P_X(x).
+ \end{align} 
+ This is possible when $P_X$ is differentiable. 
+\end{definition}
+Knowing the pdf, we can express: 
+\begin{equation}
+	\Pb(a\leq X \leq b) = \int_a^bp_X(x)dx = P_X(b) - P_X(a),
+\end{equation}
+which is a direct particular case of the fundamental theorem of Calculus. 
+
+Also, for $\Delta x$ small, we have
+\begin{equation}
+	\Pb(x\leq X \leq x + \Delta x) = \int_x^{x+\Delta x}p_X(x)dx \simeq p(x)\Delta x.
+\end{equation}
+
+Lastly, if the cdf is \textbf{strictly monotonically increasing}, its inverse exists and it is known as the \textbf{quantile function}. The use quantiles is useful when assessing the value of the RV wrt the range of possible values. 
+
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\felipe{Show the Gaussian distribution and present cdf, pdf and quantile}
+\end{mdframed}
+
+
+
+
+
+
+
+
+
