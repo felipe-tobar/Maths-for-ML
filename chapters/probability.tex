@@ -74,6 +74,102 @@ Lastly, the probability of intersection, i.e., the probability of the events $\o
 \subsection{Random variables}
 \label{cap:prob_RV}
 
+In general, other than basic toy examples, we do not refer to the underlying experiment and its sample/event spaces. We instead consider \emph{quantities of interest} that result from the outcome of the experiment. Therefore, let us consider a map from the sample space to a target space $\cT$, e.g., $\cT=\R$, $\cT=\N$ or $\cT=\{1,2,3,\ldots,N\}$.
+
+
+\begin{definition}[Random variable] A function 
+\begin{align}
+ 	X: \Omega &\to \cT\\
+ 	\omega &\mapsto X(\omega)
+ \end{align} 
+is referred to as random variable. In general, we will denote the function as $X$ and its value as $x$, ignoring the explicit dependence on $\omega$.
+\end{definition}
+
+\begin{remark}
+From now on, we will consider the outcome of the experiment (living in the sample space) as the value of the RV, this aims to have a more streamlined setup avoiding the need of a map from $\Omega$ to $\cT$. Accordingly, the event space $\cA$ and the probability $\Pb$ correspond to the outcomes (values) of $X$, we will usually denote the sample space by $\cX$. 
+\end{remark}
+
+\subsubsection{Discrete RVs}
+\label{cap:prob_disc_RV}
+
+If the sample space is finite or countably infinite, we will say that the RVis discrete. In this case, we denote the probability of the event $X=x$ by $\Pb(X=x)$. We define de following. 
+
+\begin{definition}[Probability mass function (pmf)] 
+\label{def:pmf}
+For a discrete RV $X\in\cX$ the function 
+\begin{align}
+ 	p_X: \cX &\to [0,1]\\
+ 	x &\mapsto p_X(x)=\Pb(X=x)
+ \end{align} 
+denotes the probability of the event in which the RV $X$ takes the value $x\in\cX$. Evidently, 
+\begin{equation}
+	\sum_{x\in\cX} p_X(x) = 1.
+\end{equation}
+\end{definition}
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Discrete RV}]
+\felipe{Give an example, e.g., a dice, picking items and/or a infinite state space one}
+\end{mdframed}
+
+\subsubsection{Continuous RVs}
+\label{cap:prob_cont_RV}
+
+If $\cX = \R^d$, with $d>1$, or any other infinitely uncountable space, we say that the RV is continuous. Observe that in this case we cannot defined a pmf as in Def.~\ref{def:pmf}. This is because since there is an uncountable number of symbols in the sample space $\cX$, we cannot assign each of them with a probability strictly greater than zero and still a total probability mass equal to one. Therefore, we make use of the event space and assign probabilities to intervals rather tan particular values. 
+
+\begin{definition}[Cumulative distribution function (cdf)] 
+\label{def:cdf}
+For a continuous RV $X\in\cX$, we can define the probability of $X$ to be less or equal that a given value $x\in\cX$ by 
+\begin{align}
+ 	P_X: \cX &\to [0,1]\\
+ 	x &\mapsto P_X(x)=\Pb(X\leq x).
+ \end{align} 
+Observe that this also allows to denote the probability of $X$ lying in a bounded interval, that is, 
+\begin{equation}
+	\Pb(a\leq X \leq b) = P_X(b) - P_X(a).
+\end{equation}
+The cdf is monotonically non-decreasing by construction, and, when $\cX = \R$, we have 
+\begin{align}
+	\lim_{x\to -\inf} P_X(x) & = 0\\
+	\lim_{x\to \inf} P_X(x) & = 1.
+\end{align}
+\end{definition}
+
+The idea to assign probabilities to intervals, suggest that there exists a density of probability, that is, an amount of probability mass per unit of length. This is formalised via the following definition. 
+
+
+\begin{definition}[Probability density function (pdf)] 
+\label{def:pdf}
+For a continuous RV $X\in\cX$, the probability density function of $X$ is given by the function 
+\begin{align}
+ 	p_X: \cX &\to \R\\
+ 	x &\mapsto p_X(x)=\frac{d}{dx} P_X(x).
+ \end{align} 
+ This is possible when $P_X$ is differentiable. 
+\end{definition}
+Knowing the pdf, we can express: 
+\begin{equation}
+	\Pb(a\leq X \leq b) = \int_a^bp_X(x)dx = P_X(b) - P_X(a),
+\end{equation}
+which is a direct particular case of the fundamental theorem of Calculus. 
+
+Also, for $\Delta x$ small, we have
+\begin{equation}
+	\Pb(x\leq X \leq x + \Delta x) = \int_x^{x+\Delta x}p_X(x)dx \simeq p(x)\Delta x.
+\end{equation}
+
+Lastly, if the cdf is \textbf{strictly monotonically increasing}, its inverse exists and it is known as the \textbf{quantile function}. The use quantiles is useful when assessing the value of the RV wrt the range of possible values. 
+
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\felipe{Show the Gaussian distribution and present cdf, pdf and quantile}
+\end{mdframed}
+
+
+
+
+
+
 
 
 
