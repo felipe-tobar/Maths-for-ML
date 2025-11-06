@@ -166,6 +166,147 @@ Lastly, if the cdf is \textbf{strictly monotonically increasing}, its inverse ex
 \end{mdframed}
 
 
+\subsubsection{Properties and identities}
+\label{cap:prob_properties}
+
+Probability can be thought of as an extension of logical reasoning. The following properties are consistent with such extension. Let us first consider, in the same was as we did when we defined event probabilities, the following. 
+
+Both for discrete (pmf) and discrete (pdf) RVs, we can denote $p(x,y)$ the joint pdf/pmf for RVs $X\in\cX$ and $Y\in\cY$. This can be seen as the probability of the \emph{intersection} event, where $X=x$ and $Y=y$. 
+
+Furthermore, we can write 
+\begin{align}
+	p_X(x) &=  \sum_{y\in\cY}p(x,y)\quad \text{(discrete)}\\
+	p_X(x) &=  \int_{\cY}p(x,y)dy\quad \text{(continuous)}.
+\end{align}
+
+In the ML community, this is known as \textbf{sum rule}, since it allows us to express the density $p(y)$ from a joint density by summing over all possible values.
+
+A related expression is the so called \textbf{law of total probability}, which reads  
+
+\begin{align}
+		p_X(x) &=  \sum_{y\in\cY}p(x|y)p(y)\quad \text{(discrete)}\\
+	p_X(x) &=  \int_{\cY}p(x|y)p(y)dy\quad \text{(continuous)}.
+\end{align}
+This operation is usually called \textbf{marginalisation}, or \textbf{disintegration} (of $y$).
+
+The so called \textbf{product rule} is the decomposition of the joint law as follows
+\begin{equation}
+	p(x,y) = p(y|x)p(x),
+\end{equation}
+which allows to decompose the joint pmf/pdf using the law of the conditional event $X=x$ given that $Y=y$, and the marginal law of $Y$. A key consequence of the above expression is that, since the factorisation works in both ways, we have 
+\begin{equation}
+	p(x|y) = \frac{p(y|x)p(x)}{p(y)},
+\end{equation}
+which is known as the \textbf{Bayes theorem}. This is a fundamental result in probabilistic ML, since we usually observe measurements $y$ and want to infer parameters or latent variables $x$.
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\felipe{Let's go over the Month Python example or something about drawing cards}
+\end{mdframed}
+
+\subsubsection{Moments}
+\label{cap:prob_moments}
+
+
+\begin{definition}[Mean] 
+\label{def:mean}
+The mean, or expected value, of an RV $X\in\cX$, often denoted by $\mu = \mu_X$, is defined as
+\begin{align}
+	\E[X] &= \int_\cX xp_X(x)dx\quad\text{(continuous)}\\
+	\E[X] &= \sum_{x\in\cX} xp_X(x)\quad\text{(discrete)}\\
+\end{align}
+ where in the continuous case we have assumed the existence of a pdf. 
+\end{definition}
+Observe that $\E[\cdot]$ is a linear operator, meaning that 
+ \begin{align}
+	\E[aX + b] &= a\E[X] + b\quad a,b\in\R\\
+	\E[\sum_{i=1}^n X_i] &= \sum_{i=1}^n \E[ X_i], \\
+\end{align}
+where $X_i,X_2,\ldots, X_n$ is a collection of arbitrary RVs with finite mean. 
+
+
+\begin{definition}[Variance] 
+\label{def:variance}
+The variance measures the \textbf{spread} of a distribution (with respect to its mean) and it given by
+\begin{align}
+	\V[X] &= \E[(X-\mu_X)^2]\\
+				&= \int_\cX (x-\mu_X)^2p_X(x)dx\\
+				&= \int_\cX (x^2 -2x\mu_X+\mu_X^2)^2p_X(x)dx\\
+				&= \E[X^2] -\mu_X^2,
+\end{align}
+ where in the discrete case is obtained similarly. 
+\end{definition}
+A related quantity is the \textbf{standard deviation}, given by 
+\begin{equation}
+ 	\text{std}[X] = \sqrt{\V[X]}.
+ \end{equation} 
+Let us consider an arbitrary sequence of \textbf{independent} RVs $X_i,X_2,\ldots, X_n$ and $a,b\in\R$.  Two key properties of the variance are 
+\begin{align}
+	\V[aX_1 + b] &= a^2\V[X_1]\\
+	\V[\sum_{i=1}^n X_i]	&= \sum_{i=1}^n\V[ X_i]
+\end{align}
+MISSING: SOME INEQUALITIES AND CORRELATION
+
+\subsection{Some particular RVs}
+\label{cap:prob_someRVs}
+
+\subsection{Bernoulli and binomial}
+\label{cap:prob_bernoulli}
+
+Consider tossing a coin, where $\Pb(\text{heads})=\theta$, where $0\leq \theta \leq 1$. Note that, as a consequence, $\Pb(\text{tails})=1-\theta$. This is called the Bernoulli distribution, and it is written as 
+\begin{equation}
+	Y\sim\ber(\theta).
+\end{equation}
+Bernoulli's pmf is given by 
+\[
+p_\ber(y) =
+\begin{cases}
+\theta, & y = 1, \\
+1 - \theta, & y = 0, \\
+0, & \text{otherwise.}
+\end{cases}
+\]
+More concisely, we can write the pmf as 
+\begin{equation}
+	p_\ber(y) = \theta^y(1-\theta)^{1-y}.
+\end{equation}
+
+Let us now consider $N$ Bernoulli trials, denoted $Y_i\sim \ber(\cdot|\theta), i=1,\ldots,N$ -- this can be thought of as tossing a coin $N$ times. Define the RV $S$ as the total number of heads, that is
+\begin{equation}
+ 	S = \sum_{i=1}^N I(y_i = 1).
+ \end{equation} 
+ The distribution of $S$ is 
+ \begin{equation}
+ 	\bin(s|N,\theta) = \binom{N}{s}\theta^s(1-\theta)^{N-s},
+ \end{equation}
+which is known as the Binomial distribution, where $\binom{N}{s} = \frac{N!}{(N-s)!s!}$.
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Logistic regression}]
+
+Within ML, the Bernoulli distribution is largely used for (probabilistic) classification. In such case we want to predict a binary variable $y\in\{0,1\}$, which might represent the fact that a sample is of class 1 (and not class 0), conditional to some observed features $x\in\R^d$. We can then model $p(y=1)$ as 
+\begin{equation}
+	p(y|x,\theta) = \ber(y|f(x,\theta)).
+\end{equation}
+Since $f(x,\theta)$ represents the parameter of $\ber(y)$, we need $0\leq f(x,\theta) \leq 1$. However, to avoid that requirement, we can leave $f(x,\theta)$ unconstrained and do 
+\begin{equation}
+	p(y|\theta,x) = \ber(y|\sigma(f(x,\theta))),
+\end{equation}
+where 
+\begin{equation}
+	\sigma(a) = \frac{1}{1+e^{-a}}
+\end{equation}
+is the logistic function. 
+When we choose $f(x,\theta) = \theta_1^\top x + \theta_2$, we have the logistic regression model.
+
+\felipe{Show plots of Log Reg and sigmoid function.}
+\end{mdframed}
+
+
+
+
+
+
+
 
 
 
