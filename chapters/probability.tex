@@ -249,7 +249,7 @@ MISSING: SOME INEQUALITIES AND CORRELATION
 \subsection{Some particular RVs}
 \label{cap:prob_someRVs}
 
-\subsection{Bernoulli and binomial}
+\subsubsection{Bernoulli and binomial}
 \label{cap:prob_bernoulli}
 
 Consider tossing a coin, where $\Pb(\text{heads})=\theta$, where $0\leq \theta \leq 1$. Note that, as a consequence, $\Pb(\text{tails})=1-\theta$. This is called the Bernoulli distribution, and it is written as 
@@ -301,9 +301,122 @@ When we choose $f(x,\theta) = \theta_1^\top x + \theta_2$, we have the logistic 
 \felipe{Show plots of Log Reg and sigmoid function.}
 \end{mdframed}
 
+The extension of the Bernoulli (resp.~Binomial) distribution to the multivariate case, i.e., when the output of the experiments take values on categories $\{1,2,\ldots,K\}$ with $K>2$ is known as the categorical (resp.~Multinomial). These distributions will be left for personal study. 
 
+\subsubsection{Uniform distribution}
+\label{cap:prob_uniform}
 
+MISSING
 
+\subsubsection{Gaussian distribution}
+\label{cap:prob_Gaussian}
+
+The pdf the (scalar) Gaussian RV $X$ is given by 
+\begin{equation}
+	\cN(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x-\mu)^2},
+\end{equation}
+when $\mu=0$ and $\sigma=1$, we say that $X$ is a standard normal. 
+
+\begin{mdframed}[style=discusion, frametitle={Why Gaussian}]
+
+The Gaussian distribution is widely used for modelling continuous RVs, this is, in part, because: 
+
+\begin{itemize}
+	\item Central limit theorem: The scaled sum of multiple independent RVs, with different distributions, converges to a Gaussian RVs
+	\item The Gaussian distribution is the distribution with the maximum entropy (fewer structural assumptions) for a fixed variance
+	\item Its parameters are easy to interpret
+	\item The maths are simple when using it in applications
+\end{itemize}
+
+\end{mdframed}
+
+The Gaussian distribution is central to model \textbf{observation noise}, and therefore is key in regression models. That is, one can consider a linear regression models where
+
+\begin{equation}
+	Y|x \sim \cN(y|a^\top x + b,\sigma^2),
+\end{equation}
+which is equivalent to 
+\begin{equation}
+	y = a^\top x + b + \epsilon,
+\end{equation}
+where $\epsilon \sim \cN(0,\sigma^2)$.
+
+MISSING: MVN
+
+\subsubsection{Other distributions}
+\label{cap:prob_otherdist}
+
+There is a number of relevant distributions that we will not cover due to time constraints. These are, among others, 
+\begin{itemize}
+	\item Student's $t$
+	\item Cauchy
+	\item Chi-square
+	\item Laplace
+	\item Beta
+	\item inv-Gamma
+	\item Gamma
+	\item Exponential
+	\item half Gaussian
+\end{itemize}
+
+\subsection{Transformations of RVs distributions}
+\label{cap:prob_transRVs}
+
+In ML, we are interested in the construction of expressive \textbf{generative models}, i.e., probability distributions. Despite having a large collection of known distributions, sometimes we need to design purpose-specific models; this is achieved by transforming a given RV. 
+
+Consider $X\sim p_X(\cdot)$ and $Y=f(X)$ a deterministic transformation. We are interested in computing $p_Y(y)$.
+
+The discrete case is straightforward, as we just need to sum over the possible (discrete) values. That is, 
+\begin{equation}
+	p_Y(y) = \sum_{x:y=f(x)}p_X(x).
+\end{equation}
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Uniform into binary}]
+Consider 
+\begin{equation}
+	p_X = Uniform(0,1,\ldots,9),
+\end{equation}
+and 
+\[
+y = f(x) =
+\begin{cases}
+1, & \text{if } x \text{ is odd}, \\[4pt]
+0, & \text{if } x \text{ is even.}
+\end{cases}
+\]
+
+\felipe{Plot the pmfs}
+\end{mdframed}
+
+The continuous case is a bit more involved, since we cannot directly sum over all possible values of the RV. However, we can work with the cdf to show that 
+\begin{equation}
+	P_Y(y) = \Pb(Y\leq y) = \Pb(f(x)\leq y) = \Pb(x\in\{x|f(x)\leq y\}).
+\end{equation}
+Let us notice that if $f$ is invertible, we can rely on the \textbf{change of variable theorem}, which states that
+\begin{equation}
+	\label{eq:CVT_scalar}
+ 	p_Y(y) = p_X(x)\left|\frac{dx}{dy}\right|.
+ \end{equation} 
+This identity can be proven using the cdf. When $f$ is invertible, we can denote $g=f^{-1}$ and note that (assuming that $f$ is non-decreasing)
+\begin{equation}
+	P_Y(y) = \Pb(Y\leq y) = \Pb(f(x)\leq y)= \Pb(x\leq g(y)) = P_X(g(y)).
+\end{equation}
+We can now take the derivative, to give: 
+\begin{equation}
+	p_Y(y) = \frac{d}{dy}P_X(g(y)) = \frac{dP_X(g(y))}{dx}\frac{dx}{dy}= p_X(g(y))\frac{dx}{dy}.
+\end{equation}
+If $f$ had been non-increasing, we would have obtained the same expression with the reversed sign. Therefore, we conclude eq.~\eqref{eq:CVT_scalar}.
+
+In the multivariate case, the CVT reads
+\begin{equation}
+	\label{eq:CVT_vector}
+ 	p_Y(y) = p_X(x)\left|\text{det}J_q(y)\right|,
+ \end{equation}
+ where $J_q(y) = \frac{dg(y)}{dy}$ is the Jacobian of $g=f^{-1}$. 
+
+  \begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\felipe{Give 1 or two examples with plots. They could be $\chi^2$, lognormal, uniform, half normal, etc.}
+\end{mdframed}
 
 
 
