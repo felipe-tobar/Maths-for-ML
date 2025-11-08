@@ -419,6 +419,38 @@ In the multivariate case, the CVT reads
 \end{mdframed}
 
 
+\subsection{Monte Carlo sampling}
+\label{cap:prob_mc}
+
+Consider a set $\{x_1,x_2,\ldots,x_N\}$ of i.i.d. samples of an RV $X\sim p_X$. We are interested in approximating the law $p_X$, and also computing expectation wrt it. An empirical estimate of the law of $X$ is the so called \textbf{histogram}
+\begin{equation}
+	P_N(x) = \frac{1}{N} \sum_{i=1}^N \delta_{x_i}(x),
+\end{equation}
+where $\delta_{x_i}(\cdot)$ denotes de delta-Dirac mass in $x_i$. 
+
+\begin{mdframed}[style=discusion, frametitle={\center Real approximation?}]
+
+Does $P_N(x)$ becomes more and more similar to the true law of $X$ as $N$ grows? 
+
+\end{mdframed}
+
+Notice that $P_N$ allows to compute (approximate) expectations. Let us consider a function $f: x \mapsto f(x)$, and 
+\begin{equation}
+	I_f \eqdef  \int f(x)p(x)dx \simeq f(x)P_N(x) = \frac{1}{N} \sum_{i=1}^{N} f(x_i) \eqdef I_N. 
+\end{equation}
+Due to the Strong Law of Large Numbers (SLLN), we know that $I_N$ get arbitrarily close to $I_f$ as $N\to\infty$.
+
+A relevant question is how to generate the samples needed to approximate $P_N$, this is known as \textbf{sampling}. There are three main approaches to sample from distributions, namely: 
+\begin{itemize}
+	\item Rejection sampling
+	\item Importance sampling
+	\item Markov chain Monte Carlo.
+\end{itemize}
+We will briefly revise them in class.
+
+
+
+
 
 
 
