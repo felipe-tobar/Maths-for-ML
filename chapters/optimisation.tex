@@ -507,11 +507,11 @@ Figure \ref{fig:stochastic_loss} shows how the empirical loss changes as we cons
 \end{figure}
 
 
-Recall that in general we will consider parameter updates of the form 
+Recall that, in general, we will consider parameter updates of the form 
 \begin{equation}
 	\theta_{t+1} = \theta_t -M_t^{-1} g_t,
 \end{equation}
-where $M_t$ is an estimate of the norm of the gradient $g_t$, as this ensures convergence (or prevents divergence). We next explore some different choices of this estimate.
+where $M_t$ is an estimate of the magnitudes of the coordinates of the gradient $g_t$, as this ensures convergence (or prevents divergence). We next explore some different choices of this estimate.
 
 \subsubsection{Adagrad}
 
@@ -523,7 +523,7 @@ where $s_{t,d} = \sum_{i=1}^t g_{i,d}^2$. This can also be expressed in vector f
 \begin{equation}
 	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
 \end{equation}
-The aim of this update rule is that control the magnitude of the step size for each coordinate of the parameter independently, based on a rolling estimate using previous gradient evaluations. Notice that the computation of $s_{t,d}$ assigns the same importance to all gradient evaluations in time.
+The aim of Adagrad is to control the magnitude of the step size for each coordinate of the parameter independently, based on a rolling estimate using previous gradient evaluations. Notice that the computation of $s_{t,d}$ assigns the same importance to all gradient evaluations in time.
 
 
 \subsubsection{RMSProp}
@@ -533,21 +533,21 @@ Adagrad might fail to represent the current gradient magnitude by not emphasisin
 \begin{equation}
 	s_{t+1,d} = \beta s_{t,d} + (1-\beta) g_{t,d}^2,
 \end{equation}
-where the \emph{forgetting factor} $\beta$ is usually chosen closer to 0.9. Then, the update rule also follows
+where the \emph{forgetting factor} $\beta$ is usually chosen close to 0.9. Then, the update rule also follows
 \begin{equation}
 	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
 \end{equation}
  
 \subsubsection{Adam}
 
-The de facto optimiser in deep learning is Adam (Adaptive Moment Estimation), which combines RMSProp and momentum. Adam's update follows: 
+The de facto optimiser in deep learning is Adam (Adaptive Moment Estimation) proposed by \cite{kingma2015adam}, which combines RMSProp and momentum. Adam's update follows: 
 \begin{align}
 	m_t = \beta_m m_{t-1} + (1-\beta_m) g_{t}\\
 	s_t = \beta_s s_{t-1} + (1-\beta_s) g^2_{t}.
 \end{align}
 Then, 
 \begin{equation}
-	\theta_{t} = \theta_{t-1} - \eta_t \frac{m_t}{\sqrt{s_t} + \epsilon}
+	\theta_{t} = \theta_{t-1} - \eta_t \frac{m_t}{\sqrt{s_t} + \epsilon}.
 \end{equation}
 
 
@@ -558,9 +558,9 @@ We will consider the function
 	f(x,y)=0.1 x^2 + y^2\,.
 \end{equation}
 
-Notice that this function is convex, hence we would expect a reasonable gradient based method to converge. However, the speed and way in which they will converge will be different in every case. This functions serves to show this, especially because the curvature is much more pronounced along the $y$ axis.
+Notice that this function is convex, hence we would expect a reasonable gradient based method to converge. However, the speed and way in which they converge might be different in every case. This text function will illustrate this, since its curvature is much more pronounced along the $y$ axis.
 
-We visualise the effect of the different optimisers presented above in Figure \ref{fig:optimisers}. Notice that SGE converges more slowly when compared to RMSprop and Adam. Adagrad, on the other hand, slows down too early.
+We visualise the effect of the different optimisers presented above in Figure \ref{fig:optimisers}. Notice that SGD converges more slowly than RMSprop and Adam. Adagrad, on the other hand, slows down too early.
 	
 \end{mdframed}
 
