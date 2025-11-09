@@ -4,9 +4,9 @@
 \section{Optimisation}
 \label{cap:optimisation}
 
-\textbf{NB:} in this chapter, we follow \cite{pml1Book}.\\
+\textbf{NB:} in this chapter, we follow \cite{pml1Book} and \cite{deisenroth2020mathematics}. For a deeper presentation of the topics covered here, also see \cite{nesterov2018lectures} and \cite{boyd2004convex}.\\
 
-\noindent Optimisation is central to ML, since models are \emph{trained} by minimising a loss function (or optimising a reward function). In general, model design involves the definition of a training objective, that is, a function that denotes how good a model is. This training objective is a function of the training data and a model, the latter usually represented by its parameters. The best model is is the chosen by optimising this function. 
+\noindent Optimisation is central to ML, since models are \emph{trained} by minimising a loss function (or optimising a reward function). In general, model design involves the definition of a training objective or \textbf{loss}, that is, a function that denotes \textbf{how well a model fits the data}. This training objective is a function of the training data and a chosen model, the latter usually represented by its parameters. The best model is thus chosen by optimising the loss function. 
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: Linear regression (LR)}]
 
@@ -21,13 +21,12 @@ conditional to a set of observations
 	\datos=\{(x_i,y_i)\}_{i=1}^N\subset \R^M \times \R.
 	\label{eq:training_set}
 \end{equation}
- Using least squares, the function $f$ is chosen via minimisation of the sum of the square differences between observations $\{y_i\}_{i=1}^N$ and predictions $\{f(x_i)\}_{i=1}^N$. That is, we aim to minimise he loss:
+ Using least squares, the function $f$ is chosen via minimisation of the sum of the square differences between observations $\{y_i\}_{i=1}^N$ and predictions $\{f(x_i)\}_{i=1}^N$. That is, we aim to minimise the loss:
 \begin{equation}
 	J(\datos,f) = \sum_{i=1}^N(y_i-f(x_i))^2 = \sum_{i=1}^N(y_i-a^
 	\top x_i - b)^2.
 	\label{eq:least_squares_cost}
 \end{equation}
-
 We show an example of a linear model learnt from data in Figure \ref{fig:lr_crickets}.
 
 \end{mdframed}
@@ -35,7 +34,7 @@ We show an example of a linear model learnt from data in Figure \ref{fig:lr_cric
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{img/optimisation_example_lr_crickets.pdf}
-    \caption{Example of a linear regression model minimising the least squares.}
+    \caption{Example of a linear regression model minimising the least squares loss.}
     \label{fig:lr_crickets} 
 \end{figure}
 
@@ -45,7 +44,7 @@ We show an example of a linear model learnt from data in Figure \ref{fig:lr_cric
 Here, we aim to determine the function
 \begin{align}
   f \colon \R^M &\to \R\nonumber\\
-  x &\mapsto f(x)= \frac{1}{1 + e^{-\theta^\top x+b}},\quad \theta\in\R^M, b\in\R
+  x &\mapsto f(x)= \frac{1}{1 + e^{-\theta^\top x+b}},\quad \theta\in\R^M, b\in\R,
    \label{eq:log_reg_fn} 
 \end{align}
 conditional to the  observations
@@ -56,10 +55,10 @@ conditional to the  observations
  The standard loss function for the classification problem is the cross entropy, given by:
 \begin{align}
 	J(\datos,f) &= -\frac{1}{N} \sum_{i=1}^N \left(c_i\log f(x_i) + (1-c_i)\log(1-f(x_i))\right)\\
-				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x+b}) -y_i(-\theta^\top x+b)  \right)
+				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x+b}) -y_i(-\theta^\top x+b)  \right).
 	\label{eq:x_entropy_cost}
 \end{align}
-In figure \ref{fig:log_reg_example} show an example of a binary classification task minimising the cross entropy to separate data generated from two Gaussian distributions.
+Figure \ref{fig:log_reg_example} shows an example of a binary classification task minimising the cross entropy to separate data generated from two Gaussian distributions.
 
 \end{mdframed}
 
@@ -71,7 +70,7 @@ In figure \ref{fig:log_reg_example} show an example of a binary classification t
 \end{figure}
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Clustering (K-means)}]
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Clustering ($K$-means)}]
 
 Given a set of observations
 \begin{equation}
@@ -80,17 +79,17 @@ Given a set of observations
 \end{equation}
 we aim to find cluster centres (or prototypes) $\mu_1,\mu_2,\ldots, \mu_K$ and \emph{assignment variables} $\{r_{ik}\}_{i,k=1}^{N,K}$, to minimise the following loss 
 \begin{align}
-	J(\datos,f) = \sum_{i=1}^N\sum_{k=1}^K r_{ik} ||x_i-\mu_k||^2\\
+	J(\datos,f) = \sum_{i=1}^N\sum_{k=1}^K r_{ik} ||x_i-\mu_k||^2.
 	\label{eq:clustering_cost} 
 \end{align}
-An example of a K-means model after the loss minimisation is shown on Figure \ref{fig:kmeans_example}
+An example of a $K$-means model after the loss minimisation is shown on Figure \ref{fig:kmeans_example}
 
 \end{mdframed}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{img/optimisation_example_kmeans.pdf}
-    \caption{Example of a K-means model to classify data from two Gaussians. The figure shows the learnt centroids (black cross) and the colours correspond to the cluster assignment.}
+    \caption{Implementation of the $K$-means method to clustering data from two Gaussians. The figure shows the learnt centroids (black cross) and the colours correspond to the cluster assignments.}
     \label{fig:kmeans_example}
 \end{figure}
 
@@ -101,22 +100,22 @@ An example of a K-means model after the loss minimisation is shown on Figure \re
 We denote an optimisation problem as follows: 
 
 \begin{equation}
-	\min_{x\in\cX} f(x) \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J.
+	\min_{x\in\cX} f(x), \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J.
 \end{equation}
 We describe the components of this statement in detail: 
 
 \begin{itemize}
 	\item \textbf{Objective function:} The function $f:\cX\to \R$ is the quantity to be minimised, with respect to $x$. 
-	\item \textbf{Optimisation variable:} Minimising $f$ requires fining the value of $x$ such that $f(x)$ is minimum. This is also written as
+	\item \textbf{Optimisation variable:} Minimising $f$ requires finding the value of $x$, such that $f(x)$ is minimum. This is also written as
 	\begin{equation}
-	x_\star = \argmin_{x\in\cX} f(x) \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0.
+	x_\star = \argmin_{x\in\cX} f(x), \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0.
 	\end{equation}
 	\item \textbf{Restrictions:} These are denoted by the functions $g_i$ and $h_i$ above, which describe the requirements for the optimiser in the form of equalities and inequalities, respectively. 
 	\item \textbf{Feasible region:}  This is the subset of the domain that complies with the restrictions, that is 
 	\begin{equation}
-		C = \{x\in\cX, \text{~ s.t.~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J \}
+		C = \{x\in\cX, \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J \}.
 	\end{equation}
-	\item \textbf{Local / global optima.} Values for the optimisation variable that solve the optimisation problem wither locally or globally. More formally: 
+	\item \textbf{Local / global optima.} Values for the optimisation variable that solve the optimisation problem either locally or globally. More formally: 
 	\begin{align}
 		\text{$x_\star$ is a local optima} &\iff \exists \lambda>0 \text{~ s.t.~ }  x_\star = \argmin_{ x\in\cX \text{~ s.t.~ } ||x-x_\star||\leq \lambda } f(x). \\
 		\text{$x_\star$ is a global optima} &\iff x_\star = \argmin_{ x\in\cX } f(x). 
@@ -124,19 +123,19 @@ We describe the components of this statement in detail:
 \end{itemize}
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: Unique and non-unique closed form minima}]
-In unconstrained optimisation, we have functions that naturally present a unique global minimum and others that have more than one. For instance, Figure \ref{fig:example_local_global} shows $(x-1)^2 + (y+2)^2$ on the left, which as a unique minimiser on $x, y = 1, -2$ and $(x^2-1)^2 + (y^2 -1)^2$ on the right, where every global minimiser satisfies $\{x,y : x=+-1 \land y=+-1\}$.
+In unconstrained optimisation, we have functions that have a unique global minimum and others that have more than one. For instance, Figure \ref{fig:example_local_global} shows $(x-1)^2 + (y+2)^2$ on the left, which has a unique minimiser on $(x, y) = (1, -2)$ and $(x^2-1)^2 + (y^2 -1)^2$ on the right, where every global minimiser belongs to the set $\{(x,y) : x=+-1 \land y=+-1\}$.
 \end{mdframed}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{img/optimisation_example_2d_parametric.pdf}
-    \caption{Functions with a unique and non-unique global minima.}
+    \caption{Functions with a unique (left) and non-unique (right) global minima.}
     \label{fig:example_local_global}
 \end{figure}
 
 
-\begin{mdframed}[style=discusion, frametitle={\center Interplay between constrains and local/global optima}]
-On the other hand, we may be presented with functions such as $f(x,y) = sin(x)*sin(y) + 0.1(x^2+y^2)$, with a global minimum but that has other local minima. Figure \ref{fig:example_restricted_minima} shows how different restrictions change the number and type of optima. In this case, when restricting the minimisation problem to the circle centred in $1.5,1$ with radius $2$, we observe a minimiser that is not the global minimum of the unconstrained problem (unfeasible point) nor one of the local minima.
+\begin{mdframed}[style=discusion, frametitle={\center Interplay between constraints and local/global optima}]
+On the other hand, we may be presented with functions such as $f(x,y) = \sin(x)*\sin(y) + 0.1(x^2+y^2)$, which has a global minimum but also local minima. Figure \ref{fig:example_restricted_minima} shows how different restrictions change the number and type of optima. In this case, when restricting the minimisation problem to the circle centred in $(1.5,1)$ with radius $2$, we observe a minimiser that is not the global minimum of the unconstrained problem (an unfeasible point) nor one of the local minima.
 
 \end{mdframed}
 
@@ -144,7 +143,7 @@ On the other hand, we may be presented with functions such as $f(x,y) = sin(x)*s
     \centering
     \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex.pdf}
 	\includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex_constrained.pdf}
-    \caption{Minima for constrained versus unconstrained problems.}
+    \caption{Minima for constrained (left) and unconstrained (right) problems.}
     \label{fig:example_restricted_minima}
 \end{figure}
 
@@ -154,7 +153,7 @@ On the other hand, we may be presented with functions such as $f(x,y) = sin(x)*s
 \subsection{Continuous unconstrained optimisation} % (fold)
 \label{sec:continuous_optimisation}
 
-We will ignore constrains in this section, and we will focus on problems of the form
+We will ignore constrains in this section, and focus on problems of the form
 
 \begin{equation}
 	\theta \in \argmin_{\theta\in\Theta} L(\theta).
@@ -165,14 +164,14 @@ We emphasise that if $\theta_\star$ satisfies the above, then
 \end{equation}
 meaning that it is a \textbf{global} optimum. However, as this might be very hard to find, we are also interested in local optima, that is, $\theta_\star$  such that 
 \begin{equation}
-\exists\, \delta > 0 \;\; \forall\, \theta \in \Theta \;\; 
-\text{s.t.} \;\; 
+\exists\, \delta > 0  \;\; 
+\text{s.t.} \;\; \forall\, \theta \in \Theta \;\; 
 \|\theta - \theta_\star\| < \delta 
 \;\Rightarrow\;
 L(\theta_\star) \le L(\theta).
 \end{equation}
 
-We now review the optimality conditions.
+We now review the \textbf{optimality conditions}.
 
 \begin{assumption}
 The loss function $L$ is twice differentiable.
@@ -183,7 +182,7 @@ Denoting $g(\theta) = \nabla_\theta L(\theta)$ and $H(\theta) = \nabla_\theta^2L
 \begin{itemize}
 	\item \textbf{First order necessary condition:} If $\theta_\star$ is a local minimum, then 
 	\begin{itemize}
-		\item $\nabla_\theta L(\theta_\star)=0$
+		\item $\nabla_\theta L(\theta_\star)=0$.
 	\end{itemize}
 	\item \textbf{Second order necessary condition:} If $\theta_\star$ is a local minimum, then 
 	\begin{itemize}
@@ -223,8 +222,7 @@ where we have 3 possible cases:
 	\item $-1<p<1$: The stationary point is a \emph{saddle point}
 		\item $p<-1$: The stationary point is a maximum
 \end{itemize}
-
-Figure \ref{fig:critical_points} shows the function behavious for different $p$. What happens when $|p|=1$?
+Figure \ref{fig:critical_points} shows the function behaviour for different $p$. What happens when $|p|=1$?
 
 \end{mdframed}
 
@@ -248,13 +246,12 @@ This setting is defined by having a convex objective function and a convex feasi
 	\quad \forall\, \lambda \in [0, 1].
 \end{equation}
 \end{definition}
-
-For example, Figure \ref{fig:convex_nonconvex_sets} shows two convex and two non-convex optimisation regions.
+For illustration, Figure \ref{fig:convex_nonconvex_sets} shows two convex and two non-convex sets.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{img/optimisation_convex_and_nonconvex_regions.pdf}
-    \caption{Examples of convex and non-convex sets. Feasible regions are highlighted in blue.}
+    \caption{Examples of convex and non-convex sets, highlighted in blue.}
     \label{fig:convex_nonconvex_sets} 
 \end{figure}
 
@@ -343,7 +340,7 @@ We consider $d=1$. Using the FTC,
  \end{equation}
  equivalently, 
 \begin{equation}
-	f(b)\geq f(a) ' (b-a)f'(a), \label{eq:tanget_PD1}
+	f(b)\geq f(a)+ (b-a)f'(a), \label{eq:tanget_PD1}
 \end{equation}
 meaning that the function $f$ \emph{is always above its tangent}. Evaluating \eqref{eq:tanget_PD1} for $(a,z)$ and $(b,z)$, where $z=(1-t)a + tb$, we have
 \begin{align}
@@ -354,8 +351,9 @@ Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summin
 \begin{align}
 	f(z) &\geq (1-t)f(a) + tf(b) + (1-t)(tb-ta)f'(a) +t[(1-t)a - (1-t)b]f'(b)\\
 	     &=    (1-t)f(a) + tf(b) + (1-t)t(b-a) [f'(a) - f'(b)]\\
-	     &\geq (1-t)f(a) + tf(b)
+	     &\geq (1-t)f(a) + tf(b).
 \end{align}
+This concludes the proof. Discuss in class how to extend this to arbitrary dimension $d>1$.
 \end{proof}
 
 
@@ -369,9 +367,7 @@ Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summin
 \subsection{First order methods}
 \label{sub:first_order_methods}
 
-In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is not possible. For that reason, we will consider iterative methods based on gradients. 
-
-The idea here is to go \emph{downhill} following the gradient towards the minimum (ignoring the curvature information for now). 
+In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is not possible. For that reason, we will consider iterative methods based on gradients. The idea here is to go \emph{downhill} following the gradient towards the minimum (ignoring the curvature information for now). 
 
 We will specify a starting point $x_0$ and calculate
 
@@ -390,9 +386,7 @@ In fact, as long as $d_t^\top\nabla f \leq 0$, $d_t$ is a descent direction. Cle
 \subsubsection{Role of the step size}
 \label{ssub:stepsize}
 
-The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule.
-
-We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to this choice: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, it may not converge at all. 
+The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule. We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to it: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, it may not converge at all. 
 
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola}]
@@ -414,23 +408,23 @@ In Figure \ref{fig:parabola_lr} we show how the steepest descent converges/diver
 \end{figure}
 
 
-The learning rate is usually tuned with heuristics. Since we will usually implement 
+The learning rate is usually tuned based on heuristics. When implementing the rule 
 \begin{equation}
 	x_{t+1} = x_t + \eta \nabla f(x_t),
 \end{equation}
-we will usually set $\eta<||\nabla f||^{-1}$, as this will result in a stable autoregressive system for the sequence $x_t$. 
+we will usually set $\eta<||\nabla f||^{-1}$, as this will result in a stable autoregressive system for the sequence $x_t$ (discuss this in class).
 
 
 
 \subsubsection{Momentum}
 \label{ssub:momentum}
 
-In higher dimensions, we want to move faster in some directions and slow in other directions, depending on the value of the gradient in each coordinate. This can be achieved by: 
+In higher dimensions, we want to move faster in some directions and slower in others, depending on the value of the gradient in each coordinate. This can be achieved by: 
 \begin{align}
 	m_t &= \beta m_{t-1} + \nabla f(x_{t-1})\\
-	x_t = x_{t-1} - \nabla_t m_t,
+	x_t &= x_{t-1} - \nabla_t m_t,
 \end{align}
-where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient is consistently large, then that coordinate will receive updated of a higher magnitude. This is particularly useful when the evaluation of the gradient is noisy. Figure \ref{fig:parabola_momentum} shows how learning changes using momentum, with the same learning rates as the previous example.
+where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient is consistently large, then that coordinate receives updates of a higher magnitude. This is particularly useful when the evaluation of the gradient is noisy. Figure \ref{fig:parabola_momentum} shows how learning changes using momentum, with the same learning rates as the previous example.
 
 \begin{figure}[ht]
     \centering
@@ -442,11 +436,10 @@ where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a desi
 \subsubsection{Newton method}
 \label{ssub:newton}
 Newton's method is
-
 \begin{equation}
 	x_{t+1} = x_t -\eta_t H_t^{-1}\nabla f(x_t),	
 \end{equation}
-where recall that $H_t = \nabla^2 f(x_t)$ denots the Hessian of $f$ at $x_t$. This update follows from considering the second order approximation of the loss function arond the current point, that is: 
+where recall that $H_t = \nabla^2 f(x_t)$ denotes the Hessian of $f$ at $x_t$. This update follows from considering the second order approximation of the loss function around the current point, that is: 
 
 \begin{equation}
 	L(x) \simeq L(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t),
@@ -455,21 +448,21 @@ the minimum of which is given by
 \begin{equation}
 	x_\star = x_t - H^{-1}_t\nabla L(x_t),
 \end{equation}
-where the learning rate can also be used. 
+where the learning rate can also be used to accelerate (or de-accelerate) convergence. 
 
 \noindent\begin{minipage}{0.58\textwidth}
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola (2)}]
 
 Let us consider the same parabolic function as before. This time we will use the Newton method presented above.
 
-As shown in Figure \ref{fig:newton_method}, this method converges in only one step. That is, the update corresponds to the closed form solution of the minimisation problem.
+As shown in Figure \ref{fig:newton_method}, this method converges in one step (for a quadratic function). That is, the update corresponds to the closed form solution of the minimisation problem.
 
 \end{mdframed}
 \end{minipage}\hfill
 \begin{minipage}{0.4\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{img/optimisation_parabola_newton.pdf}
-	\captionof{figure}{One step parabola minimisation with the Newton method.}
+	\captionof{figure}{One-step parabola minimisation with the Newton method.}
 	\label{fig:newton_method}
 \end{minipage}
 
@@ -484,11 +477,9 @@ We now consider stochastic optimisation, where
 \begin{equation}
 	L(x) = \E_{q(z)}L(x,z),
 \end{equation}
-that is, when the loss function is random and we aim to minimise its expected value. 
+that is, when the loss function is random and we aim to minimise its expected value.  For instance, in linear regression we have $L(\theta)=\E_{q(y|x)}(y-\theta^\top x)$.
 
-For instance, in linear regression we have $L(\theta)=\E_{q(y|x)}(y-\theta^\top x)$.
-
-In practice we are unable to compute this expectation since we don't know the law $q(z)$. However, since we usually have samples of $q$, we can do a sample approximation og the expectation. In fact, we will consider
+In practice, we are unable to compute this expectation since the law $q(z)$ is unknown. However, since we usually have samples of $q$, we can do a sample approximation of the expectation. In fact, we will consider
 \begin{equation}
 	L(\theta) = \frac{1}{N}\sum_{i=1}^nL(x,z_i).
 \end{equation}
@@ -497,14 +488,14 @@ In the linear regression example, this would be $L(\theta) = \frac{1}{N}\sum_{i=
 The gradient is then also approximated using a batch of, say, $B$ samples. That is, 
 
 \begin{equation}
-	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i)
+	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i).
 \end{equation}
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Example: random loss function for linear regression}]
 
 Consider a toy example of linear regression where $q(y|x) = \mathcal{N}(y;x,\sigma^2)$ for a given $\sigma >0$. Consequently, we can compare the true expectation (equal to the variance in this case) with the empirical approximation for increasing values of $N$.
 
-In Figure \ref{fig:stochastic_loss} we show how the value of the empirical loss changes as we consider more and more samples.
+Figure \ref{fig:stochastic_loss} shows how the empirical loss changes as we consider more and more samples.
 
 \end{mdframed}
 
@@ -517,9 +508,8 @@ In Figure \ref{fig:stochastic_loss} we show how the value of the empirical loss 
 
 
 Recall that in general we will consider parameter updates of the form 
-
 \begin{equation}
-	\theta_{t+1} = \theta_t -M_t^{-1} g_t
+	\theta_{t+1} = \theta_t -M_t^{-1} g_t,
 \end{equation}
 where $M_t$ is an estimate of the norm of the gradient $g_t$, as this ensures convergence (or prevents divergence). We next explore some different choices of this estimate.
 
