@@ -570,3 +570,170 @@ We visualise the effect of the different optimisers presented above in Figure \r
     \caption{Convergence comparison for different optimisers.}
     \label{fig:optimisers}
 \end{figure}
+
+%%%%%%%%%########
+\subsection{Training and Regularisation of Neural Networks}
+
+\subsubsection{Network Architecture}
+
+As discussed previously, achieving good generalisation does not simply require arbitrarily wide networks. The \textbf{architecture} of a neural network refers to its overall structure: number of layers, neurons per layer, connectivity, and activation functions.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{img/optimisation_nn.png}
+	\caption{A neural network of depth $l$.}
+\end{figure}
+
+We adopt the following notation:
+\begin{equation}
+	h^{(k)} = f^{(k)}(h^{(k-1)}W^{(k)} + b^{(k)}), \quad k \in \{1,\dots,l\}, \quad h^{(0)} = x,
+\end{equation}
+\begin{equation}
+	\hat{y} = g(h^{(l)}U + c),
+\end{equation}
+where $g$ denotes the output activation defining the \textbf{output unit}.
+
+\subsubsection{Cost Function and Output Units}
+
+Unlike linear models, the use of nonlinear activations renders the cost function generally non-convex, so gradient descent does not guarantee convergence to a global optimum. Although least squares may be used, in practice one minimises the negative log-likelihood of a probabilistic model $p(y|\bm{x};\bm{\theta})$:
+\begin{equation}
+	J(\bm{\theta}) = -\E_{(\bm{x},\bm{y}) \sim \hat{p}_{\mathrm{data}}} [\log p_{\mathrm{model}}(\bm{y}|\bm{x})].
+\end{equation}
+The choice of output unit determines the appropriate likelihood and loss:
+\begin{enumerate}
+	\item \textbf{Linear:} $\hat{\bm{y}} = h^{(l)}U + c$  
+	
+	Models $\mathcal{N}(\bm{y}|\hat{\bm{y}}, \bm{I})$ and is equivalent to minimising MSE; suited for regression.
+	
+	\item \textbf{Sigmoid:} $\hat{y} = \mathrm{sig}(h^{(l)}U + c)$  
+	
+	Used for binary classification with $p(y|\bm{x}) = \mathrm{Bernoulli}(y|p)$ and $\hat{y} = p(y=1|\bm{x})$.
+	
+	\item \textbf{Softmax:} $\hat{\bm{y}} = \mathrm{softmax}(h^{(l)}U + c)$  
+	
+	For multiclass problems, with
+	\[
+	\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}.
+	\]
+\end{enumerate}
+
+\subsubsection{Forward Propagation}
+
+In a feedforward network, information flows from input $\bm{x}$ to output $\hat{\bm{y}}$. During training, this process computes the cost $J(\bm{X},\bm{\theta})$.
+
+\begin{algorithm}[H]
+	\caption{Forward Propagation}
+	\textbf{Require:} Depth $l$, weights $\bm{W}^{(k)}$, biases $\bm{b}^{(k)}$, input $\bm{x}$, output $\bm{y}$, and output parameters $U$, $c$, $g$.\\
+	\begin{algorithmic}[1]
+		\State $\bm{h}^{(0)} \gets \bm{x}$
+		\For{$k = 1,\dots,l$}
+			\State $\bm{u}^{(k)} \gets \bm{h}^{(k-1)}\bm{W}^{(k)} + \bm{b}^{(k)}$
+			\State $\bm{h}^{(k)} \gets f^{(k)}(\bm{u}^{(k)})$
+		\EndFor
+		\State $\bm{\hat{y}} \gets g(\bm{h}^{(l)}U + c)$
+		\State $J \gets L(\bm{\hat{y}},\bm{y})$
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Backward Propagation – Preliminaries}
+
+The \textbf{backpropagation} algorithm propagates cost information backwards to compute gradients efficiently. While analytic gradients can be derived, automatic differentiation provides faster and more scalable computation, enabling modern deep learning.
+
+Assume training is performed in \textbf{mini-batches} $(x^d)_{d=1}^N$, enabling efficient matrix operations on GPUs. For an MSE loss in regression:
+\[
+J(\bm{X},\bm{\theta}) = \frac{1}{2N}\sum_{d=1}^N (\hat{y}_d - y_d)^2.
+\]
+
+Our goal is to update all weights $w_{ij}^{(k)}$. Using the chain rule:
+\[
+\frac{\partial J_d}{\partial w_{ij}^{(k)}} 
+= \frac{\partial J_d}{\partial u_{dj}^{(k)}} 
+  \frac{\partial u_{dj}^{(k)}}{\partial w_{ij}^{(k)}},
+\]
+where we define the \textbf{error term}
+\[
+\delta_{dj}^{(k)} \equiv \frac{\partial J_d}{\partial u_{dj}^{(k)}},
+\]
+and note that
+\[
+\frac{\partial u_{dj}^{(k)}}{\partial w_{ij}^{(k)}} 
+= h_{di}^{(k-1)}.
+\]
+Hence,
+\[
+\frac{\partial J_d}{\partial w_{ij}^{(k)}} = \delta_{dj}^{(k)} h_{di}^{(k-1)},
+\]
+and the total gradient (ignoring the constant $1/N$ for now) is
+\begin{equation}
+\frac{\partial J}{\partial W^{(k)}} = (h^{(k-1)})^T @ \delta^{(k)}.
+\end{equation}
+
+\subsubsection{Backward Propagation – Hidden Layers}
+
+From the chain rule:
+\[
+\delta_{dj}^{(k)} = \frac{\partial J_d}{\partial u_{dj}^{(k)}} = \sum_{a=1}^{k_{k+1}} \frac{\partial J_d}{\partial u_{da}^{(k+1)}} \frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}} = \sum_{a=1}^{k_{k+1}} \delta_{da}^{(k+1)} \frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}},
+\] 
+where, since $\frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}} = w_{ja}^{(k+1)}f'(u_{dj}^{(k)})$, we have
+
+\[
+\delta_{dj}^{(k)} = f'(u_{dj}^{(k)})\sum_{a=1}^{k_{k+1}}w_{ja}^{(k+1)}\delta_{da}^{(k+1)}.
+\]
+In matrix form:
+\begin{equation}
+\delta^{(k)} = f'(u^{(k)}) * (\delta^{(k+1)} @ (W^{(k+1)})^T).
+\end{equation}
+
+\subsubsection{Backward Propagation – Output Layer}
+
+For a regression problem with linear output and MSE loss:
+\[
+\delta_{d1}^{(l)} = (\hat{y}_d - y_d)(\hat{y}_d)' = (\hat{y}_d - y_d),
+\]
+and with the normalisation term:
+\begin{equation}
+\label{eq:capa_output}
+\delta^{(l)} = \frac{1}{N}(\hat{y} - y).
+\end{equation}
+Furthermore,
+\begin{equation}
+\frac{\partial J}{\partial b^{(k)}} = \mathrm{Sum}_1(\delta^{(k)}), \quad
+\frac{\partial J}{\partial U} = (h^{(l)})^T @ \delta^{(l)}, \quad
+\frac{\partial J}{\partial c} = \mathrm{Sum}_1(\delta^{(l)}),
+\end{equation}
+where $\mathrm{Sum}_1(A)$ denotes summation over the first axis.
+
+\begin{algorithm}[H]
+	\caption{Backward Propagation}
+	\textbf{Require:} Learning rate $\lambda$.\\
+	\begin{algorithmic}[1]
+	\State Perform forward propagation, store $(\hat{y}), (u^{(k)}), (h^{(k)})$.
+	\State Compute output error $\delta^{(l)}$ according to the output unit.
+	\State Update $U \gets U - \lambda \frac{\partial J}{\partial U}$, \quad $c \gets c - \lambda \frac{\partial J}{\partial c}$.
+	\For{$k = l,\dots,1$}
+		\State Compute $\delta^{(k)}$ using the hidden-layer recursion.
+		\State Evaluate $\frac{\partial J}{\partial W^{(k)}}, \frac{\partial J}{\partial b^{(k)}}$.
+		\State Update $W^{(k)} \gets W^{(k)} - \lambda \frac{\partial J}{\partial W^{(k)}}$.
+		\State Update $b^{(k)} \gets b^{(k)} - \lambda \frac{\partial J}{\partial b^{(k)}}$.
+	\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{remark}
+	The algorithm is applied to each mini-batch for several \textbf{epochs}. Increasing epochs generally decreases training error, but excessive training may degrade generalisation due to \textbf{overfitting}.
+\end{remark}
+
+\subsubsection{Regularisation}
+
+Neural networks are often large models; controlling their complexity is crucial. \textbf{Regularisation} techniques aim to reduce the generalisation error while retaining sufficient model capacity.
+
+\paragraph{L2 Regularisation.} Adds a quadratic penalty on weights:
+\[
+\tilde{J}(\bm{\theta}) = J(\bm{\theta}) + \frac{\alpha}{2}\|\bm{\theta}\|_2^2.
+\]
+The hyperparameter $\alpha$ controls the regularisation strength. Usually, only weights are penalised, not biases. In practice this corresponds to \textit{weight decay}:
+\[
+W^{(k)} \gets (1-\beta)W^{(k)} - \lambda \frac{\partial J}{\partial W^{(k)}}, \quad \beta = \lambda \alpha.
+\]
+
+
