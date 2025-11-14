@@ -173,9 +173,16 @@ Why is the quantile function useful?
 
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
-\felipe{Show the Gaussian distribution and present cdf, pdf quantile function and quantiles.}
+\begin{mdframed}[style=ejemplo, frametitle={\center Gaussian distribution}]
+In figure \ref{fig:gaussian_pdf} we can see the probability density function and the cumulative density function of the one dimensional Gaussian distribution. We will define this distribution in Section~\ref{cap:prob_Gaussian}.
 \end{mdframed}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/probability_gaussian_pdf_cdf.pdf}
+    \caption{Probability and cumulative density function.}
+    \label{fig:gaussian_pdf} 
+\end{figure}
 
 
 \subsubsection{Properties and identities}
@@ -355,7 +362,6 @@ Let us now consider $N$ Bernoulli trials, denoted $Y_i\sim \ber(\cdot|\theta), i
  \end{equation}
 which is known as the Binomial distribution, where $\binom{N}{s} = \frac{N!}{(N-s)!s!}$.
 
-
 \begin{mdframed}[style=ejemplo, frametitle={\center Logistic regression}]
 
 Within ML, the Bernoulli distribution is largely used for (probabilistic) classification. In such case we want to predict a binary variable $y\in\{0,1\}$, representing a sample being class 1 (and not class 0), conditional to some observed features $x\in\R^d$. We can then model $p(y=1)$ as 
@@ -373,10 +379,21 @@ where
 is the logistic function. 
 When we choose $f(x,\theta) = \theta_1^\top x + \theta_2$, we obtain the logistic regression model.
 
-\felipe{Show plots of Log Reg and sigmoid function.}
+We show the sigmoid function in Figure \ref{fig:sigmoid}. A visualisation of an adjusted logistic regression model was shown in Figure\ref{fig:lr_crickets}.
 \end{mdframed}
 
+\noindent\begin{minipage}{0.58\textwidth}
 The extension of the Bernoulli (resp.~Binomial) distribution to the multivariate case, i.e., when the output of the experiments take values on categories $\{1,2,\ldots,K\}$ with $K>2$ is known as the categorical (resp.~Multinomial). These distributions will be left for personal study. 
+\end{minipage}\hfill
+\begin{minipage}{0.4\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{img/probability_sigmoid.pdf}
+	\captionof{figure}{Visualisation of a sigmoid function.}
+	\label{fig:sigmoid}
+\end{minipage}
+
+\vspace{1cm}
+
 
 \subsubsection{Uniform distribution}
 \label{cap:prob_uniform}
@@ -479,7 +496,7 @@ Some observations about the MVN listed as follows:
 	\item Central in probabilistic ML: used in multivariate regression, Gaussian processes, PCA, and Bayesian inference.
 \end{itemize}
 
-\felipe{include some plots about Gaussian and MVN}
+Recall that figure \ref{fig:lr_crickets} shows a mixture of two two-dimensional Gaussian distributions with different covariance matrices.
 
 
 \subsubsection{Other distributions}
@@ -523,7 +540,6 @@ y = f(x) =
 \end{cases}
 \]
 
-\felipe{Plot the pmfs}
 \end{mdframed}
 
 The continuous case is a bit more involved, since we cannot directly sum over all possible values of the RV. However, we can work with the cdf to show that 
@@ -552,9 +568,16 @@ In the multivariate case, the CVT reads
  \end{equation}
  where $J_q(y) = \frac{dg(y)}{dy}$ is the Jacobian of $g=f^{-1}$. 
 
-  \begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
-\felipe{Give 1 or two examples with plots. They could be $\chi^2$, lognormal, uniform, half normal, etc.}
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: $\chi^2$ family of distributinons.}]
+A random variable $Z$ is said to distribute according to a $\chi^2$ (denoted $Z \sim \chi^2$) when $Z = \sum^k_{i=1} X^2_i$ for $X\sim\mathcal{N}(0,1)$. We provide a visualisation of the probability density function of $\chi^2$ distributions for various $k$ in Figure \ref{fig:parabola_momentum}.
 \end{mdframed}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/probability_xi-squared.pdf}
+    \caption{Gaussian distribution and $\chi^2$ distribution for different $k$ parameters.}
+    \label{fig:parabola_momentum}
+\end{figure}
 
 
 \subsection{Monte Carlo sampling}
