@@ -576,27 +576,29 @@ We visualise the effect of the different optimisers presented above in Figure \r
 
 \subsubsection{Network Architecture}
 
-As discussed previously, achieving good generalisation does not simply require arbitrarily wide networks. The \textbf{architecture} of a neural network refers to its overall structure: number of layers, neurons per layer, connectivity, and activation functions.
+The \textbf{architecture} of a neural network refers to its overall structure: number of layers, neurons per layer, connectivity, and activation functions.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=.5]{img/optimisation_nn.png}
 	\caption{A neural network of depth $l$.}
+	\label{fig:dnn}
 \end{figure}
 
-We adopt the following notation:
+We adopt the following notation (as illustrated in Fig.~\ref{fig:dnn}):
 \begin{equation}
 	h^{(k)} = f^{(k)}(h^{(k-1)}W^{(k)} + b^{(k)}), \quad k \in \{1,\dots,l\}, \quad h^{(0)} = x,
 \end{equation}
 \begin{equation}
 	\hat{y} = g(h^{(l)}U + c),
 \end{equation}
-where $g$ denotes the output activation defining the \textbf{output unit}.
+where $f$ is the activation function for all (hidden) neurons, and $g$ is the activation function of the \textbf{output neurons}. Furthermore, $h^{(k)}$ denotes the output of the $k$-th layer. 
 
 \subsubsection{Cost Function and Output Units}
 
 Unlike linear models, the use of nonlinear activations renders the cost function generally non-convex, so gradient descent does not guarantee convergence to a global optimum. Although least squares may be used, in practice one minimises the negative log-likelihood of a probabilistic model $p(y|\bm{x};\bm{\theta})$:
 \begin{equation}
+	\label{eq:loss_NN_optim}
 	J(\bm{\theta}) = -\E_{(\bm{x},\bm{y}) \sim \hat{p}_{\mathrm{data}}} [\log p_{\mathrm{model}}(\bm{y}|\bm{x})].
 \end{equation}
 The choice of output unit determines the appropriate likelihood and loss:
@@ -616,6 +618,13 @@ The choice of output unit determines the appropriate likelihood and loss:
 	\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}.
 	\]
 \end{enumerate}
+
+Recall that, in practice, since $p_{\mathrm{data}}$ in eq.~\eqref{eq:loss_NN_optim} is unknown, we optimise an empirical estimate of that loss given by 
+\begin{equation}
+	\label{eq:loss_NN_optim_emp}
+	J(\bm{\theta}) = -\sum_i \log p_{\mathrm{model}}(\bm{y}_i|\bm{x}_i).
+\end{equation}
+The rest of this section is devoted to the calculation of this loss and its gradient. 
 
 \subsubsection{Forward Propagation}
 
@@ -637,14 +646,13 @@ In a feedforward network, information flows from input $\bm{x}$ to output $\hat{
 
 \subsubsection{Backward Propagation – Preliminaries}
 
-The \textbf{backpropagation} algorithm propagates cost information backwards to compute gradients efficiently. While analytic gradients can be derived, automatic differentiation provides faster and more scalable computation, enabling modern deep learning.
+The \textbf{backpropagation} algorithm propagates cost information backwards to compute gradients efficiently. In practice, this is achieved by means of \textbf{automatic differentiation}, which provides fast and scalable computation, thus enabling modern deep learning.
 
 Assume training is performed in \textbf{mini-batches} $(x^d)_{d=1}^N$, enabling efficient matrix operations on GPUs. For an MSE loss in regression:
 \[
-J(\bm{X},\bm{\theta}) = \frac{1}{2N}\sum_{d=1}^N (\hat{y}_d - y_d)^2.
+J(\bm{X},\bm{\theta}) = \frac{1}{2N}\sum_{d=1}^N (\hat{y}_d - y_d)^2,
 \]
-
-Our goal is to update all weights $w_{ij}^{(k)}$. Using the chain rule:
+where $J_d=(\hat{y}_d - y_d)^2$, our goal is to update all weights $w_{ij}^{(k)}$. Using the chain rule:
 \[
 \frac{\partial J_d}{\partial w_{ij}^{(k)}} 
 = \frac{\partial J_d}{\partial u_{dj}^{(k)}} 
