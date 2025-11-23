@@ -109,8 +109,46 @@ denotes the probability of the event where the RV $X$ takes the value $x\in\cX$.
 \end{equation}
 \end{definition}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Discrete RV}]
-\felipe{Give an example, e.g., a dice, picking items and/or a infinite state space one}
+\begin{mdframed}[style=ejemplo, frametitle={\center Discrete RV: time to first heads}]
+
+
+Consider an infinite sequence of independent coin flips, each taking values
+\[
+X_i = 
+\begin{cases}
+	1, & \text{(Heads)} \\
+	0, & \text{(Tails)},
+\end{cases}
+\quad\text{with } \Pb(X_i=1)=p, \ \Pb(X_i=0)=1-p.
+\]
+Define the discrete random variable
+\[
+T = \min\{k \ge 1 : X_k = 1\},
+\]
+the \emph{time of the first heads}. Then $T$ takes values in $\{1,2,3,\dots\}$ and
+\[
+\Pb(T=k)
+= (1-p)^{k-1}p, \qquad k=1,2,\dots
+\]
+This is the \emph{geometric distribution}. Its cdf is
+\[
+F_T(k)
+= \Pb(T \le k)
+= 1-(1-p)^{k}, \qquad k=1,2,\dots
+\]
+and
+\[
+\E[T] = \frac{1}{p}, 
+\qquad 
+\V(T) = \frac{1-p}{p^{2}}.
+\]
+For the particular case of $p=1/2$, we have 
+\[
+\Pb(T=k)
+= \frac{1}{2^k}, \qquad k=1,2,\dots.
+\]
+Where it holds that $\sum_{k=1}^\infty \Pb(T=k) = \sum_{k=1}^\infty \frac{1}{2^k} = 1$.
+
 \end{mdframed}
 
 \subsubsection{Continuous RVs}
@@ -174,7 +212,7 @@ Why is the quantile function useful?
 
 
 \begin{mdframed}[style=ejemplo, frametitle={\center Gaussian distribution}]
-In figure \ref{fig:gaussian_pdf} we can see the probability density function and the cumulative density function of the one dimensional Gaussian distribution. We will define this distribution in Section~\ref{cap:prob_Gaussian}.
+In Figure \ref{fig:gaussian_pdf} we can see the probability density function and the cumulative density function of the one dimensional Gaussian distribution. We will define this distribution in Section~\ref{cap:prob_Gaussian}.
 \end{mdframed}
 
 \begin{figure}[ht]
@@ -205,7 +243,7 @@ The so called \textbf{product rule} is the decomposition of the joint law as fol
 \begin{equation}
 	p(x,y) = p(y|x)p(x),
 \end{equation}
-which allows to decompose the joint pmf/pdf using the law of the conditional event $X=x$ given that $Y=y$, and the marginal law of $Y$. A key consequence of the above expression is that, since the factorisation works in both ways, we have 
+which allows us to decompose the joint pmf/pdf using the law of the conditional event $X=x$ given that $Y=y$, and the marginal law of $Y$. A key consequence of the above expression is that, since the factorisation works in both ways, we have 
 \begin{equation}
 	p(x|y) = \frac{p(y|x)p(x)}{p(y)},
 \end{equation}
@@ -232,17 +270,22 @@ Let $A_i$ be the event that the car is behind door $i$, and $B$ the event that t
 \[
 P(A_1)=P(A_2)=P(A_3)=\tfrac{1}{3}.
 \]
-Given the rules,
+Given that you chose door 1, we have:
 \[
 P(B \mid A_1)=\tfrac{1}{2}, \quad P(B \mid A_2)=1, \quad P(B \mid A_3)=0.
 \]
 
-By Bayes’ theorem:
-\[
-P(A_1 \mid B)
-= \frac{P(B \mid A_1) P(A_1)}{P(B \mid A_1)P(A_1) + P(B \mid A_2)P(A_2) + P(B \mid A_3)P(A_3)}
-= \frac{(1/2)(1/3)}{(1/2)(1/3) + (1)(1/3)} = \tfrac{1}{3}.
-\]
+Bayes’ theorem states:
+\begin{align}
+	P(A_1 \mid B)
+	& = \frac{P(B \mid A_1) P(A_1)}{P(B)}\\
+	& = \frac{P(B \mid A_1) P(A_1)}{P(B \mid A_1)P(A_1) + P(B \mid A_2)P(A_2) + P(B \mid A_3)P(A_3)}\\
+	& = \frac{(1/2)(1/3)}{(1/2)(1/3) + (1)(1/3)}\\
+	& = \frac{1}{3}.	
+\end{align}
+
+
+
 Hence
 \[
 P(A_2 \mid B) = \tfrac{2}{3}.
@@ -387,7 +430,7 @@ The extension of the Bernoulli (resp.~Binomial) distribution to the multivariate
 \end{minipage}\hfill
 \begin{minipage}{0.4\textwidth}
 	\centering
-	\includegraphics[width=\textwidth]{img/probability_sigmoid.pdf}
+	\includegraphics[width=0.8\textwidth]{img/probability_sigmoid.pdf}
 	\captionof{figure}{Visualisation of a sigmoid function.}
 	\label{fig:sigmoid}
 \end{minipage}
@@ -461,7 +504,7 @@ The Gaussian distribution is widely used for modelling continuous RVs, this is, 
 	\item Central limit theorem: The scaled sum of multiple independent RVs, with different distributions, converges to a Gaussian RVs
 	\item The Gaussian distribution is the distribution with the maximum entropy (fewer structural assumptions) for a fixed variance
 	\item Its parameters are easy to interpret: the pdf is in fact parametrised by its mean and variance.
-	\item The maths are simple when using it in applications
+	\item The maths are simple: this is key in applications
 \end{itemize}
 
 \end{mdframed}
@@ -492,11 +535,11 @@ Some observations about the MVN listed as follows:
 \begin{itemize}
 	\item The mean vector $\boldsymbol{\mu}$ gives the expected value of each component.
 	\item The covariance matrix $\Sigma$ encodes the variance of each component and the pairwise correlations.
-	\item Linear transformations of Gaussian vectors are still Gaussian: if $\mathbf{X} \sim \cN(\boldsymbol{\mu},\Sigma)$ and $A$ is a matrix, $A\mathbf{X} + b \sim \cN(A\boldsymbol{\mu}+b, A \Sigma A^\top)$.
+	\item Linear transformations of Gaussian vectors are still Gaussian: if $\mathbf{X} \sim \cN(\boldsymbol{\mu},\Sigma)$ and $A$ is a matrix, $A\mathbf{X} + b \sim \cN(A\boldsymbol{\mu}+b, A \Sigma A^\top)$. This enables sampling of multivariate Gaussians with arbitrary mean and covariance.
 	\item Central in probabilistic ML: used in multivariate regression, Gaussian processes, PCA, and Bayesian inference.
 \end{itemize}
 
-Recall that figure \ref{fig:lr_crickets} shows a mixture of two two-dimensional Gaussian distributions with different covariance matrices.
+Recall that Figure \ref{fig:lr_crickets} shows a mixture of two two-dimensional Gaussian distributions with different covariance matrices.
 
 
 \subsubsection{Other distributions}
@@ -580,8 +623,8 @@ A random variable $Z$ is said to distribute according to a $\chi^2$ (denoted $Z 
 \end{figure}
 
 
-\subsection{Monte Carlo sampling}
-\label{cap:prob_mc}
+\subsection{Sampling}
+\label{cap:prob_sampling}
 
 Consider a set $\{x_1,x_2,\ldots,x_N\}$ of independent and identically distributed (i.i.d.) samples of an RV $X\sim p_X$. We are interested in approximating the law $p_X$, and also computing expectations wrt it. An empirical estimate of the law of $X$ is the so called \textbf{histogram}
 \begin{equation}
@@ -599,9 +642,9 @@ Notice that $P_N$ allows to compute (approximate) expectations. Let us consider 
 \begin{equation}
 	I_f \eqdef  \int f(x)p(x)dx \simeq f(x)P_N(x) = \frac{1}{N} \sum_{i=1}^{N} f(x_i) \eqdef I_N. 
 \end{equation}
-Due to the Strong Law of Large Numbers (SLLN), we know that $I_N$ gets \textbf{arbitrarily close} to $I_f$ as $N\to\infty$.
+Due to the Strong Law of Large Numbers (SLLN), we know that $I_N$ gets \textbf{arbitrarily close} to $I_f$ as $N\to\infty$. This approach to computing expectation is referred to as \textbf{Monte Carlo approximation}.
 
-A relevant question is how to generate the samples needed to approximate $P_N$, this is known as \textbf{sampling}. There are three main approaches to sample from distributions:
+A relevant question is how to generate the samples needed to approximate $P_N$, this is known as \textbf{sampling}. When sampling directly from a distribution is not possible, there are three main approaches to sampling as follows:
 
 \begin{itemize}
     \item \textbf{Rejection sampling:}  
@@ -631,6 +674,47 @@ A relevant question is how to generate the samples needed to approximate $P_N$, 
 \end{itemize}
 
 These methods are central to probabilistic machine learning, Bayesian inference, and situations where exact integration is intractable.
+
+\paragraph{Hierarchical sampling.}
+
+In some settings involving more than one random variable, sampling is naturally performed by
+\textbf{sampling in stages}.   In this case, a random variable $X$ is generated by first sampling an auxiliary variable
+$Z$, and then sampling $X$ conditional on $Z$.  
+This is called \textbf{hierarchical sampling} (or sampling from a hierarchical
+model).
+
+Formally, if $Z \sim p(z)$ and $X \mid Z=z \sim p(x \mid z)$ is possible to sample, then sampling from the \textbf{marginal} distribution $p(x)$ is obtained by:
+\[
+z \sim p(z), \qquad x \sim p(x \mid z).
+\]
+
+
+\begin{mdframed}[style=ejemplo, frametitle={\center Example: Gaussian mixture.}]
+	The Gaussian mixture model (GMM) is a random variable with a pdf given by a mixture of Gaussian components. For mixture weights $\pi_k \ge 0$, with $\sum_{k=1}^K \pi_k = 1$, and component
+	densities $X \mid Z=k \sim \mathcal{N}(\mu_k,\Sigma_k)$, the marginal density of $X$ is
+	\[
+	p(x)
+	= \sum_{k=1}^K \pi_k \,
+	\mathcal{N}(x \mid \mu_k,\Sigma_k).
+	\]
+	
+	When $K=2$, we can define the component index as the RV $Z \in \{1,2\}$. Therefore, a component can be chosen with
+	\[
+	\Pb(Z=1)=\pi,\qquad \Pb(Z=2)=1-\pi,
+	\]
+	and then as sample of $X$ can be obtained via: 
+	\[
+	X \mid (Z=1) \sim \mathcal{N}(\mu_1,\sigma_1^2),
+	\qquad
+	X \mid (Z=2) \sim \mathcal{N}(\mu_2,\sigma_2^2).
+	\]
+
+	\textbf{The extension to arbitrary $K>2$ is left as an exercise.} Notice that in this case, the component index $Z$ is given by a Categorical distribution with parameters $\pi_k \ge 0$, with $\sum_{k=1}^K \pi_k = 1$.
+\end{mdframed}
+
+
+
+
 
 
 
