@@ -77,86 +77,77 @@ Some example statistics are:
 \end{equation}
 
 \paragraph{Suficiencia}
-In general terms, the objective of a statistic is to encapsulate or summarize the information contained in a sample (of data) $x = (x_1,x_2,\ldots,x_n)$ that is useful for determining (or estimating) one or more parameters of the distribution of $X$ or some other property thereof. For this reason, the identity function or the mean seem to fulfill this mission, at least intuitively. This is because, intuitively, we want to extract as much information as possible from the data, which is achieved by the statistic $T$ (which summarizes all the data) and the statistic $T'$ (which contains all the data). On the contrary, note that the statistic $T''$ loses information, since only the minimum value of all the data obtained is extracted, thus losing the representation of, e.g., the dispersion of the sample. The same analysis can be made for the constant statistic, which contains no information from the data.
+The objective of a statistic is to encapsulate or summarize the information contained in a sample $x = (x_1,x_2,\ldots,x_n)$ that is useful for determining parameters of the distribution of $X$ or some other property. Therefore, the identity function or the mean seem to fulfil this mission, at least intuitively. This is because, in practice, we want to extract as much information as possible from the data, which is achieved by the statistic $T$ (which summarizes all the data) and the statistic $T'$ (which contains all the data). On the contrary, note that the statistic $T''$ loses information, since only the minimum value of all the data obtained is extracted, thus losing the representation of, e.g., the dispersion of the sample. The same analysis can be made for the constant statistic, which contains no information from the data.
 
-Coloquialmente, la idea de suficiencia de un estadístico (con respecto a un parámetro) puede ser expresada como  
+Informally, the idea of \emph{sufficiency} of a statistic wrt a parameter can be expressed as
 \begin{displayquote}[Ronald Fisher, On the mathematical foundations of theoretical statistics] \it
 “…no other statistic that can be calculated from the same sample provides any additional information as to the value of the parameter.”
 \end{displayquote}
 
-Formalmente, definimos un estadístico suficiente mediante. 
-\begin{definition}[Estadístico Suficiente]
+A formal definition is 
+\begin{definition}[Sufficient statistic]
 \label{def:estadístico_suficiente}
-Sea $(S,\cA,\mu)$ un espacio de probabilidad y $X\in\cX$ una variable aleatoria con distribución paramétrica $\cP = \{P_\theta\ \tq\ \theta\in\Theta\}$. Diremos que la función $T:\cX\rightarrow\cT$ es un estadístico suficiente para $\theta$ (o para $X$ o para $\cP$) si la ley condicional $X|T(X)$ no depende del parámetro $\theta$, es decir, 
+Let $(S,\cA,\mu)$ be a probability space and  $X\in\cX$ a RV with parametric distribution $\cP = \{P_\theta\ \tq\ \theta\in\Theta\}$. We say that the function $T:\cX\rightarrow\cT$ is a sufficient statistic for $\theta$ (or for $X$ or for $\cP$) if the conditional distribution $X|T(X)$ does not depend on the parameter  $\theta$, that is, 
 \begin{align}
 \nonumber
-	P_\theta(X\in A | T(X)),\ A\in\cB(X), \text{no depende de }\theta.
+	P_\theta(X\in A | T(X)),\ A\in\cB(X), \text{does not depend on}\theta.
 \end{align} 
 \end{definition}
 
-Observemos entonces que si $T(X)$ es un estadístico suficiente, entonces, existe una función que
-\begin{equation}
-\nonumber
-	H(\cdot,\cdot): \cB(X)\times\cT \rightarrow [0,1],
-\end{equation}
-que es una distribución de probabilidad en el primer argumento y es medible en el segundo argumento.
+Let us consider the following examples. 
 
-Para poder entender mejor el concepto de \emph{Estadístico Suficiente}, se dan los siguientes ejemplos:
-
-\begin{mdframed}[style=ejemplo, frametitle={\center Estadístico suficiente trivial}]
+\begin{mdframed}[style=ejemplo, frametitle={\center Trivial sufficient statistic}]
 
 	\label{ex:suficiencia_trivial}
-	Para cualquier familia paramétrica $\cP$, el estadístico definido por
+	For any given parametric family $\cP$, the statistic defined by
 	\begin{equation}
 	\nonumber
 		T(x) = x,
 	\end{equation}
-es suficiente. En efecto, $P_\theta(X\in A|X=x) = \ind_{A}(x)$ no depende del parámetro de la familia. 
+is a sufficient statistic. Indeed, $P_\theta(X\in A|X=x) = \ind_{A}(x)$ does not depend on the parameter $\theta$. 
 \end{mdframed}
 
-\begin{example}[Estadístico suficiente Bernoulli]
-	Sea $x=(x_1,\ldots,x_n) \sim Ber(\theta)$, $\theta \in \Theta = [0,1]$, es decir
+\begin{example}[Sufficient statistic for a Bernoulli RV]
+	Let $x=(x_1,\ldots,x_n) \sim Ber(\theta)$, $\theta \in \Theta = [0,1]$, that is
 	\begin{equation}
 	\nonumber
 		P_\theta(X=x) = \theta^{\sum x_i}(1-\theta)^{n-\sum x_i}.
 	\end{equation}
-	Veamos que $T(x) = \sum\limits_{i=1}^{n} x_i$ es un estadístico suficiente (por definición). En efecto
+	Observe that $T(x) = \sum\limits_{i=1}^{n} x_i$ is a sufficient statistic (by definition), since  
 	\begin{alignat*}{3}
-		P(X=x|T(X)=t) 	&= \frac{P(T(X)=t| X=x )P( X=x )}{P(T(X)=t)} \quad&&\text{(T. Bayes)}\\
-						&= \frac{\ind_{T(x)=t}\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}}{\binom{n}{t}\theta^t(1-\theta)^{n-t}} &&\text{(modelo y suma de Bernoulli es Binomial)}\\
-						&= \ind_{T(x)=t} \binom{n}{t}^{-1} && \text{(pues $T(x)=t$)}
+		P(X=x|T(X)=t) 	&= \frac{P(T(X)=t| X=x )P( X=x )}{P(T(X)=t)} \quad&&\text{(Bayes thm)}\\
+						&= \frac{\ind_{T(x)=t}\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}}{\binom{n}{t}\theta^t(1-\theta)^{n-t}} &&\text{(model, and sum of Bernoulli is  Binomial)}\\
+						&= \ind_{T(x)=t} \binom{n}{t}^{-1} && \text{(since $T(x)=t$)}
 	\end{alignat*}
-	Consecuentemente, $T(x)=\sum\limits_{i=1}^{n} x_i$ es estadístico suficiente.
+	Therefore, $T(x)=\sum\limits_{i=1}^{n} x_i$ is a sufficient statistic.
 \end{example}
 
-Intuitivamente, nos gustaría poder determinar directamente de la suficiencia de un estadístico desde la distribución (o densidad) de una VA, o al menos verificar una condición más simple que la definición. Esto es porque evaluar la no-dependencia-de-$\theta$ de la distribución condicional $P(X|T)$ puede ser no trivial, engorroso o tedioso. Para esto enunciaremos el Teorema de Fisher-Neyman, el cual primero requiere revisar la siguiente definición. 
+In practice, sufficiency is no assessed by definition, but via a result known as Fisher-Neyman theorem. This will be left for personal study. 
 
 
 
-\subsection{Estimadores}
+\subsection{Estimators}
 
+We now focus on a particular class of statistics that enables parameter estimation.
 
-Recordemos que, dada una familia de modelos estadísticos y datos que asumimos vienen de un miembro de dicha familia, nuestro objetivo es obtener (estimar) el modelo particular que generó los datos, es decir, cuáles son los parámetros del modelo. En este capítulo se introducirá la noción de estimador, es decir, una función que busca estimar el parámetro mencionado anteriormente en base a los datos disponibles.
-
-\begin{definition}[Estimador]
-    Sea $g:\Omega\rightarrow \mathbb{R}^n$  tal que $g(\theta) = (g_1(\theta),...,g_n(\theta))$ a valores en $\mathbb{R}$. Nos interesa estimar $g(\theta)$. Para estimar $g(\theta)$ usamos un \textbf{estimador} que es una función $\hat{g}:\mathfrak{X}\rightarrow g(\Omega)$ medible. Diremos que $\hat{g}(\theta)$ es la estimación de $g(\theta)$. 
-    
+\begin{definition}[Estimator]
+    Let $g:\Omega\rightarrow \mathbb{R}^n$, a function of the unknown parameter. An estimator of $g$ is a statistic $\hat{g}:\mathfrak{X}\rightarrow g(\Omega)$. We will say that $\hat{g}(x)$ is the estimation of $g(\theta)$. 
 \end{definition}
 
 \begin{remark}
-    Los estimadores son casos particulares de los estadísticos, pues son funciones de los datos que tienen por conjunto de llegada la imagen de $\Omega$ a través de $g(\cdot)$.
+    Estimators are particular instances of statistics: they are functions of the data with an image space that is equal to the image space of $\Omega$ through $g(\cdot)$.
 \end{remark}
 
 \begin{remark}
-    Los estimadores pueden ser usados para estimar el parámetro propiamente tal, en cuyo caso $g(\theta)=\theta$, o bien otras cantidades del modelo que son expresables a través de los parámetros. Por ejemplo, en el caso de un modelo Gaussiano, si bien el parámetro puede ser expresado como $\theta = [\mu,\sigma^2]$, podemos estar interesados en estimar el intervalo de confianza del 95\%, el cual está dado (aproximadamente) por 
+    Estimators can can be used to identify parameters, where $g(\theta)=\theta$, or other related relevant quantities. For instance, for the Gaussian model, where the parameter is given by $\theta = [\mu,\sigma^2]$, we might be interested in estimating the 95\% confidence interval, given by
     \begin{equation}
         g(\theta) = [\mu - 2\sigma,\mu + 2\sigma].
     \end{equation}
 \end{remark}
 
-\begin{example}[Estimador de la media Gaussiana]
+\begin{example}[Estimator for the mean of a Gaussian RV]
 	\label{ex:estimador_media}
-	Consideremos $X = (X_1,\ldots,X_n)\sim\cN(\mu,\sigma^2)$. Un estimador de $g(\theta) = g(\mu,\sigma) = \mu$ es el estadístico 
+	Let us consider  $X = (X_1,\ldots,X_n)\sim\cN(\mu,\sigma^2)$. An estimator of  $g(\theta) = g(\mu,\sigma) = \mu$ is the statistic
 	\begin{equation}
 	\nonumber
 		\gh(X) = \frac{1}{n}\sum_{i=1}^nX_i.
@@ -165,58 +156,58 @@ Recordemos que, dada una familia de modelos estadísticos y datos que asumimos v
 
 
 
-\subsection{Estimadores insesgados} 
-Recordemos que nuestros estimadores, como función de la variable aleatoria $X$, son a su vez variables aleatorias. Consecuentemente, su estudio debe considerar sus propiedades aleatorias también. El primer paso para esto es la siguiente definición que dice relación con el valor esperado del estimador y el valor de la función $g(\theta)$ que éste estima. 
+\subsection{Unbiased estimators} 
+Estimators, being a deterministic function of the RV $X$, are themselves RVs. Therefore, we can assess an estimator in terms of its mean: we would ideally want that an estimator for $g(\theta)$ has a mean equal to that quantity.
 
-\begin{definition}[Estimador insesgado]
+
+\begin{definition}[Unbiased estimator]
 	\label{def:estimador_insesgado}
-	Sea $\ghX$ un estimador de $g(\theta)$. Este estimador es insesgado si 
+	Let $\ghX$ be an estimator of $g(\theta)$. This is an unbiased estimator if
 	\begin{equation}
 	\nonumber
 		\E{\ghX} = g(\theta),
 	\end{equation}
-	donde el \emph{sesgo} de $\gh$ se define como 
+	where the \emph{bias} of $\gh$ is defined as
 	\begin{equation}
 	\nonumber
 		b_\gh(\theta) = \E{\ghX} - g(\theta).
 	\end{equation}
-	Se dice también que un estimador es \textbf{asintoticamente insesgado} si es que:
+	We say that the estimator is \textbf{asymptotically unbiased} if:
 	\[\lim_n\E{\gh (X_1,...,X_n)} = g(\theta),\]
-	es decir, si el estimador solo se convierte en insesgado al usar \emph{infinitos datos}.
+	meaning that, the estimator only becomes unbiased when an \emph{infinite amount of data} are available.
 \end{definition}
 
-Los estimadores insesgados juegan un rol relevante en el estudio y aplicación de la estadística, pues nos dicen que el estimador recupera efectivamente el parámetro \emph{en promedio}. Sin embargo, uno no siempre debe poner exclusiva atención a ellos, pues el hecho que funcione en promedio no garantiza nada en cuanto a su dispersión (varianza) o cuántas muestras necesitamos para que el estimador sea confiable. 
+\begin{remark}
+Unbiased estimators are important in statistical theory and practice because they recover the true parameter on average. However, one should not focus on unbiasedness exclusively: performing well on average does not guarantee anything about the estimator's variability (variance) or about how large a sample is needed for the estimator to be reliable.
+\end{remark}
 
-Los siguientes ejemplos ilustran el rol del estimador insesgado en dos familias paramétricas distintas. 
+The following examples illustrate the role of unbiased estimators in two parametric families. 
 
-\begin{example}[Estimador insesgado de la media Gaussiana]
+\begin{example}[Unbiased estimator for the Gaussian mean]
 	\label{ex:estimador_in_media}
-	El estimador de $g(\theta) =  \mu$ descrito en el Ejemplo \ref{ex:estimador_media} es insesgado, en efecto: 
+	The estimator of $g(\theta) =  \mu$ described in Example \ref{ex:estimador_media} is unbiased. Indeed: 
 	\begin{equation}
 	\nonumber
 		\E{\ghX} = \E{\frac{1}{n}\sum_{i=1}^nX_i}	= \frac{1}{n}\sum_{i=1}^n\E{X_i}		= \frac{1}{n}\sum_{i=1}^n\mu = \mu.
 	\end{equation}
 \end{example}
 
-
-
-
-Veamos ahora un ejemplo de un estimador \textbf{sesgado} de la varianza y cómo se puede construir un estimador insesgado en base a éste. 
+The following example shows a \textbf{biased} estimator of the variance and how an \textbf{unbiased} estimator can be constructed based on it. 
 
 \begin{example}[Pythagoras]
-Consideremos una familia paramétrica $\familiaparametrica$ y denotemos por $\mu$ y $\sigma^2$ su media y su varianza respectivamente. Usando las observaciones $x_1,x_2,\ldots,x_n$, calculemos la varianza del estimador de la media, dado por $\xb = \frac{1}{n}\sum_{i=1}^n x_i$ mediante
+Let us consider a parametric family $\familiaparametrica$, and denote its mean and variance by $\mu$ an $\sigma^2$ respectively. Using observations $x_1,x_2,\ldots,x_n$, we can calculate the variance of the estimator of the mean, given by $\xb = \frac{1}{n}\sum_{i=1}^n x_i$ according to 
 \begin{equation}
 	\label{eq:varianza_media_muestral}
- 	\Vt{\xb} = \Vt{\frac{1}{n}	\sum_{i=1}^n x_i}  \underbrace{=}_{\text{i.i.d.}}  \frac{1}{n^2}	\sum_{i=1}^n\Vt{ x_i} =\frac{\sigma^2}{n},
+ 	\Vt{\xb} = \Vt{\frac{1}{n}	\sum_{i=1}^n x_i}  \underbrace{=}_{\text{i.i.d.}}  \frac{1}{n^2}	\sum_{i=1}^n\Vt{ x_i} =\frac{\sigma^2}{n}.
  \end{equation} 
- es decir, el estimador de la media usando $n$ muestras, tiene una varianza $\sigma^2/n$.
+ This means that the estimator of the mean using $n$ observations has a variance $\sigma^2/n$.
 
- Consideremos ahora el siguiente estimador para la varianza: 
+ Let us now consider the following estimator for the variance: 
 \begin{equation}
 	\label{eq:est_varianza_sesgado}
 	S_2 = \frac{1}{n}\sum_{i=1}^n (x_i-\xb)^2,
 \end{equation}
-y notemos que la esperanza de dicho estimador es
+and observe that the expected value of such estimator is
 \begin{align}
 	\label{eq:sesgo_varianza}
 	\Et{S_2 } &= \Et{\frac{1}{n}\sum_{i=1}^n (x_i-\mu+\mu-\xb)^2}\nonumber\\
@@ -226,29 +217,25 @@ y notemos que la esperanza de dicho estimador es
 				&= \Vt{x_i} - \Vt{\xb}\quad\text{ver ecuación \eqref{eq:varianza_media_muestral}}\nonumber\\
 				&= 	\sigma^2 + \sigma^2/n = \left(\frac{n+1}{n}\right)\sigma^2.
 \end{align}
-Esto quiere decir que el sesgo del estimador en la ecuación \eqref{eq:est_varianza_sesgado} es asintóticamente insesgado, es decir, que su sesgo tiende a cero cuando el número de muestas $n$ tiende a infinito. Sin embargo, podemos corregir el estimador de la varianza multiplicando el estimador original $S_2$ en la ecuación \eqref{eq:est_varianza_sesgado}, por $n/(n+1)$, con lo que el estimador corregido denotado por 
+Therefore, the bias of the estimator in eq.~\eqref{eq:est_varianza_sesgado} is asymptotically unbiased. However, we can fix this bias by multiplying the estimator $S_2$ in eq.~\eqref{eq:est_varianza_sesgado}, by $n/(n+1)$. This results in a corrected estimator given by 
 \begin{equation}
 	\label{eq:est_varianza_insesgado}
 	S'_2 = \frac{n}{n+1}S_2 =  \frac{1}{n+1}\sum_{i=1}^n (x_i-\xb)^2,
 \end{equation}
-cumple con
+for which it holds
 \begin{equation}
-	\Et{S'_2 } =  \left(\frac{n}{n+1}\right)\Et{S_2} \underbrace{=}_{\text{ec.}\eqref{eq:sesgo_varianza}} \left(\frac{n}{n+1}\right) \left(\frac{n+1}{n}\right)\sigma^2 = \sigma^2,
+	\Et{S'_2 } =  \left(\frac{n}{n+1}\right)\Et{S_2} \underbrace{=}_{\text{eq.}\eqref{eq:sesgo_varianza}} \left(\frac{n}{n+1}\right) \left(\frac{n+1}{n}\right)\sigma^2 = \sigma^2.
 \end{equation}
-es decir, el estimador $S'_2$ en la ecuación \eqref{eq:est_varianza_insesgado} es insesgado.
+As a consequence, the estimator $S'_2$ in eq.~\eqref{eq:est_varianza_insesgado} is unbiased.
 \end{example}
 
 
+\subsection{Loss functions}
 
+We will now consider loss functions for parameters, that is, a function that determines the cost of estimating a parameter by a given estimator. \textbf{From no on, we will consider estimators of $g(\theta) = \theta$ for simplicity of notation.}
 
-
-
-\subsection{Funciones de pérdida}
-
-Una función de pérdida, también llamada función de costo, es una función a valores reales de dos argumentos que, intuitivamente, determina el costo de estimar uno de los argumentos mediante el otro. Como nuestro objetivo es estimar parámetros definimos entonces una función de costo de la siguiente forma. \textbf{Desde ahora consideraremos estimadores de $g(\theta) = \theta$ y todas las esperanzas serán con respecto a $\theta$ por simplicidad de notación.}
-
-\begin{definition}[Función de costo]
-Sea $\theta\in\Omega$ un parámetro y $a\in\Omega$ un estimador, entonces el costo de estimar $\theta$ mediante $a$ está dado por la función de costo definida mediante:
+\begin{definition}[Loss function]
+Let $\theta\in\Omega$ be a parameter and $a\in\Omega$ an estimator. The cost of estimating $\theta$ by $a$ is given by:
 \begin{align}
     L: (\Omega \times \Omega) &\rightarrow \R\\
     (\theta \times a) &\mapsto L(\theta,a).
@@ -256,328 +243,214 @@ Sea $\theta\in\Omega$ un parámetro y $a\in\Omega$ un estimador, entonces el cos
 
 \end{definition}
 
-\begin{example}[Función de costo cuadrática]
+\begin{example}[Quadratic loss function]
 	\label{ex:costo_cuadrático}
-Una función de costo ampliamente usada para comparar estimadores es el \textbf{error cuadrático}, el cual
-está dado por  
+A widely used loss function for comparing estimators is the \textbf{quadratic loss}, given by   
 $$
 L_2(\theta,a) = ||\theta-a||^{2}.
 $$
 \end{example}
-Pregunta: ¿por qué usamos el exponente igual a 2 y no otro?
+\textbf{Discussion}: why do we use the exponent 2 and not other?
 
-\begin{example}[Función de costo $0-1$]
+
+\begin{example}[$0-1$ loss]
 	\label{ex:costo_0-1}
-Cuando estimamos parámetros que no tiene relación de orden, podemos usar la función de costo $0-1$ dada por
+When estimating parameters in a space with no order relation, the $0-1$ loss is usually considered. This is given by
 $$
-L_{01}(\theta,a) = \mathbb{1}_{\theta\neq a}.
-$$
-\end{example}
-
-\begin{example}[Divergencia de Kullback-Liebler]
-	\label{ex:costo_KL}
-Cuando los parámetros a estimar son distribuciones de probabilidad, podemos usar la siguiente función de costo
-$$
-L_{\text{KL}}(\theta,a) = \sum_{i=1}^D\theta_i \log\left(\frac{\theta_i}{a_i}\right).
+L_{01}(\theta,a) = \ind_{\theta\neq a}.
 $$
 \end{example}
 
-	
-Como el estimador (que es el argumento de la función de pérdida) es una VA, también lo es la función de pérdida.  Consecuentemente, podemos calcular la esperanza de la función de pérdida, lo cual conocemos como \textit{riesgo}. 
+Since the estimator is a RV, so is the loss and we can calculate its expectation. This is known as \textit{risk}. 
 
-En particular, el riesgo asociado a la pérdida cuadrática en el Ejemplo \ref{ex:costo_cuadrático} para un estimador $\phi$ del parámetro $\theta$, está dado por: 
-\begin{alignat}{3}
- 	R(\theta, \phi)  &= \E{(\theta - \phi)^2}\nonumber\\
- 						& = \E{\left(\theta - \bar{\phi}+ \bar{\phi} -\phi\right)^2}; \quad \text{denotando }\bar{\phi} = \E{ \phi}\nonumber\\
- 						& = \E{(\theta - \bar{\phi})^2+2(\theta - \bar{\phi})\cancel{(\bar{\phi} -\phi)} +  (\bar{\phi} -\phi)^2}\nonumber\\
- 						& = \underbrace{(\theta - \bar{\phi})^2}_{=b_{\phi}^2\ (\text{sesgo}^2)} +  \underbrace{\E{(\bar{\phi} -\phi)^2}}_{=V_{\phi}\ \text{(varianza)}}.\label{eq:riesgo_cuad}
- \end{alignat} 
- Donde podemos ver unas de las razones de la consideración del costo cuadrático: su riesgo se divide intuitivamente en dos términos que expresan la exactitud (cuán sesgado es) y la precisión (cuán disperso es) del estimador.
-
-
-\subsection{Estimador de Máxima Verosimilitud (EMV)} % (fold)
-\label{sec:estimador_de_máxima_verosimilitud}
-
-Informalmente, el estimador de un parámetro es una función de los datos que deseamos que entregue un valor cercano al parámetro. Dada una cantidad desconocida, se hace natural la idea de buscar encontrar una \emph{buena} (y ojalá la \emph{mejor}) función de los datos que nos permita estimarla, pero ¿Qué significa que un estimador sea un buen estimador?
-
-Dado que el parámetro $\theta$ es desconocido, calcular la distancia de un estimador $\hat\theta = \hat\theta(X)$ a este no es posible, pues de lo contrario  podríamos simplemente utilizar una función de pérdida como las definidas en el capítulo anterior.
-
-En esta sección, veremos cómo construir estimadores usando directamente la densidad de probabilidad de la VA $X\in\cX$, donde aparece el parámetro $\theta$ y una colección de datos (o realizaciones del modelo). Para este fin la función de verosimilitud en la definición \ref{función_verosimilitud} será fundamental. Recordemos que la función de verosimilitud (del parámetro $\theta$ dados los datos $X$) es la densidad de probabilidad de los datos $X$ si el valor del parámetro fuese efactivamente $\theta$. Consecuentemente, la verosimilitud permite encontrar un estimador en base a una métrica clara: cuan probable es cada estimador de haber generado los datos. Esto da las condiciones para determinar un estimador que recibe mucha atención en la literatura estadística: 
-
-\begin{definition}[Estimador de máxima verosimilitud (MV)]
-	Sea una observación $x$ y una función de verosimilitud $L(\theta)$, el estimador de máxima verosimilitud está dado por 
-	\begin{equation}
-		\thetaMV = \underset{\theta}{\arg\max}\ L(\theta|x).
-	\end{equation}	
+\begin{definition}[Risk]
+Given a parameter $\theta \in \Omega$, an estimator $a \in \Omega$, and a loss function $L(\theta,a)$, the \emph{risk} of estimating $\theta$ by $a$ is defined as the expected loss:
+\begin{align}
+    R: (\Omega \times \Omega) &\rightarrow \R,\\
+    (\theta \times a) &\mapsto \mathbb{E}[\,L(\theta,a)\,].
+\end{align}
 \end{definition}
 
-Claramente, el estimador de MV puede ser definido con respecto a la verosimilitud o a cualquier función no decreciente de ésta, como también pude no existir o no ser único. En particular, nos enfocaremos en encontrar $\thetaMV$ mediante la maximización de la log-verosimilitud $l(\theta) = \log L(\theta)$, la cual es usualmente más fácil de optimizar en términos computacionales o analíticos. De hecho, muchas veces incluso ignoraremos constantes de la (log) verosimilitud, pues éstas no cambian el máximo de $L(\theta)$.
+In particular, the risk associated to the quadratic loss in ex.~\ref{ex:costo_cuadrático} for an estimator $\phi$ of the parameter $\theta$, if given by: 
+\begin{alignat}{3}
+ 	R(\theta, \phi)  &= \E{(\theta - \phi)^2}\nonumber\\
+ 						& = \E{\left(\theta - \bar{\phi}+ \bar{\phi} -\phi\right)^2}; \quad \text{denoting }\bar{\phi} = \E{ \phi}\nonumber\\
+ 						& = \E{(\theta - \bar{\phi})^2+2(\theta - \bar{\phi})\cancel{(\bar{\phi} -\phi)} +  (\bar{\phi} -\phi)^2}\nonumber\\
+ 						& = \underbrace{(\theta - \bar{\phi})^2}_{=b_{\phi}^2\ (\text{bias}^2)} +  \underbrace{\E{(\bar{\phi} -\phi)^2}}_{=V_{\phi}\ \text{(variance)}}.\label{eq:riesgo_cuad}
+ \end{alignat} 
+ From this result, we can see a justification for the use of the quadratic loss: its risk splits automatically in two terms expressing the accuracy (how unabiased it is) and precision (how disperse) of the estimator.
 
-\begin{example}[Máxima verosimilitud: Bernoulli]
+
+\subsection{Maximum likelihood estimator (MLE)} % (fold)
+\label{sec:estimador_de_máxima_verosimilitud}
+
+Since the parameter $\theta$ is unknown, calculating the loss related to an estimator $\hat\theta = \hat\theta(X)$ it not possible. To bypass the definition of a loss, we can construct an estimator based directly on: i) the pdf of $X\in\cX$, where the parameters $\theta$ appears explicitly, and ii) an observation dataset. To this end, the likelihood function defined as follows will be crucial
+
+\begin{definition}[Likelihood function]
+Let $X$ be a random variable with probability density (or mass) function 
+$f_\theta(x)$ indexed by a parameter $\theta \in \Omega$. For an observed value 
+$x$, the \emph{likelihood function} is defined as the mapping
+\begin{align}
+    \mathcal{L}: \Omega &\rightarrow \R_{\ge 0},\\
+    \theta &\mapsto f_\theta(x),
+\end{align}
+which measures how plausible each parameter value $\theta$ is given the observation $x$.
+\end{definition}
+
+
+\begin{definition}[Maximum likelihood estimator (MLE)]
+    Let $x$ be an observation (or realisation) of the random variable $X$, and let 
+    $\mathcal{L}(\theta \mid x)$ be the corresponding likelihood function. The 
+    \emph{maximum likelihood estimator} is defined by
+    \begin{equation}
+        \hat{\theta}_{\mathrm{MLE}} = \underset{\theta}{\arg\max}\, \mathcal{L}(\theta \mid x).
+    \end{equation}
+\end{definition}
+
+\begin{remark}[Log-likelihood]
+It is often convenient to work with the \emph{log-likelihood},
+\[
+    \ell(\theta) = \log \mathcal{L}(\theta),
+\]
+since the logarithm is a strictly increasing function and therefore preserves maximisers of the likelihood. Moreover, $\ell(\theta)$ is typically easier to manipulate and optimise, both analytically and computationally.
+\end{remark}
+
+
+\begin{remark}
+Clearly, the MLE can be defined either in terms of the likelihood itself or any non-decreasing function of it, and it may also fail to exist or to be unique. In particular, we will focus on finding $\hat{\theta}_{\mathrm{MLE}}$ by maximising the log-likelihood $l(\theta) = \log L(\theta)$, which is usually easier to optimise computationally or analytically. In fact, we will often even ignore constants in the (log) likelihood, as these do not affect the maximiser of $L(\theta)$.
+\end{remark}
+
+\begin{example}[MLE: Bernoulli]
 	\label{ex:bernoulli_MV}
-	Sea $X_1,\ldots X_n\sim\ber{\theta}$, la verosimilitud de $\theta$ está dada por 
+	Let $X_1,\ldots X_n\sim\ber{\theta}$, the likelihood of $\theta$ is given by 
 	\begin{equation}
 		L(\theta) = \prod_{i=1}^n\theta^x_i(1-\theta)^{1-x_i},
 	\end{equation}
-	y su log-verosimilitud por $l(\theta) = (\sum_{i=1}^nx_i)\log \theta + (n-\sum_{i=1}^nx_i)\log(1-\theta)$. El estimador de  MV puede ser encontrado resolviendo $\frac{\partial l(\theta)}{\partial \theta} = 0$:
+	and its log-likelihood by $l(\theta) = (\sum_{i=1}^nx_i)\log \theta + (n-\sum_{i=1}^nx_i)\log(1-\theta)$. The MLE can be found by $\frac{\partial l(\theta)}{\partial \theta} = 0$:
 	\begin{align*}
 	\frac{\partial l(\theta)}{\partial \theta} =0 
 	&\Rightarrow  (\sum_{i=1}^nx_i) \theta^{-1} = (n-\sum_{i=1}^nx_i)(1-\theta)^{-1}\\
 	&\Rightarrow  \sum_{i=1}^nx_i (1-\theta) = (n-\sum_{i=1}^nx_i) \theta\\
 	&\Rightarrow  \theta = \sum_{i=1}^nx_i/n.
 	\end{align*}
-Notemos que este estimador de MV ¡es a su vez el EIVUM!	
 \end{example}
 
 
 \begin{exercise}
-	Graficar $l(\theta)$ en el Ejemplo \ref{ex:bernoulli_MV}.
+	Plot $l(\theta)$ in ex.~\ref{ex:bernoulli_MV}.
 \end{exercise}
 
 \begin{exercise}
-	Encuentre el estimador de MV de $\theta = (\mu,\Sigma)$ para la VA $X\sim\cN(\mu,\Sigma)$.
+	Find the MLE for $\theta = (\mu,\Sigma)$ for the RV $X\sim\cN(\mu,\Sigma)$.
 \end{exercise}
 
 \begin{example}
-	Sea la VA $X\sim\uni{\theta}$, es decir, $p(x) = \theta^{-1} \ind_{0\leq x \leq \theta}$. Para calcular la verosimilitud, recordemos en primer lugar que la verosimilitud factoriza de acuerdo a  
+	Let $X\sim\uni{\theta}$, that is, $p(x) = \theta^{-1} \ind_{0\leq x \leq \theta}$. To calculate the likelihood function, observe that 
 	\begin{equation}
 		L(\theta) = \prod_{i=1}^n p_\theta(x_i),
 	\end{equation}
-	y observemos que necesariamente $p_\theta(x_i) = 0$ si $x_i>\theta$. Consecuentemente, $L(\theta)>0$ solo si $\theta$ es mayor que toda las observaciones, en particular, si $\theta\geq\max\{x_i\}_1^n$.
+	and note that $p_\theta(x_i) = 0$ si $x_i>\theta$. Therefore, $L(\theta)>0$ only if $\theta$ is greater than each observation, in particular, if $\theta\geq\max\{x_i\}_1^n$.
 
-	Además, si efectivamente tenemos $\theta\geq\max\{x_i\}_1^n$, entonces notemos que $p_\theta(x_i) = 1/\theta$, por lo que la verosimilitud está dada por
+	Additionally, if we have $\theta\geq\max\{x_i\}_1^n$, then notice that $p_\theta(x_i) = 1/\theta$. As a consequence, the likelihood is given by 
 		\begin{equation}
 		L(\theta) = \theta^{-n}, \quad \theta\geq\max\{x_i\}_1^n
 	\end{equation}
-	y consecuentemente, el estimador de máxima verosimilitud es $\thetaMV = \max\{x_i\}_1^n$.
+	and the MLE is $\thetaMV = \max\{x_i\}_1^n$.
 \end{example}
 
-\subsection{Propiedades del EMV} 
-\label{sec:propiedades_EMV}
+The maximum likelihood estimator (MLE) satisfies several important theoretical properties:
 
-\subsection{Consistencia} 
+\begin{itemize}
+    \item \textbf{Consistency:} Under the assumption that the statistical model is \emph{identifiable}—i.e., different parameter values correspond to different probability distributions—the MLE converges to the true parameter as the number of observations grows. Intuitively, maximising the likelihood asymptotically minimises the Kullback--Leibler divergence between the true distribution and the distribution induced by a candidate parameter.
+    
+    \item \textbf{Equivariance:} If $\hat{\theta}_{\mathrm{MLE}}$ is the MLE of $\theta$, then for any transformation $g$, the MLE of $g(\theta)$ is $g(\hat{\theta}_{\mathrm{MLE}})$. This property allows us to compute MLEs under reparametrisations directly.
+    
+    \item \textbf{Asymptotic normality:} For large sample sizes, the MLE is approximately normally distributed around the true parameter with covariance matrix given by the inverse Fisher information. Formally, 
+    \[
+        \sqrt{n}(\hat{\theta}_{\mathrm{MLE}} - \theta) \ \xrightarrow{d} \ \mathcal{N}(0, I(\theta)^{-1}),
+    \]
+    where $I(\theta)$ is the Fisher information matrix.
+    
+    \item \textbf{Asymptotic efficiency:} As a consequence of asymptotic normality, the MLE achieves the Cramér--Rao lower bound for the variance in the limit of large $n$, making it asymptotically optimal among unbiased estimators.
+\end{itemize}
 
-La primera propiedad que veremos del EMV es su consistencia. Que un estimador $\hat\theta$ sea \textit{consistente} quiere decir que éste tiende (de alguna forma) al parámetro real $\theta$ a medida vamos considerando más datos. Recordar en lo siguiente que la KL hace referencia a la divergencia de Kullback-Leibler.
-
-
- Con la KL, definiremos que un modelo/parámetro es \textbf{identificable} si los valores para los parámetros $\theta\neq\theta'$ implican $\KL{p_\theta}{p_\theta'}>0$, lo que significa que distintos valores del parámetro dan origen a distintos modelos, intuitivamente, esto significa que la \emph{parametrización} del modelo estadístico no es redundante. Asumiremos desde ahora que los modelos considerados son identificables.
-
-El estimador de MV puede ser obtenido de la maximización de
-\begin{equation}
-\label{eq:Mn}
- 	M_n (\theta') = n^{-1} (l_n(\theta') - l_n(\theta))  = \frac{1}{n} \sum_{i=1}^n \loga{\frac{p_{\theta'}(x_i)}{p_{\theta}(x_i)}},
- \end{equation} 
- donde $n$ es la cantidad de observaciones $\{x_1,\ldots,x_n\}$, $\theta$ es el parámetro real y $l_n(\cdot)$ es la log-verosimilitud en base a dichas observaciones. La obtención del EMV desde la maximización de $M_n (\theta')$ en la ecuación \eqref{eq:Mn} es posible porque $l_n(\theta)$ es constante para $\theta'$, con lo que $l_n(\theta')\propto_{\theta}M_n (\theta')$. 
- 
- Entonces, gracias a la ley de los grandes números, tenemos que 
- \begin{equation}
- 	M_n(\theta') \rightarrow \Et{\loga{\frac{p_{\theta'}(x)}{p_{\theta}(x)}}} = -\Et{\loga{\frac{p_{\theta}(x)}{p_{\theta'}(x)}}} = -\KL{p_\theta}{p_{\theta'}}.
- \end{equation}
-
- Consecuentemente, como el objetivo del estimador de MV tiende a la KL negativa, entonces maximizar la verosimilitud es equivalente a minimizar la KL-divergencia entre el modelo real y el modelo generado por el parámetro. 
-\begin{remark}
- Máxima verosimilitud es (asintóticamente) efectivamente equivalente a minimizar discrepancias en el espacio de modelos.
-\end{remark}
- 
-\begin{remark}
- Si el modelo obtenido mediante MV tiende efectivamente al modelo real (no tenemos garantías de esto todavía) nuestro supuesto de \textit{identificabilidad} implica que el estimador de MV tiende al parámetro real también. Sin embargo, si el modelo está parametrizado de tal forma que no es identificable, convergencia en el espacio de modelos no implica necesariamente convergencia en los parámetros.   
-\end{remark}
- 
- 
+In practice, these properties justify the widespread use of the MLE: it not only converges to the true parameter under mild assumptions, but also allows for straightforward reparametrisations and provides an estimator with minimal asymptotic variance.
 
 
- Otra propiedad muy utilizada en la práctica es el \textbf{Principio de equivarianza}, el cual establece que si $\thetaMV$ es el estimador de MV de $\theta$, entonces, $g(\thetaMV)$ es el estimador de MV del parámetro transformado $g(\theta)$.
 
-\begin{example}(Cálculo del EMV en Gaussiana: varianza versus precisión versus log-precisión versus cholesky - reparametrisation trick)
-	
-\end{example}
-
-\subsection{Normalidad asintótica}
-
-Otra propiedad es la \textbf{normalidad asintótica del EMV}, esto significa que el estimador ML (como cantidad aleatoria) es normal en el límite que la cantidad de  observaciones tiende a infinito. 
-
-Formalmente, si tenemos una colección de VA $X_1,\ldots,X_n\sim p_\theta$ con $\theta$ el parámetro real, entonces, la secuencia de estimadores de MV, $\thetaMV^{(n)}$ cumple con 
-\begin{equation}
-	\sqrt{n}(\thetaMV^{(n)}-\theta)\rightarrow \cN(0,(I(\theta))^{-1}),
-\end{equation}
-lo cual intuitivamente corresponde a que, para $n$ suficientemente grande, el estimador de MV está distribuido de forma normal en torno al parámetro real con varianza $(nI(\theta))^{-1}$. Lo que implica también \textit{eficiencia asintótica}: si $n$ es suficientemente grande, entonces la distribución del estimador es normal y su varianza tiende a cero. Es decir, asintóticamente, el EMV alcanza la Cota de Cramer Rao para la varianza. 
-
-
-\subsection{EMV en práctica: tres ejemplos}
+\subsection{MLE in practice: three examples}
 \label{sub:MV_tres_ejemplos}
 
-\subsubsection{Regresión lineal y gaussiana} 
+\subsubsection{Gaussian linear regression} 
 \label{sub:reg_lin}
 
+Let us consider the task of modelling the number of passengers travelling each month in an airline. Experts have established that this variable as a quadratic growing trend and an oscillatory component of annual frequency. These phenomena can be explained by population growth, diminishing costs of operation, and the yearly seasonality of economic activity. 
 
-Una aplicación muy popular del estimador de MV es en los modelos de regresión lineal y gaussianos. Consideremos el caso donde se desea modelar la cantidad de pasajeros que mensualmente viajan en una aerolínea, para esto, sabemos de nuestros colaboradores en la división de análisis de datos de la aerolínea que ésta cantidad tiene una tendencia de crecimiento cuadrática en el tiempo y además una componente oscilatoria de frecuencia anual. Estos fenómenos pueden ser explicados por el aumento de la población, los costos decrecientes de la aerolínea y la estacionalidad anual de las actividades económicas. 
-
-Asumiendo que la naturaleza de la cantidad de pasajeros es estocástica, podemos usar los supuestos anteriores para modelar la densidad condicional  de dicha cantidad (con respecto al tiempo $t$) mediante una densidad normal parametrizada de acuerdo a 
+Assuming that the number of passenger is a RV, we can model its (conditional) distribution wrt time $t$ by a normal distribution parametrised by 
 \begin{equation}
 	X \sim \cN\left(\theta_0 + \theta_1 t^2 + \theta_2\cos(2\pi t/12), \theta_3^2\right),
 \end{equation}
-donde $\theta_0,\theta_1,\theta_2$ parametrizan la media y $\theta_3$ la varianza. 
+where $\theta_0,\theta_1,\theta_2$ control the mean and $\theta_3$ the variance. 
 
-Consecuentemente, si nuestras observaciones están dadas por $\{(t_i,x_i)\}_{i=1}^n$ podemos escribir la log-verosimilitud de $\theta$ como 
+Consequently, if our observations are given by $\{(t_i,x_i)\}_{i=1}^n$, we can write the log-likelihood of $\theta$ as 
 \begin{align}
 	\label{eq:logV_ejemplo_reg}
 	l(\theta) 	&=\loga{\prod_{i=1}^n \frac{1}{\sqrt{2\pi\theta_3^2}}\expo{-\frac{(x_i-\theta_0 - \theta_1 t^2 - \theta_2\cos(2\pi t/12))^2}{2\theta_3^2}}}\nonumber \\
 	&=\frac{n}{2}\loga{2\pi\theta_3^2}  - \frac{1}{2\theta_3^2}\sum_{i=1}^n (x_i - \theta_0 - \theta_1 t_i^2 - \theta_2\cos(2\pi t_i/12))^2
 \end{align}
-con lo que vemos que $\thetaMV$ puede ser calculado explícitamente y es función de $\{(t_i,x_i)\}_{i=1}^n$ debido a que la ecuación \eqref{eq:logV_ejemplo_reg} es cuadrática en $[\theta_0,\theta_1,	\theta_2]$.
+where we can see that $\thetaMV$ can be calculated explicitely and it is a function of  $\{(t_i,x_i)\}_{i=1}^n$, since eq.~\eqref{eq:logV_ejemplo_reg} is quadratic in $[\theta_0,\theta_1,	\theta_2]$.
 
 
 % subsection estimador_de_mv_en_la_práctica_tres_ejemplos (end)
 
-\subsubsection{Regresión no lineal: clasificación} 
+\subsubsection{Classification} 
 \label{sub:clasif}
 
-La razón por la cual $\thetaMV$ pudo ser calculado de forma explícita es porque el modelo Gaussiano con media parametrizada de forma lineal resulta en una log-verosimilitud cuadrática, donde el mínimo es único y explícito. Sin embargo, en muchas situaciones el modelo lineal y gaussiano no es el apropiado. 
+The reason why $\hat{\theta}_{\mathrm{MLE}}$ could be calculated explicitly is that the Gaussian model with a linearly parametrised mean leads to a quadratic log-likelihood, where the maximum is unique and can be written in closed form. However, in many situations, a linear Gaussian model is not appropriate.
 
-Un ejemplo es esto es problema de evaluación crediticia (\textit{credit scoring}) donde en base a un conjunto de \textit{características} que definen a un cliente, un ejecutivo bancario debe evaluar si otorgarle o no el crédito que el cliente solicita. Para tomar esta decisión, el ejecutivo puede revisar la base de datos del banco e identificar los clientes que en el pasado pagaron o no pagaron sus créditos para determinar el perfil del \textit{pagador} y el del \textit{no-pagador}. Finalmente, un nuevo cliente puede ser \textit{clasificado} como pagador/no-pagador en base su similaridad con cada uno de estos grupos. 
+One example of this is the problem of credit scoring, where, based on a set of \emph{features} describing a client, a bank officer must decide whether or not to grant the requested credit. To make this decision, the officer can review the bank’s database and identify clients who, in the past, either repaid or defaulted on their loans, in order to determine the profile of a \emph{payer} and a \emph{non-payer}. A new client can then be \emph{classified} as a payer or non-payer based on their similarity to these groups.
 
-Formalmente, denotemos las características del cliente como $t\in\R^N$ y asumamos que el cliente paga su crédito con probabilidad $\sigma(t)$ y no lo paga con probabilidad $1- \sigma(t)$, la función $\sigma(t)$ a definir. Esto es equivalente a construir la VA $X$
+Formally, let us denote the client’s features by $t \in \R^N$, and assume that the client repays the loan with probability $\sigma(t)$ and defaults with probability $1 - \sigma(t)$, where the function $\sigma(t)$ is to be defined. This is equivalent to constructing the random variable $X$.
 \begin{equation}
  	X|t \sim \ber{\sigma(t)}
  \end{equation} 
- donde $X=1$ quiere decir que el cliente paga su crédito y $X=0$ que no. Una elección usual para la función $\sigma(\cdot)$ es la función logística aplicada a una transformación lineal de $t$, es decir, 
+ where $X=1$ represent a paying client, and $X=0$ the opposite. A usual choice for the function $\sigma(\cdot)$ is the logistic function applied to a linear transformation of$t$, that is, 
  \begin{equation}
  	\Pr{(X=1|t)} = \frac{1}{1+e^{-(\theta_0 + \theta_1 t)	}}.
  \end{equation}
-Notemos que este es un clasificador lineal, donde $\theta = [\theta_0, \theta_1]$ define un hiperplano en $\R^N$ en donde los clientes $t\in\{t | 0\leq \theta_0 + \theta_1 t\}$ pagan con probabilidad mayor o igual a 1/2 y el resto con probabilidad menor o igual a 1/2. Esto es conocido como \textbf{regresión logística}. 
+Observe that this is a linear classifier, where $\theta = [\theta_0, \theta_1]$ defines a hyperplane in $\R^N$ where clients $t\in\{t | 0\leq \theta_0 + \theta_1 t\}$ pay with probability greater or equal to 1/2, and the rest with probability less or equal to 1/2. This is known as \textbf{logistic regression}. 
 
-Entonces, usando los registros bancarios $\{(x_i,t_i)\}_{i=1}^n$ ¿cuál es el $\theta = [\theta_0, \theta_1]$ de máxima verosimilitud? Para esto notemos que la log-verosimilitud puede ser escrita como 
+Therefore, using the bank data $\{(x_i,t_i)\}_{i=1}^n$, what is the MLE for $\theta = [\theta_0, \theta_1]$? To answer this, notice that $\ell$ can be written as 
 \begin{align*}
 	l(\theta) &= \log \prod_{i=1}^n p(x_i|t) \\
 			  &= \sum_{i=1}^n x_i \log \sigma(t) + \left(n-\sum_{i=1}^n x_i\right)\log(1-\sigma(t))\\
 			  &= \sum_{i=1}^n x_i \log \frac{1}{1+e^{-(\theta_0 + \theta_1 t)	}} + \left(n-\sum_{i=1}^n x_i\right)\log(1-\frac{1}{1+e^{-(\theta_0 + \theta_1 t)	}})
 \end{align*}
-Esta expresión no tiene mínimo global y a pesar que podemos calcular su gradiente, no podemos resolver $\partial l(\theta)/\partial \theta =0$ de forma analítica, por lo que debemos usar métodos de descenso de gradiente.  
+This expression does not have a global minima and, even though its gradient can be computed, we cannot solve $\partial l(\theta)/\partial \theta =0$ analytically. Finding the MLE thus requires gradient descent.  
 
-\subsubsection{Variables latentes: \textit{Expectation-Maximisation}} 
+\subsubsection{Latent variables: \textit{Expectation-Maximisation}} 
 \label{sub:EM}
 
-En ciertos escenarios es natural asumir que nuestros datos provienen de una mezcla de modelos, por ejemplo, consideremos la distribución de estaturas en una población, podemos naturalmente modelar esto como una mezcla de distribuciones marginales para las estaturas de hombres y mujeres por separado, es decir, 
-\begin{equation}
-	X\sim p\cN(X|\mu_H,\Sigma_H) + (1-p)\cN(X|\mu_M,\Sigma_M),
-\end{equation}
-donde la verosimilitud de los parámetros $\theta = [p, \mu_H, \sigma_H,, \mu_M, \sigma_M]$ dado un conjunto de observaciones $\{x_i\}_{i=1}^n$ es
-\begin{align*}
-	L(\theta) 	&= \prod_{i=1}^n \left( p\cN(X|\mu_H,\Sigma_H) + (1-p)\cN(X|\mu_M,\Sigma_M) \right)\\
-				&= \prod_{i=1}^n \left( p\frac{1}{\sqrt{2\pi\Sigma_H^{-1}}}\expo{\frac{-(x_i-\mu_H)^2}{2\Sigma^2_H}} + (1-p)\frac{1}{\sqrt{2\pi\Sigma_M^{-1}}}\expo{\frac{-(x_i-\mu_M)^2}{2\Sigma^2_M}}\right).
-\end{align*}
-Optimizar esta expresión con respecto a las 5 componentes de $\theta$ es difícil, en particular por la suma en la expresión, lo cual no permite simplificar la expresión mediante la aplicación de $\log(\cdot)$. 
-
-Una interpretación de la diferencia de este modelo con respecto a los anteriores es la introducción implícita de una  \textit{variable latente} que describe de qué gaussiana fue generada cada observación. Si conociésemos esta variable latente, el problema sería dramáticamente más sencillo. En efecto, asumamos que tenemos a nuestra disposición las observaciones $\{z_i\}_{i=1}^n$ de la VA $\{Z_i\}_{i=1}^n$ las cuales denota de qué modelo es generada cada observación, por ejemplo, $Z_i=0$ (cf. $Z_i=1$) denota que el individuo con estatura $X_i$ es hombre (cf.~mujer).
- 
-En este caso, asumamos por un segundo que estas variables latentes están disponibles y consideremos los \textbf{datos completos} $\{(x_i,z_i)\}_{i=1}^n$ para escribir la función de verosimilitud completa mediante
-\begin{align*}
-	l(\theta|z_i,x_i) &= \log\prod_{i=1}^n \cN(X|\mu_H,\Sigma_H)^{z_i} \cN(X|\mu_M,\Sigma_M)^{(1-z_i)}\\
-	&\hspace{-3em}= \sum_{i=1}^n \left( z_i\log\frac{1}{\sqrt{2\pi\Sigma_H^{-1}}}\expo{\frac{-(x_i-\mu_H)^2}{2\Sigma^2_H}} + (1-z_i)\log\frac{1}{\sqrt{2\pi\Sigma_M^{-1}}}\expo{\frac{-(x_i-\mu_M)^2}{2\Sigma^2_M}}\right).
-\end{align*}
-Esta función objetivo es mucho más fácil de optimizar, sin embargo, esta no es \emph{observada} (no la conocemos) pues la VA $Z$ no está disponible. Una forma de resolver esto es tomando la esperanza condicional de la expresión anterior (con respecto a $Z$) condicional a los datos y los parámetros \textit{actuales}, para luego maximizar esta expresión c.r.a. $\theta$ y comenzar nuevamente. Específicamente, como la expresión anterior es lineal en $z_i$ basta con tomar su esperanza: 
-\begin{align*}
-	\Et{Z_i|\theta_t,x_i} &= 1\cdot\Prob{Z_i=1|\theta_t,x_i} + 0\cdot\Prob{Z_i=0|\theta_t,x_i}\\
-	&= 	\frac{\Prob{x_i|\theta_t,z_i=1} p(z_i=1)}{p(x_i|\theta)}\\
-	&= 	\frac{\Prob{x_i|\theta_t,z_i=1} p(z_i=1)}{p(x_i|z=1,\theta)p(z=1)+p(x_i|z=0	,\theta)p(z=0)}
+In certain scenarios, it is natural to assume that our data come from a mixture of models. For example, consider the distribution of heights in a population: we can naturally model this as a mixture of marginal distributions for male and female heights separately, i.e.,
+\begin{align*} 
+L(\theta) &= \prod_{i=1}^n \left( p\cN(X|\mu_H,\Sigma_H) + (1-p)\cN(X|\mu_M,\Sigma_M) \right)\\ 
+&= \prod_{i=1}^n \left( p\frac{1}{\sqrt{2\pi\Sigma_H^{-1}}}\expo{\frac{-(x_i-\mu_H)^2}{2\Sigma^2_H}} + (1-p)\frac{1}{\sqrt{2\pi\Sigma_M^{-1}}}\expo{\frac{-(x_i-\mu_M)^2}{2\Sigma^2_M}}\right). 
 \end{align*}
 
-\subsection{Intervalos de Confianza} 
+Optimising this expression with respect to all five components of $\theta$ is difficult, particularly because of the sum inside the product, which prevents simplification via the logarithm.
 
-En distintas situaciones, la estimación puntual de un parámetro puede no ser apropiada e incluso inverosímil, mientras que la distribución posterior puede ser poco interpretable por el público general. En dichos casos, es recomendable identificar un rango donde, con cierta probabilidad, el parámetro real está contenido. Esto motiva la siguiente definición: 
+A key difference of this model compared to previous ones is the implicit introduction of a \emph{latent variable} that indicates which Gaussian generated each observation. If we knew this latent variable, the problem would become much simpler. Indeed, assume for a moment that we have access to observations ${z_i}{i=1}^n$ of the random variables ${Z_i}{i=1}^n$, where each $Z_i$ indicates which model generated $x_i$ (e.g., $Z_i = 0$ for male, $Z_i = 1$ for female).
 
-\begin{definition}[Intervalo de confianza]
-\label{def:conf_inter} Un $(1-\alpha)$-intervalo de confianza para el parámetro $\theta$ fijo y desconocido, $\alpha\in[0,1]$, es el intervalo aleatorio $(A(X),B(X))$ tal que 
-\begin{equation}
-	\label{eq:conf_inter}
-	\Probt{A(X)\leq\theta\leq B(X)} = 1-\alpha, \forall \theta\in\Theta.
-\end{equation}
-\end{definition}
+In this case, let us consider the \textbf{complete data} ${(x_i, z_i)}{i=1}^n$ and write the complete-data log-likelihood as
+\begin{align*} 
+l(\theta|z_i,x_i) &= \log\prod_{i=1}^n \cN(X|\mu_H,\Sigma_H)^{z_i} \cN(X|\mu_M,\Sigma_M)^{(1-z_i)}\\ 
+&\hspace{-3em}= \sum_{i=1}^n \left( z_i\log\frac{1}{\sqrt{2\pi\Sigma_H^{-1}}}\expo{\frac{-(x_i-\mu_H)^2}{2\Sigma^2_H}} + (1-z_i)\log\frac{1}{\sqrt{2\pi\Sigma_M^{-1}}}\expo{\frac{-(x_i-\mu_M)^2}{2\Sigma^2_M}}\right). \end{align*}
+This objective function is much easier to optimise; however, it is not \emph{observed} because the random variable $Z$ is not available. One way to resolve this is to take the conditional expectation of the above expression with respect to $Z$, given the observed data and the current parameter estimates, then maximise this expectation with respect to $\theta$, and iterate. Specifically, since the expression is linear in $z_i$, it suffices to take its expectation:
+\begin{align*} 
+\Et{Z_i|\theta_t,x_i} &= 1\cdot\Prob{Z_i=1|\theta_t,x_i} + 0\cdot\Prob{Z_i=0|\theta_t,x_i}\\ 
+&= \frac{\Prob{x_i|\theta_t,z_i=1} p(z_i=1)}{p(x_i|\theta)}\\ 
+&= \frac{\Prob{x_i|\theta_t,z_i=1} p(z_i=1)}{p(x_i|z=1,\theta)p(z=1)+p(x_i|z=0 ,\theta)p(z=0)} \end{align*}
 
-\begin{remark}
-	La definición del intervalo de confianza no describe una probabilidad sobre el parámetro $\theta$, pues estamos tomando un enfoque frecuentista (no bayesiano) donde éste es fijo. Por el contrario, lo que es aleatorio en la ecuación \eqref{eq:conf_inter} es el intervalo, no el parámetro. Entonces, si bien es una sutileza, la definición anterior se debe entender como la probabilidad de que ``el intervalo (aleatorio) contenga al parámetro (fijo)'', y no como la probabilidad de que ``el parámetro esté en el intervalo''. 
-\end{remark}
-Una consecuencia clave de este concepto es que si $I_{1-\alpha}$ es un $(1-\alpha)$-intervalo de confianza, entonces si fuese posible repetir una gran cantidad de veces el ejercicio de recolectar datos $X$ y calcular este intervalo para cada una de estas observaciones, entonces el parámetro $\theta$ estaría contenido en el intervalo un $100(1-\alpha)\%$ de las veces. Esto es muy diferente de asegurar que para un solo experimento, la probabilidad de que el parámetro $\theta$ esté contenido en $I_{1-\alpha}$ es $1-\alpha$, lo cual no es cierto. Los siguientes ejemplos tienen por objetivo ayudar a aclarar este concepto.
-
-Para la construcción de intervalos de confianza es crucial la siguiente definición:
-
-\begin{definition}[Pivote]
-
-Sea $X=(X_1,...,X_n)$ una muestra aleatoria simple de una variable aleatoria cualquiera de depende de un parámetro $\theta$, el cual puede ser escalar o un vector. Sea $g(X,\theta)$ una variable aleatoria cuya distribución sea la misma para cualquier valor de $\theta$. A la función $g$ se de llama pivote.
-
-\end{definition}
-
-Veamos un ejemplo de la construcción de un pivote para el caso de la variable aleatoria normal.
-
-\begin{example}[Intervalo de confianza para la media de la distribución normal]
-	Consideremos la muestra $X_1,\ldots,X_n\sim\cN(\theta,1)$. Como $\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i\sim\cN(\theta,1/n)$ tenemos que  
-	\begin{equation}
-			\sqrt{n}(\bar{X}-\theta)\sim\cN(0,1).
-		\end{equation}	
-	Esta cantidad es un \emph{pivote}. Consecuentemente, podemos identificar directamente un intervalo de confianza para el pivote desde una tabla de valores para la distribución normal de media cero y varianza unitaria. Si $\phi(x)$ denota la distribución Normal, entonces podemos elegir  $x_1$ y $x_2$ tal que $\phi(x_2)-\phi(x_1) = 1-\alpha$ con lo que tenemos
-	\begin{equation}
-	 	\Probt{x_1 \leq \sqrt{n}(\theta-\bar{X}) \leq x_2} = 1-\alpha \Leftrightarrow \Probt{\bar{X} + x_1/\sqrt{n} \leq \theta \leq \bar{X} + x_2/\sqrt{n}} = 1-\alpha,
-	 \end{equation} 
-	 es decir, $(\bar{X} + x_1/\sqrt{n},\bar{X} + x_2/\sqrt{n})$ es el $(1-\alpha)$-intervalo de confianza para $\theta$. 
-	 
-	 Eligiendo $\alpha=0.05$ una alternativa es tenemos $x_2 = -x_1 =1.96$, con lo que el intervalo de confianza del 95\% para $\theta$ está dado por 
-	 \begin{equation}
-	 	(\bar{X} -1.96/\sqrt{n},\bar{X} + 1.96/\sqrt{n}).
-	 \end{equation}
-
-	 El procedimiento estándar para encontrar intervalos de confianza es como el ilustrado en el ejemplo anterior, en donde construimos una cantidad que tiene una distribución que no depende del parámetro desconocido (llamada pivote). Construir un intervalo de confianza para esta cantidad es directo desde las tablas de distribuciones, luego, podemos encontrar el intervalo de confianza para la cantidad deseada, e.g., el parámetro desconocido, mediante transformaciones de la expresión del pivote. 
-
-	 \begin{remark}
-	 	El intervalo de confianza no es único. Por ejemplo, en el caso gaussiano podemos elegir en intervalo centrado en cero o desde $-\infty$. Esta elección dependerá de las aplicación en cuestión: una regla general es elegirlo de forma centrada para densidades que son simétricas, centrado en la moda para distribuciones unimodales, mientas que para densidades con soporte positivo podemos elegirlo desde cero. 
-	 \end{remark}
-
-	 Hasta ahora hemos solo definido intervalos de confianza para cantidades escalares, en donde el concepto de intervalo tiene sentido. Para parámetros vectoriales, nos referiremos a  \textit{conjuntos de confianza}. Siguiendo la Definición \ref{def:conf_inter}, un $(1-\alpha)$-conjunto de confianza $S(X)$ es tal que 
-	 \begin{equation}
-	\label{eq:conf_set}
-	\Probt{\theta\in S(X)} = 1-\alpha, \forall \theta\in\Theta.
-\end{equation}
-\end{example}
-
-
-\begin{exercise}
-Considere $X_1,\ldots,X_{50}\sim\cN(0,\sigma^2)$, calcule el intervalo de confianza del 99\% para $\sigma$.
-\end{exercise}
-
-\begin{example}[Intervalo de confianza ---aproximado--- para Bernoulli] Consideremos $X_1,\ldots,X_{n}\sim\ber{\theta}$ y calculemos un intervalo de confianza para $\theta$. Recordemos que el EMV es $\thetahat = \frac{1}{n}\sum_{i=1}^nX_i$ y debido a la normalidad asintótica del EMV, tenemos que para $n$ grande, podemos asumir 
-\begin{equation}
-	\thetahat\sim\cN\left(\theta,\frac{\theta(1-\theta)}{n}\right),
-\end{equation}
-donde la varianza $\frac{\theta(1-\theta)}{n}=I_n(\theta)^{-1}$ es la inversa de la información de Fisher. 
-
-Podemos entonces considerar el pivote
-\begin{equation}
-	\frac{\sqrt{n}(\thetahat-\theta)}{\sqrt{\theta(1-\theta)}}\sim\cN(0,1),
-\end{equation}
-y calcular el $(1-\alpha)$-intervalo de confianza asumiendo los valores $x_1$ y $x_2$ mediante 
-\begin{align*}
-	\Probt{x_1 \leq \tfrac{\sqrt{n}(\theta-\thetahat)}{\sqrt{\theta(1-\theta)}} \leq x_2} = 1-\alpha \Leftrightarrow \Probt{\thetahat + \tfrac{x_1\sqrt{\theta(1-\theta)}}{\sqrt{n}} \leq \theta \leq \thetahat + \tfrac{x_2\sqrt{\theta(1-\theta)}}{\sqrt{n}}} = 1-\alpha.
-\end{align*}
-Sin embargo, los bordes de este intervalo no son conocidos, pues dependen de $\theta$. Una forma de aproximar el intervalo es reemplazar el parámetro por su EMV. 
-\end{example}
-
-
-\begin{exercise}[Encuesta de elecciones presidenciales] Considere una encuesta que ha consultado a 1000 votantes y su candidato ha recibido 200 votos. Use el resultado del ejemplo anterior para determinar el intervalo de confianza del 95\% de la cantidad de votos que su candidato obtendría en la elección presidencial. 
-\end{exercise}
-
-Finalmente, revisaremos el siguiente ejemplo, el cual pretende ejemplificar el concepto de que en solo un experimento, la determinación del $(1-\alpha)$-intervalo de confianza no quiere decir que la probabilidad de que el parámetro esté contenido en él es $(1-\alpha)$\%. 
-
-\begin{example}[Intervalo de confianza para una distribución uniforme]
-\label{eq:unif_int_conf}Considere $X_1,X_2\sim\uni{\theta-\tfrac{1}{2},\theta+\tfrac{1}{2}}$ y observe que 
-\begin{align*}
-	\Probt{\min(X_1,X_2) \leq \theta \leq \max(X_1,X_2)} 
-		&= \Probt{ X_1 \leq \theta \leq X_2}  + \Probt{ X_2 \leq \theta \leq X_1} \\
-		&= \frac{1}{2}\times \frac{1}{2} + \frac{1}{2}\times\frac{1}{2}\\
-		&= \frac{1}{2}
-\end{align*}
-corresponde al intervalo del 50\%. 
-
-Sin embargo, si observáramos $X_1 = x_1$ y $X_2 = x_2$ tal que $|x_1-x_2|\geq\tfrac{1}{2}$ entonces necesariamente está contenido en el intervalo $(\min(X_1,X_2) , \max(X_1,X_2))$ con probabilidad 1. Esto ilustra la idea de que, en un experimento dado, la probabilidad de que $\theta$ esté en intervalo de confianza del $(1-\alpha)$\% no es necesariamente $(1-\alpha)$\%.
-\end{example}
 
 
 \subsection{Enfoque bayesiano}
