@@ -22,45 +22,40 @@ In this part of the course, we will consider a dataset $x$ belonging to an abstr
 
 In this course we will focus on parametric statistical models; this requires the rigorous definition of the parameters and their space. 
 
-\begin{definition}[Parameters and parameter space] 
-En un problema de inferencia estadística, la (o las) característica(s) que determinan la distribución de las variables aleatorias estudiadas son llamadas parámetros. Denotaremos los parámetros mediante el símbolo $\theta\in\Omega$, donde $\Omega$ es el conjunto de todos los posibles valores de los parámetros y lo llamamos espacio de parámetros.
+\begin{definition}[Parameters and parameter space] A parameter is a fixed but unknown quantity that specifies a feature of a random variable's distribution (e.g., its mean, variance, or proportion). Parameters will be denoted with the symbol $\theta\in\Omega$, where $\Omega$ is the set of all possible values for the parameter called \emph{parameter space}.
 \end{definition}
 
-Regresando a la pregunta, no habrá una, sino muchas posibles medidas de probabilidad como candidatas a ser la ley de ${X}$. A esto nos referíamos arriba cuando mencionamos la familia paramétrica de probabilidades donde cada una de las cuales puede ser la que actúa para generar $x$ a través de ${X}$. Encontrar la (o las) distribuciones, dentro de este conjunto, que son más representativas de haber generado los datos, es un objetivo de la inferencia estadística. 
-
-Denotaremos a la familia paramétrica $\mathcal{P}$ de la siguiente forma:
+We now denote the parametric family $\mathcal{P}$ as follows:
 \[\mathcal{P} = \{\mathcal{P}_\theta | \theta \in \Omega \},\]
-donde $\mathcal{P}_\theta $ es una medida de probabilidad \emph{indexada} por un parámetro $\theta \in \Omega$ en el espacio de parámetros. En nuestro estudio (pero en general no tiene que ser así) consideraremos que $\Omega$ es finito dimensional, es decir, $\Omega \subseteq \mathbb{R}^n$. Escribimos entonces que:
+where $\mathcal{P}_\theta $ is a probability distribution \emph{indexed} by a parameter $\theta \in \Omega$. We will consider finite-dimensional $\Omega$, that is, $\Omega \subseteq \mathbb{R}^n$. Therefore, we denote:
 \[\theta = [\theta_1, ..., \theta_n]^\top. \]
 
-
-Dado todo lo anterior, en la formulación de un modelo estadístico completo para representar un fenómeno se debiese tener plenamente identificado lo siguiente:
+In summary:
 
 \begin{itemize}
-    \item $\theta$ como parámetro a estimar
-    \item $\Omega$ espacio de parámetros con $\Omega \subseteq \mathbb{R}^n$
-    \item $\mathcal{P}_\theta$ probabilidad sobre $\mathfrak{X}$ (como función de $\theta$)
-    \item ${X}$ vector aleatorio con valores en $\mathfrak{X}$
-    \item $x$ elemento genérico de $\mathfrak{X}$ y realización de $X$ (datos).
+    \item $\theta$ is the parameter to be estimated from data
+    \item $\Omega$ is the parameter space, where $\Omega \subseteq \mathbb{R}^n$
+    \item $\mathcal{P}_\theta$ is probability over  $\mathfrak{X}$ (as a function of $\theta$)
+    \item ${X}$ is a RV in $\mathfrak{X}$
+    \item $x$ is the data, a realisatoin of $X$ and a a generic element of $\mathfrak{X}$.
 \end{itemize}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Fábrica de computadores}]
-
-Una fabrica de computadores desea estimar el tiempo de vida de un componente particular en sus computadores. Para ello, en primer lugar se recolectan datos de los computadores que se han usado bajo condiciones normales. Luego de ser asesorados por expertos, deciden usar una distribución normal para modelar el tiempo que se demorará en fallar el componente de interés. Se modela entonces la vida útil de los componentes con un tiempo de vida promedio $\theta$ y varianza $\sigma^2$, con $\theta$ y $\sigma^{2}$  parámetros desconocidos. Si se tienen $N$ componentes, las variables aleatorias que modelan la vida útil de cada componente serán identificadas como 
-$X_1,\ldots,X_N$, con $X_i \sim \mathcal{N}(\theta,\sigma^{2}), \forall i=1,\ldots,N$. ¿Qué opina de este modelo?
+\begin{mdframed}[style=ejemplo, frametitle={\center Computer manufacturer}]
+A computer manufacturer wishes to estimate the lifetime of a particular component in its computers. To do this, data is first collected from computers that have been used under normal conditions. After consulting with experts, they decide to use a normal distribution to model the time it will take for the component of interest to fail. The useful life of the components is then modelled with an average lifetime $\theta$ and variance $\sigma^2$, with $\theta$ and $\sigma^{2}$  unknown parameters. If there are $N$ components, the random variables that model the useful life of each component will be identified as 
+$X_1,\ldots,X_N$, with $X_i \sim \mathcal{N}(\theta,\sigma^{2}), \forall i=1,\ldots,N$. What do you think of this model?
 \end{mdframed}
 
-La inferencia estadística es una herramienta que nos permitirá resolver muchos tipos de problemas. Los más importantes serán los de \emph{identificación}, donde nuestro objetivo es descubrir el modelo que genero los datos, y \emph{predicción} donde se intenta estimar una cantidad que no ha sido observada aún. Por supuesto, buscamos alcanzar ambos objetivos de forma estadística, es decir,  modelando apropiadamente la incertidumbre asociada.
+Statistical inference is a tool that allows us to solve a number of problems. The most relevant ones involve identification, that is, to discover the model that generated the data, and prediction, where we estimate a quantity that has not yet been observed. Of course, we seek to achieve both goals statistically, that is, by appropriately modelling the associated uncertainty.
 
-\subsection{Estadísticos}
-
-
-Recordemos que en la aplicación de la estadística, además de nuestros supuestos, solo contamos con \emph{datos}, consecuentemente, todo lo que hagamos partirá desde el uso de éstos. En este sentido, definimos un estadístico como una función de (las realizaciones de) una variable aleatoria, definida desde el espacio muestral. Es decir, cualquier función \emph{medible} de los datos. Recordar que $\Theta$ es el espacio de parámetros.\\ 
+\subsection{Statistics}
 
 
-\begin{definition}[Estadístico]
+The initial setup in statistical inference features an observation dataset and our own assumptions. Therefore, the starting point in this regard is to apply transformations to the data; this underpins the construction of the so called \emph{statistics}. 
+
+
+\begin{definition}[Statistic]
 \label{def:estadístico}
-Sea $(\cT,\cA,\mu)$ un espacio de probabilidad y $X\in\cX$ una variable aleatoria con distribución paramétrica $\cP = \{P_\theta\ \tq\ \theta\in\Theta\}$. Un estadístico es una función medible de la realización $X=x$ independiente del parámetro $\theta$ (y de la distribución $P_\theta$).
+Let $(\cT,\cA,\mu)$ be a probability space and $X\in\cX$ a RV with parametric distribution $\cP = \{P_\theta\ \tq\ \theta\in\Theta\}$. A statistic is a function of the realisation $X=x$ that is independent form the parameter $\theta$ (and the distribution $P_\theta$).
 \begin{align}
 \nonumber
 	T:\ &\cX \rightarrow \cT\\
@@ -71,18 +66,18 @@ Sea $(\cT,\cA,\mu)$ un espacio de probabilidad y $X\in\cX$ una variable aleatori
 \end{definition}
 
 \begin{remark}
-Es muy relevante diferenciar el valor del estadístico $T(x)$ como función de los datos (considerados por nosotros como la realización $X=x$ de la variable aleatoria), de la aplicación de la función $T(\cdot)$ a la variable aleatoria $X$, es decir, $T(X)$. El primero es un valor "fijo"\ mientras que el segundo es una VA con propia distribución de probabilidad inducida por $P_\theta$ y por la función $T$ (llamada distribución \emph{pushforward} $T_{\sharp P_\theta}$).\\ 
+It is critical to understand the difference between the value of the statistic $T(x)$ as a function of the data $x$ (which we consider to be the realization $X=x$ of the random variable) and the application of the function $T(\cdot)$ to the RV $X$, i.e., $T(X)$---which is also a RV. The former is a “fixed” value, while the latter is a random variable with its own probability distribution induced by $P_\theta$ and by the function $T$ (called the pushforward distribution $T_{\sharp P_\theta}$). 
 \end{remark}
 
 
-En base a los datos $x$, algunos estadísticos pueden ser: 
+Some example statistics are: 
 \begin{equation}
 \nonumber
 	T(x) = \frac{1}{n}\sum_{i=1}^nx_i,\qquad T'(x) = x, \qquad T''(x) = \min(x), \qquad T'''(x) = c\in \mathbb{R}.
 \end{equation}
 
 \paragraph{Suficiencia}
-En términos generales, el objetivo de un estadístico es \textit{encapsular} o \textit{resumir} la información contenida en una muestra (de datos) $x = (x_1,x_2,\ldots,x_n)$ que es de utilidad para determinar (o estimar) un/el/los parámetros de la distribución de $X$ o alguna otra propiedad de ésta. Por esta razón, la función identidad o el promedio parecen cumplir, al menos intuitivamente, con esta misión. Esto es por que se intuitivamente queremos extraer la mayor información posible de los datos, esto lo logran el estadístico $T$ (que resume todos los datos) y el estadístico $T'$ (que contiene todos los datos). Por el contrario, notemos que el estadístico $T''$ \emph{pierde información}, dado que solo se extrae el mínimo valor de toda la data obtenida, así, perdiendo la representación de la, e.g., dispersión de la muestra. El mismo análisis se puede hacer para el estadístico constante, el que no contiene  información alguna de los datos.\\
+In general terms, the objective of a statistic is to encapsulate or summarize the information contained in a sample (of data) $x = (x_1,x_2,\ldots,x_n)$ that is useful for determining (or estimating) one or more parameters of the distribution of $X$ or some other property thereof. For this reason, the identity function or the mean seem to fulfill this mission, at least intuitively. This is because, intuitively, we want to extract as much information as possible from the data, which is achieved by the statistic $T$ (which summarizes all the data) and the statistic $T'$ (which contains all the data). On the contrary, note that the statistic $T''$ loses information, since only the minimum value of all the data obtained is extracted, thus losing the representation of, e.g., the dispersion of the sample. The same analysis can be made for the constant statistic, which contains no information from the data.
 
 Coloquialmente, la idea de suficiencia de un estadístico (con respecto a un parámetro) puede ser expresada como  
 \begin{displayquote}[Ronald Fisher, On the mathematical foundations of theoretical statistics] \it
