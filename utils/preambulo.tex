@@ -88,7 +88,6 @@
 
 %definitions
 %temp
-\newcommand{\uni}[1]{\text{Uniforme}\left(#1\right)}
 \newcommand{\loga}[1]{\log\left(#1\right)}
 \newcommand{\expo}[1]{\exp\left(#1\right)}
 \newcommand{\Prob}[1]{\mathbb{P} \left(#1\right)}
@@ -103,14 +102,14 @@
 
 
 \usepackage{cancel}
-\def\thetaMV{{\theta_\text{MV}}}
+\def\thetaMV{{\theta_\text{MLE}}}
 
 \newcommand{\Et}[1]{\mathbb{E}_\theta \left(#1\right)}
 
 \def\ind{{\mathbf 1}}
 \def\gh{{ \hat{g}}}
 \def\ghX{{ \hat{g}(X)}}
-\def\familiaparametrica{\mathcal{P}  = \{P_\theta\ \tq\ \theta\in\Theta\}}
+\def\familiaparametrica{\mathcal{P}  = \{P_\theta \mid \theta\in\Theta\}}
 \def\xb{{ \bar{x}}}
 \newcommand{\Vt}[1]{\mathbb{V}_\theta \left(#1\right)}
 
@@ -176,12 +175,12 @@
 \newtheorem{lemma}{Proposición}[theorem]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
-\newtheorem{remark}{Observación}[section]
+\newtheorem{remark}{Remark}[section]
 % Add Assumption environment
 \newtheorem{assumption}{Assumption}[section]
 \newtheorem{proposition}{Proposition}[section]
-\newtheorem{example}{Ejemplo}[section]
-\newtheorem{exercise}{Ejercicio}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
 
 
 \renewcommand{\qedsymbol}{$\blacksquare$}
