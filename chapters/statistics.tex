@@ -320,6 +320,29 @@ since the logarithm is a strictly increasing function and therefore preserves ma
 Clearly, the MLE can be defined either in terms of the likelihood itself or any non-decreasing function of it, and it may also fail to exist or to be unique. In particular, we will focus on finding $\hat{\theta}_{\mathrm{MLE}}$ by maximising the log-likelihood $l(\theta) = \log L(\theta)$, which is usually easier to optimise computationally or analytically. In fact, we will often even ignore constants in the (log) likelihood, as these do not affect the maximiser of $L(\theta)$.
 \end{remark}
 
+\begin{remark}
+In general (yet not always) we will assume i.i.d.~observations $\cD = {X_1,\ldots,X_n}$, $X_i\sim p(x|\theta)$. In such case, the likelihood factorises as $L_\cD(\theta) = \prod_{i=1}^n L_{X_i}(\theta)$, and the log-likelihood takes the form
+\begin{equation}
+l_\cD(\theta) = \sum_{i=1}^nl_{X_i}(\theta)
+\end{equation}
+\end{remark}
+
+\begin{example}
+Let us consider the observations $\cD = \{x_1,...,x_n\}$, where $x_i$ is the realisation of a RV $X_i\sim \mathcal{N}(\mu,\sigma^2)$ with known $\sigma^2$. The likelihood function of $\mu$ is given by:
+
+\begin{align}
+L(\mu)=p(\cD|\mu)&=\prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi \sigma^{2}}} 
+\exp\left(\frac{-1}{2\sigma^{2}}(x_i-\mu)^{2}\right)\nonumber\\
+&= \left(\frac{1}{\sqrt{2 \pi \sigma^{2}}}\right)^{n} \exp\left(\frac{-1}{2 \sigma^{2}} \sum_{i=1}^{n} (x_i - \mu )^{2}\right).
+\end{align}
+
+Thus, the log-likelihood is given by:
+\begin{equation}
+    l(\mu)= \log L(\mu) = -\frac{n}{2} \log(2 \pi \sigma^{2}) + \frac{-1}{2\sigma^{2}} \sum_{i=1}^{n} (x_i - \mu )^{2}.
+\end{equation}
+
+\end{example}
+
 \begin{example}[MLE: Bernoulli]
 	\label{ex:bernoulli_MV}
 	Let $X_1,\ldots X_n\sim\ber{\theta}$, the likelihood of $\theta$ is given by 
@@ -452,128 +475,72 @@ This objective function is much easier to optimise; however, it is not \emph{obs
 &= \frac{\Prob{x_i|\theta_t,z_i=1} p(z_i=1)}{p(x_i|z=1,\theta)p(z=1)+p(x_i|z=0 ,\theta)p(z=0)} \end{align*}
 
 
+\subsection{Bayesian inference}
 
-\subsection{Enfoque bayesiano}
-
-En esta sección complementaremos el enfoque visto hasta ahora en cuanto a la incorporación de un modelo para la incertidumbre asociada al parámetro $\theta$. En el paradigma bayesiano, consideraremos que el parámetro es una variable aleatoria, es decir, $\Theta$, la cual para una realización particular tomar el valor $\Theta = \theta$. Esto nos permite información \emph{a priori} sobre la estimación a realizar, lo que permite, en muchos casos, ayudar a la inferencia. Una diferencia conceptual entre ambos enfoques, es que la estadística frecuentista evita la subjetividad, mientras que la estadística bayesiana se basa en la convicción del(a) investigador(a), para emitir juicios sobre una hipótesis.
-
-En este capítulo, se estudiará la estadística bayesiana y se introducirán los mismos conceptos vistos anteriormente desde el punto de vista bayesiano.
+We will now study a complementary perspective to finding $\theta$ which incorporates a model for the parameter's uncertainty. In the Bayesian paradigm, we will assume the parameter to be a RV, that is, $\Theta$, taking values $\theta$. This setup allows us to incorporate \emph{a priori} information into the estimation process. A conceptual difference between the two inferential approaches is that the frequentist approach aims to avoid subjectivity, while the Bayesian one builds on the expert knowledge of the scientist to propose and assess possible hypotheses.
 
 
-
-
-\subsection{Contexto y definiciones principales}
-
-\begin{definition}[Distribución a priori]
-La información, sesgos y cualquier otra característica conocida de $\Theta$ codificadas mediante la propia ley de probabilidad de esta VA, la cual tiene densidad $p(\theta)$, nos referimos a esta como la \emph{densidad a priori} o simplemente \emph{prior}.
+\begin{definition}[A priori distribution]
+The information, inductive biases, and any other known property of $\Theta$ can be encoded into the parameter's probability distribution, referred to as \emph{a priori distribution}, or simply \emph{prior}. We assume this distribution  has a density denoted $p(\theta)$.
 \end{definition}
 
-Con esta definición, podemos ver que la densidad conjunta de las VAs $X,\Theta$ pueden ser expresadas combinando la densidad a priori con el modelo visto en las secciones anteriores, es decir, 
+With the above definition, we can see that the joint density of the RVs $X,\Theta$ can be expressed as
 \begin{equation}
-    p(x,\theta) = p(x|\theta)p(\theta)
+    p(x,\theta) = p(x|\theta)p(\theta),
     \label{eq:joint_bayes}
 \end{equation}
-donde hemos escrito $p(x|\theta)$ en vez de $p_\theta(x)$ para hacer explícito que ahora consideramos el parámetro como una variable aleatoria. 
+where we have written $p(x|\theta)$ instead of $p_\theta(x)$ to emphasise that we now consider the parameter to be a RV. 
 
-Adicionalmente, con la distribución conjunta en la ecuación \eqref{eq:joint_bayes}, podemos definir:
+Additionally, with the joint distribution in eq.~\eqref{eq:joint_bayes}, we can define:
 
-\begin{definition}[Distribución marginal]
-La distribución de $X$, obtenida mediante la desintegración de parámetro $\Theta$ del par $(X,\Theta)$, es decir 
+\begin{definition}[Marginal distribution]
+The distribution of $X$ can obtained through the disintegration of $\Theta$ from $(X,\Theta)$, that is 
 \begin{equation}
-    p(x) = \int_\Omega p(x|\theta)p(\theta)\d\theta
+    p(x) = \int_\Omega p(x|\theta)p(\theta)\d\theta.
 \end{equation}
-es conocida como distribución marginal de $X$.
+We refer to this distribution as the marginal distribution of $X$.
 \end{definition}
 
-Consideremos ahora que tenemos un conjunto de observaciones denotado por $\mathcal{D}$, de un modelo estadístico con parámetro $\Theta$, entonces podemos definir
 
-\begin{definition}[Función de verosimilitud]
-La densidad de probabilidad evaluada en un conjunto de observaciones $\cD$ como función del valor del parámetro $\Theta$, es decir 
-\begin{align}
-    L: \Omega &\rightarrow \R\\
-    \theta&\mapsto l(\theta) = L_\cD(\theta) = p(\cD|\theta),
-\end{align}
-recibe el nombre de función de verosimilitud, o en inglés, \emph{likelihood}. 
-\label{función_verosimilitud}
-\end{definition}
-\begin{remark}
-La función de verosimilitud no es una densidad de probabilidad, es decir, no es cierto que
-\begin{equation}
-    \int_\Omega L(\theta)\d\theta = 1
-\end{equation}
-\end{remark}
+We can now define the central object of the Bayesian inference paradigm. 
 
-\begin{remark}
-Dado que la función función de verosimilitud usualmente adquiere una forma exponencial (como por ejemplo en el caso de la familia exponencial), hay ocasiones en donde es conveniente usar la \emph{log-verosmilitud}, esto es, 
-\begin{equation}
-l(\theta)=\log L(\theta)=\log p(\cD|\theta).
-\end{equation}
-Esta formulación será particularmente útil cuando queramos optimizar la verosimilitud. 
-\end{remark}
-
-\begin{remark}
-En general (pero no siempre) asumimos observaciones $\cD = {X_1,\ldots,X_n}$, $X_i\sim p(x|\theta)$, que son i.i.d. En cuyo caso, la verosimilitud factoriza de la forma $L_\cD(\theta) = \prod_{i=1}^n L_{X_i}(\theta)$, con lo cual la log-verosimilitud toma la forma: 
-\begin{equation}
-l_\cD(\theta) = \sum_{i=1}^nl_{X_i}(\theta)
-\end{equation}
-\end{remark}
-
-\begin{example}
-Considere los datos $\cD = \{x_1,...,x_n\}$, donde $x_i$ es la observación de una VA $X_i\sim \mathcal{N}(\mu,\sigma^2)$ iid con $\sigma^2$ conocido. La función  de verosimilitud de $\mu$ está dada por:
-
-\begin{align}
-L(\mu)=p(\cD|\mu)&=\prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi \sigma^{2}}} 
-\exp\left(\frac{-1}{2\sigma^{2}}(x_i-\mu)^{2}\right)\nonumber\\
-&= \left(\frac{1}{\sqrt{2 \pi \sigma^{2}}}\right)^{n} \exp\left(\frac{-1}{2 \sigma^{2}} \sum_{i=1}^{n} (x_i - \mu )^{2}\right).
-\end{align}
-
-Luego, la log-verosimilitud está dada por:
-\begin{equation}
-    l(\mu)= \log L(\mu) = -\frac{n}{2} \log(2 \pi \sigma^{2}) + \frac{-1}{2\sigma^{2}} \sum_{i=1}^{n} (x_i - \mu )^{2}.
-\end{equation}
-
-\end{example}
-
-Ahora estamos en condiciones de definir el elemento central de la inferencia bayesiana, sobre el cual todo el proceso de inferencia toma lugar. 
-
-\begin{definition}[Distribución posterior]
+\begin{definition}[Posterior distribution]
 \label{dist_posterior}
-Dado el conjunto de observación $\cD$ la distribución \emph{posterior} del parámetro, es decir, considerando la inforamción reportada por los datos $\cD$, está dada por el teorema de Bayes mediante
+Given a set of observations $\cD$, the \emph{posterior} distribution of the parameter, which considers the information provided by the data $\cD$ and the prior knowledge, is given through Bayes theorem by
 \begin{align}
     p(\theta|\cD) = \frac{p(\cD)|\theta)p(\theta)}{p(\cD)}  \propto p(\mathcal{D}|\theta) p(\theta) \label{eq:posterior_def}
 \end{align}
 
-donde: 
+where: 
 \begin{itemize}
-    \item $p(\theta)$ es el prior del parámetro.
-    \item $p(\theta|\mathcal{D})$ es la posterior del parámetro. 
-    \item $p(\mathcal{D}|\theta)$ es la verosimilitud
-    \item $p(\mathcal{D}) = \int\Omega p(\mathcal{D}|\theta)p(\theta)\d \theta $ es la densidad marginal de los datos 
+    \item $p(\theta)$ is the parameter's prior law.
+    \item $p(\theta|\mathcal{D})$ is the parameter's posterior law.
+    \item $p(\mathcal{D}|\theta)$ is the likelihood
+    \item $p(\mathcal{D}) = \int\Omega p(\mathcal{D}|\theta)p(\theta)\d \theta $ is the data marginal density
 \end{itemize}
 \end{definition}
 
-La \emph{transición} de prior a posterior puede ser interpretada como el proceso de incorporar la evidencia de los datos (a través de la función de verosimilitud) para reducir la incertidumbre con respecto del valor del parámetro $\Theta$. De la ecuación \eqref{eq:posterior_def} podemos ver que este proceso, a veces referido como \emph{actualización bayesiana}, equivale a multiplicar por la verosimilitud, para luego normalizar, garantizando que $p(\theta|\cD)$ es en efecto una densidad de probabilidad. 
+The \emph{transition} from prior to posterior can be interpreted as the process of incorporating the evidence provided by the data (through the likelihood function) in order to reduce uncertainty about the value of the parameter $\Theta$. From equation \eqref{eq:posterior_def} we can see that this process, sometimes referred to as \emph{Bayesian update}, amounts to multiplying by the likelihood and then normalising, ensuring that $p(\theta|\mathcal{D})$ is indeed a probability density.
 
 \begin{remark}
-El símbolo $\propto$ en la ecuación \eqref{eq:posterior_def} es usado para indicar que el lado izquierdo es igual al lado derecho salvo una constante de proporcionalidad que depende de $\mathcal{D}$ y no de $\theta$. Con esto, cuando estemos calculando la posterior, solo nos enfocaremos en \emph{una versión proporcional}, pues luego la densidad posterior se puede encontrar mediante la normalización de esta última.
+The symbol $\propto$ in eq.~\eqref{eq:posterior_def} is used to indicate that the left-hand side is equal to the right-hand side up to a proportionality constant that depends on the $\mathcal{D}$ and not on $\theta$. With this, when calculating the posterior, we will only focus on a \emph{proportional version}, since, the tru density can be obtain via normalisaton.
 \end{remark}
 
-\begin{example}[Posterior modelo Bernoulli]
+\begin{example}[Posterior distribution for Bernoulli]
 \label{ej_post_bernoulli_1}
-Sea $\theta$ la probabilidad de obtener cara al lanzar una moneda, y sean $X_1,..X_n$ $n$ resultados obtenidos al lanzar la moneda. Si no sabemos nada de $\theta$ antes del experimento, hace sentido tomar su prior como una distribución que de igual probabilidad a todo espacio de parámetros, es decir: $\theta \sim Unif(0,1)$. Notemos que el prior encapsula la infromación que tenemos antes del experimento. Modelamos $X_1,..X_n \sim Bernoulli(\theta)$. Entonces: 
+Let $\theta$ be the probability to obtain heads when throwing a coin, and let $X_1,..X_n$ $n$ realisations of this experiment. Without prior knowledge of $\theta$, it is reasonable to assume a uniform prior $\theta \sim Unif(0,1)$. Recall that this priori encodes our beliefs for the parameter before the experiment. Modelling $X_1,..X_n \sim Bernoulli(\theta)$, we have: 
 $$
 p(X_1,..X_n|\theta)=\prod_{i=1}^{n} \theta^{X_i} (1-\theta)^{1-X_i} = 
-\theta^{\sum_{i=1}^{n} X_i} (1-\theta)^{n-\sum_{i=1}^{n}X_i}
-$$
-Notemos que en este caso, podemos calcular la distribución $p(X_1,..,X_n)$:
+\theta^{\sum_{i=1}^{n} X_i} (1-\theta)^{n-\sum_{i=1}^{n}X_i}.
+$$Also, $p(X_1,..,X_n)$ is given by 
 $$
 p(X_1,..,X_n)=\int_{0}^{1} \theta^{\sum_{i=1}^{n} X_i} (1-\theta)^{n-\sum_{i=1}^{n}X_i} d\theta = B\left(\sum_{i=1}^{n} X_i +1 , n- \sum_{i=1}^{n} X_i +1 \right),
 $$
-donde $B(x,y)$ es la función beta:
+where $B(x,y)$ is the beta function:
 $$
 B(x,y)=\dfrac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}.
 $$
-Sea $s= \sum_{i=1}^{n}X_i$. Entonces la distribución a posteriori será:
+Let $s= \sum_{i=1}^{n}X_i$. Then, the posterior is
 
 $$
 p(\theta|X_1,..X_n)= \dfrac{p(X_1,..X_n|\theta)}{p(X_1,..,X_n)} = \dfrac{1}{B(s+1,n-s+1)} \theta^{s} (1-\theta)^{n-s}.
@@ -581,103 +548,105 @@ $$
 
 \end{example} 
 
-Usualmente, es experimentos reales, los datos  $x_1,...,x_n$ son recibidos de forma secuencial, es decir, \emph{en línea}. De esta forma, es relevante notar que en primer lugar se observa $x_1$ primero, luego $x_2$, y así sucesivamente. \\
-
-Consecuentemente, si se asume el prior para el parámetro $\theta$ dado por $p(\theta)$, es posible hacer la actualización bayesiana \emph{en línea} (o de forma adaptativa o continual), lo cual implica una corrección del modelo cada vez que se observan más datos. \\
-Luego de observar $x_1$, la posterior $p(\theta|x_1)$ puede ser calculada como: 
+In some cases, the observations  $x_1,...,x_n$ are available sequentially, or \emph{on line}. Therefore, assuming a prior $p(\theta)$, it is possible to perform on online, or continual, Bayesian update as new data are observed. \\
+After seeing $x_1$, the posterior $p(\theta|x_1)$ can be computed as: 
 $$
 p(\theta|x_1) \propto p(x_1|\theta) p(\theta).
 $$
 
-Luego, al observar $x_2$, usamos el hecho que $X_1$ y $X_2$ son condicionalmente independientes dado $\theta$ y obtenemos: 
+Then, after observing $x_2$, and given that $X_1$ and $X_2$ are conditionally independent given $\theta$, we have: 
 $$
 p(\theta | x_1,x_2) \propto 
-p(x_2|\theta) p(\theta|x_1) \propto p(x_1 |\theta) p(x_2|\theta) p(\theta) . 
+p(x_2|\theta) p(\theta|x_1) \propto p(x_1 |\theta) p(x_2|\theta) p(\theta). 
 $$
-Con lo que para el caso general tenemos que 
+In the general case we have
 $$
 p(\theta | x_1,..x_n) \propto p(x_n|\theta) p(\theta|x_1,..x_{n-1}) \propto p(\theta) \prod_{i=1}^n p(\theta | x_i).
 $$
 
 \begin{remark}
-Cuando las observaciones $\cD$ son condicionalmente independientes dado el parámetro $\theta$, entonces, la posterior $p(\theta|\cD)$ factoriza en las verosimilitudes de cada uno de los datos. 
+When the observations $\cD$ are conditionally independent given $\theta$, then, the posterior $p(\theta|\cD)$ factorises into the single-datum likelihoods. 
 \end{remark}
 
 \begin{remark}
-En la actualización bayesiana en línea, la posterior de la etapa $n$ sirve de prior de la etapa $n+1$.
+In the online Bayesian update, the $n$-stage posterior is the $n+1$-stage prior.
 \end{remark}
 
 
-\subsection{Priors Conjugados}
+\subsection{Conjugate priors}
 
-La actualización bayesiana puede resultar en una posterior solo conocida de forma proporcional (cuando no es posible calcular la distribución marginal $p(x)$) o bien en una distribución que no pertenece a una familia conocida. Una herramienta que asegurar el cálculo de las distribuciones posteriores (incluyendo la constante de normalización) y que esta adopta una forma conocida es a través del uso de \textbf{priors conjugados}.
+Bayesian updating may yield a posterior that is known only up to a proportionality constant (when the marginal distribution $p(x)$ cannot be computed), or a posterior that does not belong to any familiar distributional family. A key tool that guarantees the computability of the posterior distribution, including its normalising constant, and ensures that it takes a known form is the use of \textbf{conjugate priors}.
+
 \begin{definition}
-
-Sea un modelo con verosimilitud $p(x|\theta)$ y un prior sobre $\theta$ con densidad $p(\theta)$. Decimos que $p(\theta)$ es conjugado con la verosimiltud $p(x|\theta)$ si la posterior 
+Consider a model with likelihood $p(x|\theta)$ and a prior $p(\theta)$. We say that $p(\theta)$ is conjugate to the likelihood $p(x|\theta)$ if the posterior
 \begin{equation}
 	p(\theta|x) = \frac{p(x|\theta)p(\theta)}{p(x)}
 \end{equation}
-pertenece a la\textit{misma familia} que el prior $p(\theta)$. Donde pertenecer a la misma familia quiere decir que ambas tienen una densidad de probabilidad definida por la misma forma funcional, e.g., $f_\lambda(\theta)$ pero con distintos valores para el \textit{parámetro} $\lambda$, el cual es un \textit{hiperparámetro} del modelo.
+is in the \textit{same family} as the prior $p(\theta)$. This means that both prior and posterior have the same functional form, e.g., $f_\lambda(\theta)$, but with different parameter $\lambda$.
 \end{definition}
 
 
-\begin{example}[continuación de Ejemplo \ref{ej_post_bernoulli_1}]
+\begin{example}[continuation of Ex.~\ref{ej_post_bernoulli_1}]
 \label{ej_post_bernoulli_2}
-Tarea: Verifique si el Ejemplo \ref{ej_post_bernoulli_1} es en efecto uno de prior conjugado. 
+Verify is Ex.~\ref{ej_post_bernoulli_1} is indeed a conjugate prior. 
 \end{example}
 
-\begin{example}[Distribución Multinomial]
-Consideremos una variable aleatoria multinomial $X\sim\mul{n,\theta}$ donde $\theta$ pertenece al simplex 
-\begin{equation}
-	\label{eq:simplex}
-  \{\theta\in[0,1]^k:\theta_1 + \cdots + \theta_k = 1 \}.
- \end{equation} 
- La distribución multinomial genera vectores $X\in\N^k$ cuya $i-$ésima componente modela la cantidad de veces que ocurre el evento $i$ dentro de $k$ eventos en $n$ intentos. Por ejemplo, si lanzamos un dado balanceado 100 veces, el vector que contiene el conteo de veces que obtenemos cada cara puede modelarse como 
- \begin{equation}
-  	\theta_\text{dado} \sim \mul{100,\left[\tfrac{1}{6},\tfrac{1}{6},\tfrac{1}{6},\tfrac{1}{6},\tfrac{1}{6},\tfrac{1}{6}\right]}.
-  \end{equation} 
-Denotando $X=[x_1,\ldots,x_n]$, observemos que una muestra multinomial $X\sim\mul{n,\theta}$ cumple con 
-\begin{equation}
-	\{x_i\}_{i=1}^k \subset \{0,1,\ldots,n\},\quad  \sum_{i=1}^kx_i = n.
-\end{equation}
+\begin{example}[Multinomial distribution]
+Consider a ($k$-dimensional) multinomial random variable \(X \sim \mathrm{Mult}(n,\theta)\). The \(i\)-th component of this variable models the number of times that
+event \(i\) occurs among \(k\) possible events over \(n\) realisations. The parameter of this distribution is known as the \emph{probability vector}, denoted \(\theta\), which belongs to the simplex
+\[
+\{\theta \in [0,1]^k : \theta_1 + \cdots + \theta_k = 1\}.
+\]
 
-Finalmente, la distribución Multinomial está dada por 
-\begin{equation}
- 	\mul{X;n,\theta} = \frac{n!}{x_1!\cdots x_k!} \theta_1^{x_1}\cdots\theta_k^{x_k},
- \end{equation} 
- y es la generalización de las distribuciones: 
+For example, if we roll a fair die 100 times, the vector containing the
+count of occurrences of each face can be modelled as
+\[
+X_{\text{die}} \sim \mathrm{Mult}\!\left(100,
+  \left[\tfrac{1}{6}, \ldots, \tfrac{1}{6}\right]\right).
+\]
+
+Let \(X = [x_1,\ldots,x_k]\). Any multinomial sample satisfies
+\[
+x_i \in \{0,1,\ldots,n\}, \qquad \sum_{i=1}^k x_i = n.
+\]
+
+The multinomial distribution is given by
+\[
+\mathrm{Mult}(X; n, \theta)
+  = \frac{n!}{x_1! \cdots x_k!}\,
+    \theta_1^{x_1} \cdots \theta_k^{x_k},
+\]
+and it generalises the following distributions:
 \begin{itemize}
-	\item Bernoulli cuando $k=2$ y $n=1$; pues $\ber{X;\theta} = \theta^{x} (1-\theta)^{1-x}$
-	\item Categórica (o \emph{multinoulli}): cuando $n=1$; pues $\cat{X;\theta} = \theta_1^{x_1}\cdots\theta_k^{x_k}$
-	\item Binomial: cuando $k=2$; pues $\bin{X;n,\theta} = \binom{n}{x} \theta^{x}(1-\theta)^{n-x}$
+  \item the \emph{Bernoulli} distribution when \(k = 2\) and \(n = 1\);
+  \item the \emph{categorical} (or \emph{multinoulli}) distribution when \(n = 1\);
+  \item the \emph{binomial} distribution when \(k = 2\).
 \end{itemize}
+
 \end{example}
+Observe that the parameter $\theta$ for the multinomial (and the other related three distributions) is a discrete probability function. This means that constructing the prior $p(\theta)$ implies the definition of a probability distribution over probability distributions.  
 
-Observemos que el parámetro $\theta$ en la distribución multinomial (y las otras tres) es precisamente una distribución de probabilidad (discreta). Es decir, el construir un prior $p(\theta)$ implica definir una distribución sobre distribuciones discretas.  
 
-
-\begin{definition}[Distribución de Dirichlet]
-Consideremos la  distribución de Dirichlet
+\begin{definition}[Dirichlet distribution]
+Let us consider the distribution 
 \begin{equation}
 	\theta \sim \dir{\theta|\alpha} = \frac{1}{B(\alpha)} \prod_{i=1}^k \theta_i^{\alpha_i-1},
 \end{equation}
-donde $\alpha = (\alpha_1,\ldots,\alpha_k)$ es el parámetro de concentración y la constante de normalización está dada por $B(\alpha)=\prod_{i=1}^k\Gamma(\alpha_i)/\Gamma(\sum_{i=1}^k\alpha_i)$. El soporte de esta distribución es el simplex presentado en la ecuación \eqref{eq:simplex}.
+where $\alpha = (\alpha_1,\ldots,\alpha_k)$ is a concentration parameter and the normalising constant is given by  $B(\alpha)=\prod_{i=1}^k\Gamma(\alpha_i)/\Gamma(\sum_{i=1}^k\alpha_i)$. The support of this distribution is the simplex presented in eq.~\eqref{eq:simplex}.
 \end{definition}
 
-
-En el caso $k=3$, la distribución de Dirichlet puede ser graficada en el simplex de 2 dimensiones. La Figura \ref{fig:dist_Dirichlet} presenta tres gráficos para distintos valores del parámetro de concentración. 
+For $k=3$, Dirichlet's distribution can be plotted in  2 dimensions. Fig.~\ref{fig:dist_Dirichlet} shows tres plots for differnet values of the concentration parameter.
 
 \begin{figure}[H]
 \includegraphics[width=0.3\textwidth]{img/stats_dirichlet111.png}
 \includegraphics[width=0.3\textwidth]{img/stats_dirichlet101010.png}
 \includegraphics[width=0.3\textwidth]{img/stats_dirichlet1022.png}
-\caption{Distribuciones Dirichlet para $k=3$ con parámetros de concentración $\alpha$ (desde izquierda a derecha) dado por $[1,1,1]$, $[10,10,10]$ y $[10,2,2]$. }.
+\caption{Dirichlet distribution for $k=3$ with concentration parameters  $\alpha$ (left to right) $[1,1,1]$, $[10,10,10]$ y $[10,2,2]$. }.
 \label{fig:dist_Dirichlet}
 \centering
 \end{figure}
 
-
-Veamos a continuación que la distribución de Dirichlet es conjugada al modelo Multinomial, y consecuentemente para Bernoulli, Categórica y Binomial. En efecto, si $\theta \sim \dir{\theta;\alpha}$ y $X\sim\mul{X;n,\theta}$, entonces
+We will see now that the Dirichlet distribution is conjugate to the Multinomial, and, as a consequence, to Bernoulli, Categorical and Binomial. In fact, if $\theta \sim \dir{\theta;\alpha}$ y $X\sim\mul{X;n,\theta}$, then
 
 \begin{align}
 	p(\theta|x) &= \frac{\mul{x;n,\theta}\dir{\theta;\alpha}}{p(x)}\nonumber\\
@@ -685,10 +654,10 @@ Veamos a continuación que la distribución de Dirichlet es conjugada al modelo 
 				&=  \frac{1}{B(\alpha')} \prod_{i=1}^k \theta_i^{\alpha'_i-1}
 				\label{eq:dirichlet_post}
 \end{align}
-donde $\alpha' = (\alpha'_1,\ldots,\alpha'_k) = (\alpha'_1 + x_1,\ldots,\alpha'_k+ x_k)$ es el nuevo parámetro de concentración.
+where $\alpha' = (\alpha'_1,\ldots,\alpha'_k) = (\alpha'_1 + x_1,\ldots,\alpha'_k+ x_k)$ is the updated concentration parameter.
 
 \begin{example}
-	Consideremos $\alpha = [1,2,3,4,5]$ y generemos una muestra de $\theta\sim\dir{\theta|\alpha}$. El siguiente código genera, grafica e imprime esta muestra. 
+	Let us consider $\alpha = [1,2,3,4,5]$ and generate a sample from $\theta\sim\dir{\theta|\alpha}$. The following snippet generated, plots and prints this sample. 
 	\begin{lstlisting}[language=Python]
 	import numpy as np
 	alpha = np.array([1,2,3,4,5]) 
@@ -696,9 +665,9 @@ donde $\alpha' = (\alpha'_1,\ldots,\alpha'_k) = (\alpha'_1 + x_1,\ldots,\alpha'_
 	plt.bar(np.arange(5)+1, theta);
 	print(f'theta = {theta}')
 \end{lstlisting}
-En nuestro caso, obtuvimos los parámetros $ \theta = [0.034, 0.171, 0.286, 0.185, 0.324]$.
+In our case, the obtained parameters are $ \theta = [0.034, 0.171, 0.286, 0.185, 0.324]$.
 
- Ahora, usaremos un prior Dirichlet sobre $\theta$ con $\alpha_p = [1,1,1,1,1]$ para calcular la posterior de acuerdo a la ecuación \eqref{eq:dirichlet_post}. La Figura \ref{fig:post_Dirichlet} muestra 50 muestras de la distribución posterior para distintas cantidades de observaciones entre 0 y  $ 10^5$. 
+ Now, using a Dirichlet prior over $\theta$ con $\alpha_p = [1,1,1,1,1]$ to calculate the posterior according to eq.~\eqref{eq:dirichlet_post}. Fig.~\ref{fig:post_Dirichlet} shows 50 samples from the posterior for different amounts of observations between 0 and $ 10^5$. 
 
 \begin{figure}[H]
 \centering
@@ -708,84 +677,49 @@ En nuestro caso, obtuvimos los parámetros $ \theta = [0.034, 0.171, 0.286, 0.18
 \includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_1000.pdf}
 \includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_10000.pdf}
 \includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_100000.pdf}
-\caption{Concentración de la distribución posterior en torno al parámetro real para un modelo $X\sim\mul{\theta}$ y una distribución a priori Dirichlet $\theta\sim\dir{\alpha}$. Se considera desde 0 hasta $10^5$ observaciones y cada gráfico (desde izquierda-arriba hasta derecha-abajo) muestra el parámetro real (linea roja quebrada), la media posterior (línea azul quebrada) y 50 muestras de la posterior (azul claro). Observe cómo la distribución a priori (línea azul quebrada en la primera figura) pierde importancia a medida que el número de observaciones aumenta.}
+\caption{Posterior concentration around the real parameter for a model $X\sim\mul{\theta}$ and the prior Dirichlet distribution $\theta\sim\dir{\alpha}$. Observations considered ranged between 0 and $10^5$, and each plot whows the the true parameter in (broken red line), the posterior mean (broken blue line) and 50 samples from thr posterior (light blue). Observe how the effect of the prior (broken blue line in the first plot) vanishes as the number of observations grows.}
 \label{fig:post_Dirichlet}
 \end{figure}
 \end{example}
 
 
-\begin{example} \textbf{Modelo gaussiano ($\sigma^2$ conocido).} Consideremos el prior sobre la media $p(\mu) = \cN(\mu_0,\sigma_0^2)$, con lo que la posterior está dada por  
+\begin{example} \textbf{Gaussian model (known $\sigma^2$).} Let us consider the prior on the mean $p(\mu) = \cN(\mu_0,\sigma_0^2)$, in which case the posterior is given by
  \begin{align}
  	p(\mu|\mathcal{D}) &\propto \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{1}{2\sigma^2}(x_i-\mu)^2\right) \frac{1}{\sqrt{2\pi\sigma_0^2}}\exp\left(-\frac{1}{2\sigma_0^2}(\mu-\mu_0)^2\right)\label{eq:post_normal_mu_1}\\
  	&\propto \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-\mu)^2-\frac{1}{2\sigma_0^2}(\mu-\mu_0)^2\right),\label{eq:post_normal_mu_2}
  \end{align} 
- donde la proporcionalidad viene de ignorar la constante $p(\mathcal{D})$ en la primera línea e ignorar todas las contantes que no dependen de $\mu$ en la segunda línea. Recordemos que estas constantes para $\mu$ incluyen a la varianza de $x$, $\sigma^2$, por lo que ignorar esta cantidad es solo posible debido a que estamos considerando el caso en que $\sigma^2$ es conocido. Completando la forma cuadrática para $\mu$ dentro de la exponencial en la ec.~\eqref{eq:post_normal_mu_2}, obtenemos
+ where the proportionality arises from ignoring the constant $p(\mathcal{D})$ in the first line, and from disregarding all constants that do not depend on $\mu$ in the second line. Recall that these constants for $\mu$ include the variance of $x$, $\sigma^2$, so omitting this quantity is only possible because we are considering the case in which $\sigma^2$ is known. Completing the square in $\mu$ inside the exponential in Eq.~\eqref{eq:post_normal_mu_2}, we obtain
  \begin{equation}
  	p(\mu|\mathcal{D}) \propto \exp\left(-\frac{1}{2\sigma_n^2}(\mu - \mu_n)^2\right),\label{eq:post_normal_mu_3}
  \end{equation} 
- donde (ya definiremos $\mu_n$ y $\sigma_n^2$ en breve) como $p(\mu|\mathcal{D})$ debe integrar uno, la única densidad de probabilidad proporcional al lado derecho de la ecuación anterior es la Gaussiana de media $\mu_n$ y varianza $\sigma_n^2$. Es decir, la constante de proporcionalidad necesaria para la igualdad en la expresión anterior es
+where (we shall define $\mu_n$ and $\sigma_n^2$ shortly) since $p(\mu|\mathcal{D})$ must integrate to one, the only probability density proportional to the right-hand side of the previous equation is the Gaussian with mean $\mu_n$ and variance $\sigma_n^2$. That is, the proportionality constant required for equality in the expression above is
  \begin{equation}
      \int_\R\exp\left(-\frac{1}{2\sigma_n^2}(\mu - \mu_n)^2\right)\d\mu = (2\pi\sigma_n^2)^{n/2}.
- \end{equation} Consecuentemente, confirmamos que el prior elegido era efectivamente conjugado con la verosimilitud gaussiana, con lo que la posterior está dada por la siguiente densidad (gaussiana):
+ \end{equation} 
+ Consequently, we confirm that the chosen prior is indeed conjugate to the Gaussian likelihood, so the posterior is given by the following (Gaussian) density:
   \begin{equation}
  	p(\mu|\mathcal{D}) = \cN(\mu;\mu_n,\sigma_n^2) = \frac{1}{(2\pi\sigma_n^2)^{N/2}}\exp\left(-\frac{1}{2\sigma_n^2}(\mu - \mu_n)^2\right),\label{eq:post_normal_mu_4}
  \end{equation} 
- donde la media y la varianza están dadas respectivamente  por 
+where the mean and variance are given, respectively, by
  \begin{align}
  	\mu_n &= \frac{1}{\tfrac{1}{\sigma_0^2} + \tfrac{n}{\sigma^2}} \left(\frac{1}{\sigma_0^2}\mu_0 + \frac{n}{\sigma^2}\bar{x} \right), \quad \text{donde } \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\label{eq:post_Gm}\\
  	\sigma_n &= \left(\frac{1}{\sigma_0^2} + \frac{n}{\sigma^2}\right)^{-1}.\label{eq:post_Gv}
  \end{align}
 \end{example}
+
 \begin{remark}
-	La actualización bayesiana transforma los parámetros del prior de  $\mu$ desde  $\mu_0$ y $\sigma_0^2$ hacia $\mu_n$ y $\sigma_n^2$ en las ecs.~\eqref{eq:post_Gm} y \eqref{eq:post_Gv} respectivamente. Notemos que los  parámetros de la posterior son combinaciones (interpretables por lo demás) entre los parámetros del prior y los datos, en efecto, la $\mu_n$ es el promedio ponderado entre  $\mu_0$ (que es nuestro candidato para $\mu$ antes de ver datos) con factor $\sigma_0^{-2}$ y el promedio de los datos $\bar{x}$ con factor $(\sigma^{2}/n)^{-1}$, que a su vez es el estimador de máxima verosimilitud. Es importante también notar que  estos  factores son las varianzas inversas---i.e., precisión---de $\mu_0$ y de $\bar{x}$. Finalmente, observemos que $\sigma_n$ es la \emph{suma paralela} de las varianzas, pues  si expresamos la ec.~\eqref{eq:post_Gv} en términos de \emph{precisiones}, vemos que la precisión inicial $\sigma_0^2$ aumenta un término $\sigma^2$ con cada dato que vemos; lo cual tiene sentido pues con más información es la precisión la que debe aumentar y no la incertidumbre (en este caso representada por la varianza).
-\end{remark}
-\begin{example} \textbf{Modelo gaussiano ($\mu$ conocido).} Ahora procedemos con el siguiente prior para la varianza, llamado Gamma-inverso:
- \begin{equation}
- 	p(\sigma^2)= \text{inv-}\Gamma(\sigma^2;\alpha,\beta) = \frac{\beta^\alpha}{\Gamma(\alpha) (\sigma^2)^{\alpha+1}}\exp(-\beta/\sigma^2)
- \end{equation}
- esta densidad recibe dicho nombre pues es equivalente a modelar la precisión, definida como el recíproco de la varianza $1/\sigma^2$, mediante la distribución Gamma. Los hiperparámetros $\alpha$ y $\beta$ son conocidos como parámetros de forma y de tasa (o precisión) respectivamente. 
+Bayesian updating transforms the parameters of the prior on $\mu$ from $\mu_0$ and $\sigma_0^2$ to $\mu_n$ and $\sigma_n^2$ in Eqs.~\eqref{eq:post_Gm} and \eqref{eq:post_Gv}, respectively. Notice that the posterior parameters are combinations (which can be given a natural interpretation) of the prior parameters and the observed data. In particular, $\mu_n$ is a weighted average of $\mu_0$ (our prior candidate for $\mu$) with weight $\sigma_0^{-2}$ and the sample mean $\bar{x}$ with weight $(\sigma^2/n)^{-1}$, which is the maximum likelihood estimator. 
 
- Con este prior, la posterior de la varianza toma la forma:
- \begin{align}
- 	p(\sigma^2|\mathcal{D}) &\propto \prod_{i=1}^N \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{1}{2\sigma^2}(x_i-\mu)^2\right) \frac{\beta^\alpha}{\Gamma(\alpha) (\sigma^2)^{\alpha+1}}\exp(-\beta/\sigma^2)\\
- 	&\propto  \frac{1}{(\sigma^2)^{N/2+\alpha+1}}\exp\left(-\frac{1}{\sigma^2}\left(\frac{1}{2}\sum_{i=1}^N(x_i-\mu)^2 +\beta\right) \right)\nonumber
- \end{align} 
- donde nuevamente la proporcionalidad ha sido mantenida debido a la remoción de las constantes. Esta última expresión es proporcional a una distribución Gamma inversa con hiperparámetros $\alpha$ y $\beta$ ajustados en base a los datos observados. 
-
-
-\end{example}
-
-
-
-
-Hay ocasiones en las que el conocimiento a priori sobre el parámetro no puede ser convenientemente expresado mediante una densidad de probabilidad pero sí una densidad que no necesariamente integra uno o incluso es (Lebesgue) integrable. Para reflejar esta idea, se usan priors impropios.
-
-\begin{definition}[Prior impropia] Una distribución a priori impropia es una distribución que no es necesariamente de probabilidad (i.e., no integra 1), pero que de todas formas puede ser utilizada como distribución a priori en el contexto de inferencia bayesiana, pues la distribución posterior correspondiente si es una distribución de probabilidad apropiada. 
-\end{definition}
-
-\begin{remark} No es necesario usar la constante de normalización en las densidades a priori Gaussianas (o ninguna otra en realidad).
+It is also important to note that these weights correspond to the inverse variances, i.e., the precisions, of $\mu_0$ and $\bar{x}$. Finally, observe that $\sigma_n^2$ represents a \emph{parallel sum} of the variances: if we rewrite Eq.~\eqref{eq:post_Gv} in terms of precisions, we see that the initial precision $\sigma_0^{-2}$ is incremented by a contribution from each observed data point, which makes sense because with more information the precision should increase rather than the uncertainty (here represented by the variance).
 \end{remark}
 
-\begin{remark} Veamos que un prior impropio puede incluso tener integral infinita, en el caso de la distribución normal $X\sim\cN(X;\mu,1)$,  $\mu\in\R$, podemos elegir $p(\mu)\propto1$ y escribir 
-\begin{equation}
-	p(\mu|x)\propto p(x|\mu)\cdot 1 = \cN(x;\mu,1) = \cN(\mu;x,1). 
-\end{equation}
-	
-\end{remark}
 
-Considerar distribuciones uniformes impropias como priors no informativas parece tener sentido, pues intuitivamente no estamos dando preferencia (mayor probabilidad a priori) a ningún valor del parámetro por sobre otro. Sin embargo, este procedimiento sufre de una desventaja conceptual.
+\subsection{Bayesian estimators}
 
+So far, we have studied the rol of the prior in Bayesian inference, however, we have not leveraged this setup for building estimators. In particular, recall that the MLE does not incorporate a priori knowledge of the parameter. This can be addressed from a Bayesian standpoint.
 
-
-
-
-
-\subsection{Estimadores bayesianos}
-
-Si bien ya hemos estudiado el rol del prior en la inferencia bayesiana, hasta ahora no lo hemos considerado en la construcción de estimadores. En particular, el EMV no incorpora conocimiento a priori del parámetro. Con el objetivo de incorporar este conocimiento a priori en el cálculo de estimadores puntales, consideramos que en el caso general, podemos considerar otros estimadores puntuales a través de una función de pérdida asociada a estimar el parámetro $\theta$ mediante el estimador $\hat\theta$ dada por $L(\theta,\hat\theta)$. Con esto podemos definir los conceptos de riesgo y estimador bayesiano.
-
-\begin{definition}[Riesgo bayesiano]
-Para una función de pérdida $L(\theta,\hat\theta)$ y un conjunto de observaciones $\cD$, el riesgo bayesiano es la esperanza posterior de dicha función de pérdida, es decir
+\begin{definition}[Bayesian risk]
+For a loss function $L(\theta,\hat\theta)$ and observations $\cD$, the Bayesian risk is the posterior expectation of the loss function, that is
 \begin{equation}
     R(\hat\theta) = \int_\Omega L(\theta,\hat\theta)p(\theta|\cD)\d\theta.
 \end{equation}
@@ -793,28 +727,26 @@ Para una función de pérdida $L(\theta,\hat\theta)$ y un conjunto de observacio
 
 
 
-\begin{definition}[Estimador bayesiano]
-Dado un conjunto de datos $\cD$ y un riesgo bayesiano $R(\theta)$, un estimador bayesiano es uno que minimiza el riesgo bayesiano:
+\begin{definition}[Bayesian estimator]
+Given observations $\cD$ and the Bayesian risk $R(\theta)$, an estimator that minimises the Bayesian risk 
 \begin{equation}
-    \theta_\text{Bayes}(\cD) = \arg\min_{\Omega} R(\theta).
+    \theta_\text{Bayes}(\cD) = \arg\min_{\Omega} R(\theta)
 \end{equation}
-donde es implícito que $R(\cdot)$ se define con $\cD$.
+is known as Bayesian estimator. Here, it is implicit that $R(\cdot)$ is defined using $\cD$.
 \end{definition}
 
-A continuación, se definirán estimadores bayesianos  con distintas funciones de costo o de riesgo.
-
+We will now define Bayesian estimators corresponding to different loss or risk functions.
 
 \begin{definition}[Bayes' Least-Squares (BLS)]
-El  caso estándar es la función de pérdida cuadrática $L_2(\theta,\hat\theta) = (\theta-\hat\theta)^2$ la cual resulta en el estimador dado por la media posterior $\theta_\text{Bayes}(\cD) = \E{\theta|\cD}$
+The standard case is the quadratic loss function $L_2(\theta,\hat{\theta}) = (\theta-\hat{\theta})^2$, which leads to the estimator given by the posterior mean $\theta_{\mathrm{Bayes}}(\mathcal{D}) = \mathbb{E}[\theta \mid \mathcal{D}]$.
 \end{definition}
 
 
 \begin{definition}[Minimum absolute-error (MAE)]
-
-De forma similar,la función de costo $L_1(\theta,\hat\theta) = |\theta-\hat\theta|_1$ resulta en el estimador dado por la mediana posterior.
+Similarly, the cost function $L_1(\theta,\hat\theta) = |\theta-\hat\theta|_1$ results in the estimator that gives the posterior median.
 \end{definition}
 
-Encontrar una función de pérdida para el máximo a posteriori es menos directo. Consideremos en primer lugar el caso $\theta\in\Omega$ discreto y la pérdida ``0-1''
+Finding a loss function for the maximum a posteriori estimator is less straightforward. Let us first consider the case where $\theta \in \Omega$ is discrete and the ``0-1'' loss.
 \[   
 L_\text{0-1}(\theta,\hat\theta) = 
      \begin{cases}
@@ -823,20 +755,18 @@ L_\text{0-1}(\theta,\hat\theta) =
      \end{cases}
 \]
 
-El riesgo de Bayes asociado a $L_\text{0-1}(\theta,\hat\theta)$ (en el caso discreto) toma la forma
+The Bayes risk associated to $L_\text{0-1}(\theta,\hat\theta)$ (in the discrete case) takes the form
 \begin{equation}
     R(\hat\theta) = \Prob{\theta\neq\hat\theta|\cD} = 1-\Prob{\theta = \hat\theta|\cD},
 \end{equation}
-lo cual es minimizado eligiendo $\hat\theta$ tal que $\Prob{\theta = \hat\theta|\cD}$ es máximo, es decir, el MAP. ¿por qué no es posible proceder de esta forma para el caso continuo? ¿cuál es la función de costo asociada al MAP en el caso continuo?
+which is minimised by choosing $\hat{\theta}$ such that $\Prob{\theta = \hat\theta|\cD}$ is maximised, i.e., the MAP. Why is it not possible to proceed in this way for the continuous case? What is the loss function associated with the MAP in the continuous setting?
 
-\begin{definition}[Estimador máximo a posteriori]
-Sea $\theta \in \Theta$ un parámetro con distribución a posteriori $p(\theta |D)$ definida en todo $\Theta$. Entonces nos referiremos a su estimación puntual dada por: 
+\begin{definition}[MAximum a posteriori estimator]
+Let $\theta \in \Theta$ be a parameter with posterior $p(\theta |D)$ defined over $\Theta$. We refer to its point estimate given by : 
 $$
 \theta_{MAP}= \underset{\Theta}{\arg\max}\ p(\theta|D),
 $$
-
-como el estimador \emph{máximo a posteriori} (MAP). Se utiliza la siguiente función de costo:
-
+as the \emph{máximo a posteriori} (MAP) estimator. The following cost function is used:
 \[C(a,b)=\begin{cases}
   1, &|a-b|>0\\
   0, \sim
@@ -844,19 +774,19 @@ como el estimador \emph{máximo a posteriori} (MAP). Se utiliza la siguiente fun
 \end{definition}
 
 \begin{remark}
-Es posible encontrar el MAP solo teniendo acceso a una versión \emph{proporcional} a la distribución posterior, un escenario usual en inferencia bayesiana, o también mediante la maximización del logaritmo de ésta última. En efecto, 
+Notice that it is possible to find the MAP estimate using only a \emph{proportional} version of the posterior, as is common in Bayesian inference, or equivalently by maximising its logarithm. In fact, 
 $$
 \theta_{MAP} = \underset{\theta \in \Theta}{\arg\max }\ p(\theta|\mathcal{D}) = \underset{\theta \in \Theta}{\arg\max }\ p(\mathcal{D}|\theta)p(\theta)= \underset{\theta \in \Theta}{\arg\max}\left(\underbrace{\log p(\mathcal{D}|\theta)}_{l(\theta)} + \log p(\theta)\right),
 $$
-donde hemos encontrado la maximización de  la función de log-verosimilitud, pero ahora junto al log-prior.
+where we have found the maximisation of the log-likelihood function, but now combined with the log-prior.
 \end{remark}
 
 \begin{remark}
-Es relevante notar que el estimador MAP es una \emph{modificación} del EMV, pues ambos comparten una parte de la misma función objetivo (verosimilitud) con la diferencia que el MAP además incluye el término \emph{log-prior}. Esto puede entenderse como una regularización de la solución del problema de MV, en donde el término adicional puede representar las propiedades del estimador más allá de que las pueden ser exclusivamente revelada por los datos. 
+It is worth noting that the MAP estimator is a \emph{modification} of the MLE, since both share part of the same objective function (the likelihood), with the difference that the MAP additionally includes the \emph{log-prior} term. This can be understood as a form of regularisation of the MLE solution, where the additional term encodes properties of the estimator that may not be revealed by the data alone.
 \end{remark}
 
-\begin{example}[Máximo a posterior para el modelo gaussiano]
-En particular, para el modelo lineal y gaussiano que hemos considerado hasta ahora, podemos calcular $\theta_{MAP}$ para un prior Gaussiano de media cero y varianza $\sigma_\theta^2$. Éste está dado por (asumimos la varianza del ruido $\sigma_\epsilon^2$ conocida):	
+\begin{example}[MAP for the mean of the Gaussian model]
+In particular, for the linear Gaussian model we have considered so far, we can compute $\theta_{\mathrm{MAP}}$ for a Gaussian prior with zero mean and variance $\sigma_\theta^2$. It is given by (assuming the noise variance $\sigma_\epsilon^2$ is known):
 \begin{align}
 	\theta_\text{MAP}^\star 	&= \text{argmax } p(Y|\theta,X)p(\theta)\nonumber\\
 	\text{[ind., def.]}\ &= \text{argmax } \prod_{i=1}^N \cN(y_i;\theta^\top x_i,\sigma_\epsilon^2)\cN(\theta;0,\sigma_\theta^2) \nonumber\\
@@ -865,29 +795,29 @@ En particular, para el modelo lineal y gaussiano que hemos considerado hasta aho
 	\text{[log.]}\  &= \text{argmin } \sum_{i=1}^N{(y_i-\theta^\top x_i)^2} +{\frac{\sigma_\epsilon^2}{\sigma_\theta^2}||\theta |^2}.\nonumber 
 	\label{eq:MAP_reg_lin}
 \end{align}
-Podemos ver que eligiendo un prior uniforme o de normal de varianza muy amplia, el MAP es equivalente al EMV. ¿qué significa esto? ¿qué comportamiento differente de EMV promueve el MAP en este caso?
+We can see that by choosing a uniform prior or a Gaussian prior with very large variance, the MAP is equivalent to the MLE. What does this mean? What different behaviour does the MAP promote compared to the MLE in this case?
+
 \end{example}
 
 
+\subsection{Posterior predictive}
+
+In Bayesian inference, predictions play an important role, since after performing inference on a statistical model, we are generally interested in studying how future data will be generated by the model. To this end, we define the Bayesian prediction as
 
 
-
-
-\subsection{Posterior predictiva}
-
-En la inferencia bayesiana las predicciones ocupan un rol relevante, pues luego de realizar inferencia sobre un modelo estadístico, en general estamos interesados estudiar cómo serán los siguientes datos genearados por el modelo. Para esto definiremos la predicción bayesiana de la forma
-
-\begin{definition}[Posterior predictiva]
-Para un conjunto de datos $\cD$ y un parámetro $\theta$, la densidad posterior predictiva está dada por
+\begin{definition}[Posterior predictive]
+For a dataset $\mathcal{D}$ and a parameter $\theta$, the posterior predictive density is given by
 \begin{equation}
     p(x|\cD) = \int_\Omega p(x|\theta)p(\theta|\cD)\d\theta = \E{p(x|\theta) |\cD},
 \end{equation}
-es decir, el valor esperado del modelo estadístico con respecto a la ley posterior del parámetro (modelo).
+that is, the expected value of the statistical model with respect to the posterior distribution of the parameter (model).
+
 \end{definition}
-Podemos ahora considerar la posterior predictiva como nuestro modelo \emph{aprendido} y generar datos de él, donde nos encontramos frente al mismo dilema de un estimador puntual como en el caso anterior: es posible considerar muestras aleatorias, la media, la mediana o algún intervalo. 
+We can now consider the posterior predictive as our \emph{learned} model and generate data from it, where we face the same dilemma as with a point estimator in the previous case: it is possible to consider random samples, the mean, the median, or some interval.
+
 
 \begin{remark}
-La posterior predictiva es distinta (en general) a la predicción \emph{plug-in}, en donde consideramos en modelo estadístico $p_{\hat\theta}$ en base a un estimador (puntual) cualquiera $\hat\theta$. Desde esa perspectiva, la posterior predictiva equivale a considerar estimadores y modelos puntuales pero integrar todos ellos con respecto a la ley posterior. 
+The posterior predictive is generally different from the \emph{plug-in} prediction, in which we consider the statistical model $p_{\hat{\theta}}$ based on some (point) estimator $\hat{\theta}$. From this perspective, the posterior predictive is equivalent to considering point estimators and models, but integrating over all of them with respect to the posterior distribution.
 \end{remark}
 
 
