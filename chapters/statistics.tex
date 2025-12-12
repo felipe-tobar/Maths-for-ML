@@ -363,10 +363,16 @@ The MLE can be defined either in terms of the likelihood itself or any non-decre
 	&\Rightarrow  \sum_{i=1}^nx_i (1-\theta) = (n-\sum_{i=1}^nx_i) \theta\\
 	&\Rightarrow  \theta = \sum_{i=1}^nx_i/n.
 	\end{align*}
-		\todo{Plot $l(\theta)$ and MLE}
+	Both $l(\theta)$ and MLE for the Bernoulli model are shown in Figure \ref{fig:mle}.
 \end{example}
 
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/stats_bernoulli_mle.pdf}
+    \caption{Likelihood plot for the Bernoulli model with maximum (MLE estimator)}
+    \label{fig:mle} 
+\end{figure}
 
 
 
@@ -380,7 +386,7 @@ The MLE can be defined either in terms of the likelihood itself or any non-decre
 		L(\theta) = \theta^{-n}, \quad \theta\geq\max_{i=1,\ldots,n}\{x_i\}
 	\end{equation}
 	and the MLE is $\thetaMV = \max_{i=1,\ldots,n}\{x_i\}$.
-	\todo{Plot $l(\theta)$ and MLE}
+	% \todo{Plot $l(\theta)$ and MLE}
 
 \end{example}
 
@@ -426,7 +432,7 @@ Consequently, if the observations are given by $\{(t_i,x_i)\}_{i=1}^n$, the log-
 \end{align}
 where we can see that $\thetaMV$ can be calculated explicitely and it is a function of  $\{(t_i,x_i)\}_{i=1}^n$, since eq.~\eqref{eq:logV_ejemplo_reg} is quadratic in $[\theta_0,\theta_1,	\theta_2]$.
 
-\todo{plot and show the ML soln}
+\todo{plot and show the ML soln}  % get data for this
 
 
 % subsection estimador_de_mv_en_la_práctica_tres_ejemplos (end)
@@ -522,7 +528,7 @@ where:
     \item $p(\mathcal{D}) = \int_\Omega p(\mathcal{D}|\theta)p(\theta)\d \theta $ is the data marginal density.
 \end{itemize}
 \end{definition}
-\todo{include a plot: prior, likelihood, posterior.}
+
 
 The \emph{transition} from prior to posterior can be interpreted as the process of incorporating the evidence provided by the data (through the likelihood function) in order to reduce uncertainty about the value of the parameter $\Theta$. From  eq.~\eqref{eq:posterior_def} we can see that this process, sometimes referred to as \emph{Bayesian update}, amounts to multiplying by the likelihood and then normalising, ensuring that $p(\theta|\mathcal{D})$ is indeed a probability density.
 
@@ -550,7 +556,16 @@ $$
 p(\theta|X_1,..X_n)= \dfrac{p(X_1,\ldots,X_n|\theta)}{p(X_1,\ldots,X_n)} = \dfrac{1}{B(s+1,n-s+1)} \theta^{s} (1-\theta)^{n-s}.
 $$
 
+As a generalisation of the above, one can consider the Beta distribution itself as a  prior for the Bernoulli model. The density of a $Beta(\alpha,\beta)$ distribution with parameters $\alpha$ and $\beta$ is given by $Beta(\theta) = \theta^{\alpha-1} (1-\theta)^{\beta-1}$. It can be proven that when using a Beta prior, the posterior for the Bernoulli model will be given by $Beta(\alpha+s,\beta+n-s)$. We provide a visualisation of this when using $Beta(2,2)$ as a prior in Figure \ref{fig:beta_post}. Notice that when setting $\alpha=\beta=1$ we retrieve the uniform prior and the derivation above.
+
 \end{example} 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/stats_beta_posterior.pdf}
+    \caption{Example of the likelihood, Beta prior and posterior for the Bernoulli model.}
+    \label{fig:beta_post} 
+\end{figure}
 
 In some cases, the observations  $x_1,\ldots,x_n$ are available sequentially, or \emph{on line}. Therefore, assuming a prior $p(\theta)$, it is possible to perform on online, or continual, Bayesian update as new data are observed. After seeing $x_1$, the posterior $p(\theta|x_1)$ can be computed as: 
 $$
@@ -680,7 +695,6 @@ The obtained parameters are $ \theta = [0.034, 0.171, 0.286, 0.185, 0.324]$.
 \caption{Posterior concentration around the real parameter for a model $X\sim\mul{\theta}$ and the prior Dirichlet distribution $\theta\sim\dir{\alpha}$. Observations considered ranged between 0 and $10^5$, and each plot whows the the true parameter in (broken red line), the posterior mean (broken blue line) and 50 samples from thr posterior (light blue). Observe how the effect of the prior (broken blue line in the first plot) vanishes as the number of observations grows.}
 \label{fig:post_Dirichlet}
 \end{figure}
-\todo{re-run this plot with English labels}
 \end{example}
 
 
@@ -792,7 +806,7 @@ For the linear Gaussian model considered so far, we can compute $\theta_{\mathrm
 	\label{eq:MAP_reg_lin}
 \end{align}
 We can see that by choosing a uniform prior or a Gaussian prior with very large variance, the MAP is equivalent to the MLE. What does this mean? What different behaviour does the MAP promote compared to the MLE in this case?
-\todo{illustration if possible}
+% \todo{illustration if possible}  % something similar is done during the tutorial
 \end{example}
 
 
@@ -816,15 +830,13 @@ We can now consider the posterior predictive as our \emph{learned} model and gen
 The posterior predictive is generally different from the \emph{plug-in} prediction, in which we consider the statistical model $p_{\hat{\theta}}$ based on some (point) estimator $\hat{\theta}$. From this perspective, the posterior predictive is equivalent to considering point estimators and models, but integrating over all of them with respect to the posterior distribution.
 \end{remark}
 
-\todo{an example of posterior predictions vs plug-in predictions - there might be one in the ML lecture notes}
+\begin{example}{Bayesian vs plug-in prediction}
+	As an example of the advantages of a Bayesian approach, we may consider the estimation of the mean of a Gaussian distribution. When very few examples are available, a Bayesian estimation can be a better prediction than a \emph{plug-in} predictive. In Figure \ref{fig:bayesian_plugin} we compare the MLE with a Bayesian estimation of the mean (using a standard normal prior) when only five samples are available.
+\end{example}
 
-
-
-
-
-
-
-
-
-
-
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/stats_posterior_plugin.pdf}
+    \caption{Bayesian versus frequentist inference of a Gaussian distribution mean.}
+    \label{fig:bayesian_plugin} 
+\end{figure}
