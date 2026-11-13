@@ -333,6 +333,7 @@ Thus $f(b)\geq f(a)$.
 \end{proof}
 
 \begin{proposition}[Direction of steepest ascent]
+\label{prop:steepest_ascent}
 Let $f:\cX\to\R$ be differentiable on an open set $\cX\subseteq\R^d$. At a point $x_0\in\cX$ where $\nabla f(x_0)\neq0$, the gradient $\nabla f(x_0)$ points in the direction of greatest local increase of $f$, to first order. For steps of a fixed small Euclidean length, the corresponding unit direction is
 \begin{equation}
     u_\star=\frac{\nabla f(x_0)}{\norm{\nabla f(x_0)}}.
@@ -443,13 +444,12 @@ Consider three functions on $\R^2$.
 \end{enumerate}
 \end{example}
 
-\subsection{First order methods}
+\subsection{Gradient descent}
 \label{sub:first_order_methods}
 
 In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is often impractical; moreover, a stationary point need not be a minimum. For that reason, we will consider iterative methods based on gradients. The idea here is to go \emph{downhill} following the negative gradient towards a minimum (ignoring the curvature information for now). 
 
 We will specify a starting point $x_0$ and calculate
-
 \begin{equation}
 	x_{t+1} = x_t + \eta_t d_t,
 \end{equation}
@@ -459,7 +459,7 @@ Note that there are several \emph{descent directions}, that is, directions $d_t$
 \begin{equation}
 	f(x_t + \eta_t d_t) < f(x_t).
 \end{equation}
-In fact, as long as $d_t^\top\nabla f(x_t)<0$, $d_t$ is a descent direction. When the gradient is nonzero, choosing $d_t = -\nabla f(x_t)$ gives the \emph{steepest descent direction} for the Euclidean norm.
+In fact, as long as $d_t^\top\nabla f(x_t)<0$, $d_t$ is a descent direction. By Proposition~\ref{prop:steepest_ascent} applied to $-f$, whose gradient is $-\nabla f$, choosing $d_t=-\nabla f(x_t)$ gives the \emph{steepest descent direction} for the Euclidean norm, provided the gradient is nonzero.
 
 
 \subsubsection{Role of the step size}
@@ -468,12 +468,21 @@ In fact, as long as $d_t^\top\nabla f(x_t)<0$, $d_t$ is a descent direction. Whe
 The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule. We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to it: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, convergence may be very slow. 
 
 
+The learning rate is usually tuned based on heuristics. When implementing the rule
+\begin{equation}
+    x_{t+1} = x_t - \eta \nabla f(x_t),
+\end{equation}
+the appropriate learning rate depends on the curvature of $f$.
+
 \begin{example}[Convergence for a parabola]
+\label{ex:parabola_lr}
 
 Let us consider the function
 \begin{equation}
 	J = (\theta -3)^2.
 \end{equation}
+
+For this parabola, the error $e_t=\theta_t-3$ satisfies $e_{t+1}=(1-2\eta)e_t$. This is a stable autoregressive system when $|1-2\eta|<1$, that is, $0<\eta<1$.
 
 In Figure \ref{fig:parabola_lr} we show how the steepest descent converges/diverges for different learning rates.
 
@@ -489,11 +498,6 @@ In Figure \ref{fig:parabola_lr} we show how the steepest descent converges/diver
 \end{example}
 
 
-The learning rate is usually tuned based on heuristics. When implementing the rule 
-\begin{equation}
-	x_{t+1} = x_t - \eta \nabla f(x_t),
-\end{equation}
-the appropriate learning rate depends on the curvature of $f$. For the parabola above, the error $e_t=\theta_t-3$ satisfies $e_{t+1}=(1-2\eta)e_t$. This is a stable autoregressive system when $|1-2\eta|<1$, that is, $0<\eta<1$ (discuss this in class).
 
 
 
@@ -505,7 +509,9 @@ In higher dimensions, we want to move faster in some directions and slower in ot
 	m_t &= \beta m_{t-1} + \nabla f(x_{t-1})\\
 	x_t &= x_{t-1} - \eta_t m_t,
 \end{align}
-where $m_t$ accumulates past gradients, $m_0=0$, and $\beta\in[0,1)$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient consistently has the same sign, its contributions accumulate, whereas contributions that alternate in sign can cancel. This is particularly useful when the evaluation of the gradient is noisy. Figure \ref{fig:parabola_momentum} shows how learning changes using momentum, with the same learning rates as the previous example.
+where $m_t$ accumulates past gradients, $m_0=0$, and $\beta\in[0,1)$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient consistently has the same sign, its contributions accumulate, whereas contributions that alternate in sign can cancel. This is particularly useful when the evaluation of the gradient is noisy.
+
+Figure \ref{fig:parabola_momentum} illustrates the effect of momentum on the parabola from Example~\ref{ex:parabola_lr}, using the same learning rates.
 
 \begin{figure}[ht]
     \centering
@@ -541,7 +547,7 @@ As shown in Figure \ref{fig:newton_method}, this method converges in one step wi
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-\includegraphics[width=0.65\linewidth]{img/optimisation_parabola_newton.pdf}
+\includegraphics[width=0.48\linewidth]{img/optimisation_parabola_newton.pdf}
 	\caption{One-step parabola minimisation with the Newton method.}
 	\label{fig:newton_method}
     \end{minipage}
@@ -549,9 +555,14 @@ As shown in Figure \ref{fig:newton_method}, this method converges in one step wi
 \end{example}
 
 
+\Needspace{0.55\textheight}
 \subsection{Stochastic gradient descent}
 \label{sub:SGD}
 
+\begin{wrapfigure}{r}{0.48\textwidth}
+    \centering
+    \resizebox{0.96\linewidth}{!}{\input{img/optimisation_sgd_foundation}}
+\end{wrapfigure}
 
 We now consider stochastic optimisation, where
 \begin{equation}
@@ -571,18 +582,27 @@ The gradient is then also approximated using a batch of, say, $B$ samples. That 
 	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i).
 \end{equation}
 
-\begin{example}[Random loss function for linear regression]
+\WFclear
+\begin{example}[Estimating the expected loss in linear regression]
 
-Consider a toy example of linear regression where $q(y|x) = \mathcal{N}(y;x,\sigma^2)$ for a given $\sigma >0$. Consequently, we can compare the true expectation (equal to the variance in this case) with the empirical approximation for increasing values of $N$.
+Consider observations generated by $y_i=x_i+\epsilon_i$, where the noise terms are independent and $\epsilon_i\sim\mathcal{N}(0,\sigma^2)$. Thus $q(y\mid x)=\mathcal{N}(y;x,\sigma^2)$, and the true regression function is $f(x)=x$.
 
-Figure \ref{fig:stochastic_loss} shows how the empirical loss changes as we consider more and more samples.
+Suppose we use this predictor. Its squared error on observation $i$ is $(y_i-x_i)^2=\epsilon_i^2$: even though the regression function is correct, the noise makes the loss random. Its expected value is
+\[
+    \E\bigl[(y_i-x_i)^2\bigr]=\E[\epsilon_i^2]=\sigma^2.
+\]
+We can estimate this expectation using the average squared error over $N$ observations:
+\[
+    \widehat{L}_N=\frac{1}{N}\sum_{i=1}^N(y_i-x_i)^2.
+\]
+Figure \ref{fig:stochastic_loss} illustrates this for $\sigma=1$. The left panel shows the noisy observations and the true regression function. The right panel shows how $\widehat{L}_N$ fluctuates as observations are added, approaching the expected loss $\sigma^2=1$. Note that the curve illustrates estimation of the expected loss, not parameter  updates.
 
 \begin{center}
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
     \includegraphics[width=0.9\linewidth]{img/optimisation_toy_SGD.pdf}
-    \caption{Estimation of the true loss via the empirical value from data.}
+    \caption{Noisy regression data and the true regression function (left); empirical mean squared error approaching the expected loss $\sigma^2=1$ (right).}
     \label{fig:stochastic_loss}
     \end{minipage}
 \end{center}

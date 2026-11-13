@@ -1,0 +1,19 @@
+% Adapted labels over the original artwork, kept unmodified on disk.
+% Randall Munroe, xkcd #2347, https://xkcd.com/2347/ (CC BY-NC 2.5).
+\begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] (comic) at (0,0)
+        {\includegraphics[width=7.4cm]{img/xkcd_dependency.png}};
+    \begin{scope}[x={(comic.south east)},y={(comic.north west)}]
+        % Replace the two original captions, retaining the tower and arrow.
+        \fill[white] (0.11,0.878) rectangle (0.62,0.978);
+        \node[align=center,font=\large\bfseries,text width=4cm]
+            at (0.35,0.932) {All of\\generative AI};
+        \fill[white] (0.615,0.222) rectangle (0.97,0.464);
+        \node[align=center,font=\small\bfseries,text width=2.5cm]
+            at (0.79,0.35) {Stochastic\\gradient\\descent};
+        \node[anchor=north,align=center,font=\tiny,text width=7.4cm]
+            at (0.5,-0.015)
+            {Adapted from \href{https://xkcd.com/2347/}{xkcd \#2347}, Randall Munroe\\
+             \href{https://creativecommons.org/licenses/by-nc/2.5/}{CC BY-NC 2.5}; labels changed.};
+    \end{scope}
+\end{tikzpicture}
