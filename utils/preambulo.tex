@@ -13,7 +13,7 @@
 }
 
 %language
-%\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[english]{babel}
 %\usepackage[utf8x]{inputenc}
 \usepackage{apacite}
 
@@ -43,7 +43,7 @@
 
 %caption para figuras
 \captionsetup[figure]{width=.8\linewidth, font=small,labelfont={bf},name={Fig.},labelsep=period}
-\captionsetup[table]{width=.8\linewidth,font=small,labelfont={bf},name={Tabla},labelsep=period}
+\captionsetup[table]{width=.8\linewidth,font=small,labelfont={bf},name={Table},labelsep=period}
 
 
 \ifx\byn\undefined
@@ -56,29 +56,56 @@
     \definecolor{my_yellow}{HTML}{FFFFFF}
 \fi
 
+\usepackage{tikz}
 \usepackage[framemethod=TikZ]{mdframed}
 
-\mdfdefinestyle{discusion}{%
-    %linecolor=black,
-    %outerlinewidth=0pt,
+% Shared framing for examples and discussion boxes throughout the notes.
+\definecolor{exampleaccent}{HTML}{426582}
+\definecolor{discussionaccent}{HTML}{52766B}
+\ifx\byn\undefined
+    \definecolor{examplebackground}{HTML}{F5F7FA}
+    \definecolor{discussionbackground}{HTML}{F3F7F5}
+\else
+    \definecolor{examplebackground}{HTML}{FFFFFF}
+    \definecolor{discussionbackground}{HTML}{FFFFFF}
+\fi
+
+\mdfdefinestyle{notebox}{
+    linewidth=2pt,
+    leftline=true,
+    rightline=false,
+    topline=false,
+    bottomline=false,
     roundcorner=0pt,
-    innertopmargin=5pt,
-    innerbottommargin=5pt,
-    innerrightmargin=20pt,
-    innerleftmargin=20pt,
-    backgroundcolor=my_blue}
+    innerleftmargin=12pt,
+    innerrightmargin=12pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    skipabove=12pt,
+    skipbelow=12pt,
+    splittopskip=10pt,
+    splitbottomskip=10pt,
+    needspace=9\baselineskip,
+    frametitlefont=\normalfont\bfseries,
+    frametitleaboveskip=8pt,
+    frametitlebelowskip=6pt,
+    repeatframetitle=true,
+    font=\normalfont
+}
+
+\mdfdefinestyle{ejemplo}{
+    style=notebox,
+    linecolor=exampleaccent,
+    backgroundcolor=examplebackground
+}
+
+\mdfdefinestyle{discusion}{
+    style=notebox,
+    linecolor=discussionaccent,
+    backgroundcolor=discussionbackground
+}
 
 \colorlet{Green}{green!90}
-
-\mdfdefinestyle{ejemplo}{%
-    %linecolor=black,
-    %outerlinewidth=0pt,
-    roundcorner=0pt,
-    innertopmargin=5pt,
-    innerbottommargin=5pt,
-    innerrightmargin=20pt,
-    innerleftmargin=20pt,
-    backgroundcolor=my_yellow}
 
 \mdfdefinestyle{pendiente}{%
     style = discusion, 
@@ -170,16 +197,25 @@
 \usepackage{multicol}
 
 \usepackage{amsthm}
-\newtheorem{theorem}{Teorema}[section]
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
-\newtheorem{lemma}{Proposición}[theorem]
+\newtheorem{lemma}{Lemma}[theorem]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \newtheorem{remark}{Remark}[section]
 % Add Assumption environment
 \newtheorem{assumption}{Assumption}[section]
 \newtheorem{proposition}{Proposition}[section]
-\newtheorem{example}{Example}[section]
+% Shared numbered examples: [optional title][optional mdframed settings].
+\newcounter{example}[section]
+\renewcommand{\theexample}{\thesection.\arabic{example}}
+\NewDocumentEnvironment{example}{ O{} O{} }{%
+    \refstepcounter{example}%
+    \begin{mdframed}[style=ejemplo,#2,
+        frametitle={Example \theexample\if\relax\detokenize{#1}\relax\else\enspace\textperiodcentered\enspace #1\fi}]%
+}{%
+    \end{mdframed}%
+}
 \newtheorem{exercise}{Exercise}[section]
 
 

@@ -37,7 +37,7 @@ In summary:
     \item ${X}$ is a RV in $\mathfrak{X}$
     \item $x$ is the data, a realisation of $X$ and a generic element of $\mathfrak{X}$.
 \end{itemize}
-\begin{example}[Computer manufacturer]
+\begin{example}[Computer manufacturer][nobreak=true]
 A computer manufacturer wishes to estimate the lifetime of a particular component in its computers. To do this, data is first collected from computers that have been used under normal conditions. After consulting with experts, they decide to use a normal distribution to model the time it will take for the component of interest to fail. The useful life of the components is then modelled with an average lifetime $\theta$ and variance $\sigma^2$, with $\theta$ and $\sigma^{2}$  unknown parameters. If there are $N$ components, the random variables that model the useful life of each component will be identified as 
 $X_1,\ldots,X_N$, with $X_i \sim \mathcal{N}(\theta,\sigma^{2}), \forall i=1,\ldots,N$. What do you think of this model?
 \end{example}
@@ -110,7 +110,7 @@ is a sufficient statistic. Indeed, $P_\theta(X\in A|X=x) = \ind_{A}(x)$ does not
 	Observe that $T(x) = \sum\limits_{i=1}^{n} x_i$ is a sufficient statistic for $\theta$. In fact (by definition):  
 	\begin{alignat*}{3}
 		P(X=x|T(X)=t) 	&= \frac{P(T(X)=t| X=x )P( X=x )}{P(T(X)=t)} \quad&&\text{(Bayes thm)}\\
-						&= \frac{\ind_{T(x)=t}\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}}{\binom{n}{t}\theta^t(1-\theta)^{n-t}} &&\text{(model, and sum of Bernoulli is  Binomial)}\\
+						&= \frac{\ind_{T(x)=t}\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}}{\binom{n}{t}\theta^t(1-\theta)^{n-t}} &&\text{(Bernoulli sum is binomial)}\\
 						&= \ind_{T(x)=t} \binom{n}{t}^{-1} && \text{(since $T(x)=t$)}
 	\end{alignat*}
 	Therefore, $T(x)=\sum\limits_{i=1}^{n} x_i$ is a sufficient statistic.
@@ -249,7 +249,7 @@ Why do we use the exponent 2 used and not other such as 4 or 1?
 \end{remark}
 
 
-\begin{example}[$0-1$ loss]
+\begin{example}[$0-1$ loss][nobreak=true]
 	\label{ex:costo_0-1}
 When estimating parameters in a space with no order relation, the $0-1$ loss is usually considered. This is given by
 $$
@@ -686,12 +686,12 @@ The obtained parameters are $ \theta = [0.034, 0.171, 0.286, 0.185, 0.324]$.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_0.pdf}
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_10.pdf}
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_100.pdf}\\
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_1000.pdf}
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_10000.pdf}
-\includegraphics[width=0.3\textwidth]{img/stats_post_dirichlet_100000.pdf}
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_0.pdf}
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_10.pdf}
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_100.pdf}\\
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_1000.pdf}
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_10000.pdf}
+\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_100000.pdf}
 \caption{Posterior concentration around the real parameter for a model $X\sim\mul{\theta}$ and the prior Dirichlet distribution $\theta\sim\dir{\alpha}$. Observations considered ranged between 0 and $10^5$, and each plot whows the the true parameter in (broken red line), the posterior mean (broken blue line) and 50 samples from thr posterior (light blue). Observe how the effect of the prior (broken blue line in the first plot) vanishes as the number of observations grows.}
 \label{fig:post_Dirichlet}
 \end{figure}
@@ -830,7 +830,7 @@ We can now consider the posterior predictive as our \emph{learned} model and gen
 The posterior predictive is generally different from the \emph{plug-in} prediction, in which we consider the statistical model $p_{\hat{\theta}}$ based on some (point) estimator $\hat{\theta}$. From this perspective, the posterior predictive is equivalent to considering point estimators and models, but integrating over all of them with respect to the posterior distribution.
 \end{remark}
 
-\begin{example}{Bayesian vs plug-in prediction}
+\begin{example}[Bayesian vs plug-in prediction]
 	As an example of the advantages of a Bayesian approach, we may consider the estimation of the mean of a Gaussian distribution. When very few examples are available, a Bayesian estimation can be a better prediction than a \emph{plug-in} predictive. In Figure \ref{fig:bayesian_plugin} we compare the MLE with a Bayesian estimation of the mean (using a standard normal prior) when only five samples are available.
 \end{example}
 

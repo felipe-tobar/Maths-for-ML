@@ -4,11 +4,11 @@
 \section{Optimisation}
 \label{cap:optimisation}
 
-\textbf{NB:} in this chapter, we follow \cite{pml1Book} and \cite{deisenroth2020mathematics}. For a deeper presentation of the topics covered here, also see \cite{nesterov2018lectures} and \cite{boyd2004convex}.\\
+\textbf{NB:} This chapter follows \cite{pml1Book} and \cite{deisenroth2020mathematics}. For a deeper presentation, also see \cite{nesterov2018lectures} and \cite{boyd2004convex}.\\
 
-\noindent Optimisation is central to ML, since models are \emph{trained} by minimising a loss function (or optimising a reward function). In general, model design involves the definition of a training objective or \textbf{loss}, that is, a function that denotes \textbf{how well a model fits the data}. This training objective is a function of the training data and a chosen model, the latter usually represented by its parameters. The best model is thus chosen by optimising the loss function. 
+\noindent Optimisation is central to ML: in the vast majority of cases, models are \emph{trained} by either minimising a loss function or maximising a reward function. In general, model design involves the definition of a training objective or \textbf{loss}, that is, a function that denotes \textbf{how well a model fits the data}. This training objective is a function of the training data and a chosen model, the latter usually represented by its parameters. The best model is thus chosen by optimising the loss function. 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Linear regression (LR)}]
+\begin{example}[Linear regression (LR)]
 
 In the LR setting, we aim to determine the function
 \begin{align}
@@ -29,17 +29,19 @@ conditional to a set of observations
 \end{equation}
 We show an example of a linear model learnt from data in Figure \ref{fig:lr_crickets}.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_example_lr_crickets.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_example_lr_crickets.pdf}
     \caption{Example of a linear regression model minimising the least squares loss.}
     \label{fig:lr_crickets} 
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Logistic regression}]
+\begin{example}[Logistic regression]
 
 Here, we aim to determine the function
 \begin{align}
@@ -55,22 +57,24 @@ conditional to the  observations
  The standard loss function for the classification problem is the cross entropy, given by:
 \begin{align}
 	J(\datos,f) &= -\frac{1}{N} \sum_{i=1}^N \left(c_i\log f(x_i) + (1-c_i)\log(1-f(x_i))\right)\\
-				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x+b}) -y_i(-\theta^\top x+b)  \right).
+				&=  \frac{1}{N} \sum_{i=1}^N \left( \log(1+e^{-\theta^\top x_i+b}) -(1-c_i)(-\theta^\top x_i+b)  \right).
 	\label{eq:x_entropy_cost}
 \end{align}
 Figure \ref{fig:log_reg_example} shows an example of a binary classification task minimising the cross entropy to separate data generated from two Gaussian distributions.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_example_logreg.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_example_logreg.pdf}
     \caption{Example of a logistic regression model to classify data from two Gaussians.}
     \label{fig:log_reg_example}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Clustering ($K$-means)}]
+\begin{example}[Clustering ($K$-means)]
 
 Given a set of observations
 \begin{equation}
@@ -84,58 +88,77 @@ we aim to find cluster centres (or prototypes) $\mu_1,\mu_2,\ldots, \mu_K$ and \
 \end{align}
 An example of a $K$-means model after the loss minimisation is shown on Figure \ref{fig:kmeans_example}
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_example_kmeans.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_example_kmeans.pdf}
     \caption{Implementation of the $K$-means method to clustering data from two Gaussians. The figure shows the learnt centroids (black cross) and the colours correspond to the cluster assignments.}
     \label{fig:kmeans_example}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 \subsection{Terminology} % (fold)
 \label{sub:opt_terminology}
 
-We denote an optimisation problem as follows: 
-
+We write a constrained optimisation problem as
 \begin{equation}
-	\min_{x\in\cX} f(x), \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J.
+    \begin{aligned}
+        &\min_{x\in\cX} f(x)\\
+        &\text{subject to } g_i(x)\leq 0,\quad i=1,\ldots,I,\\
+        &\phantom{\text{subject to }} h_j(x)=0,\quad j=1,\ldots,J.
+    \end{aligned}
 \end{equation}
-We describe the components of this statement in detail: 
+Its components are:
 
 \begin{itemize}
-	\item \textbf{Objective function:} The function $f:\cX\to \R$ is the quantity to be minimised, with respect to $x$. 
-	\item \textbf{Optimisation variable:} Minimising $f$ requires finding the value of $x$, such that $f(x)$ is minimum. This is also written as
-	\begin{equation}
-	x_\star = \argmin_{x\in\cX} f(x), \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0.
-	\end{equation}
-	\item \textbf{Restrictions:} These are denoted by the functions $g_i$ and $h_i$ above, which describe the requirements for the optimiser in the form of equalities and inequalities, respectively. 
-	\item \textbf{Feasible region:}  This is the subset of the domain that complies with the restrictions, that is 
-	\begin{equation}
-		C = \{x\in\cX, \text{~ s.t.,~ } g_i(x)\leq 0,~  h_j(x) = 0,~ i=1,\ldots,I,~ j=1,\ldots,J \}.
-	\end{equation}
-	\item \textbf{Local / global optima.} Values for the optimisation variable that solve the optimisation problem either locally or globally. More formally: 
-	\begin{align}
-		\text{$x_\star$ is a local optima} &\iff \exists \lambda>0 \text{~ s.t.~ }  x_\star = \argmin_{ x\in\cX \text{~ s.t.~ } ||x-x_\star||\leq \lambda } f(x). \\
-		\text{$x_\star$ is a global optima} &\iff x_\star = \argmin_{ x\in\cX } f(x). 
-	\end{align}
+    \item \textbf{Objective function:} The function $f:\cX\to\R$ assigns a value to each candidate $x$. We seek to minimise this value.
+    \item \textbf{Optimisation variable and minimiser:} The variable $x$ is the quantity we choose. A global minimiser $x_\star$, when one exists, satisfies
+    \begin{equation}
+        x_\star\in\argmin_{x\in C} f(x),
+    \end{equation}
+    where $C$ is the feasible region defined below. The operator $\argmin$ denotes the \emph{set} of minimisers; the minimum value is $f(x_\star)$. A minimiser need not exist, and it need not be unique.
+    \item \textbf{Constraints:} The inequalities $g_i(x)\leq 0$ and equalities $h_j(x)=0$ specify which choices of $x$ are allowed.
+    \item \textbf{Feasible region:} The set of all points satisfying the constraints is
+    \begin{equation}
+        C=\bigl\{x\in\cX\mid g_i(x)\leq 0\ \forall i=1,\ldots,I,\quad
+        h_j(x)=0\ \forall j=1,\ldots,J\bigr\}.
+    \end{equation}
+    \item \textbf{Local and global minimisers:} Let $x_\star\in C$. It is a local minimiser if it minimises $f$ among nearby \emph{feasible} points:
+    \begin{equation}
+        \exists\,\delta>0\quad\text{such that}\quad
+        f(x_\star)\leq f(x)\quad
+        \forall x\in C\text{ with }\norm{x-x_\star}<\delta.
+    \end{equation}
+    It is a global minimiser if it minimises $f$ over the entire feasible region:
+    \begin{equation}
+        f(x_\star)\leq f(x)\quad\forall x\in C.
+    \end{equation}
+    Every global minimiser is also a local minimiser. For an unconstrained problem, $C=\cX$.
 \end{itemize}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Unique and non-unique closed form minima}]
-In unconstrained optimisation, we have functions that have a unique global minimum and others that have more than one. For instance, Figure \ref{fig:example_local_global} shows $(x-1)^2 + (y+2)^2$ on the left, which has a unique minimiser on $(x, y) = (1, -2)$ and $(x^2-1)^2 + (y^2 -1)^2$ on the right, where every global minimiser belongs to the set $\{(x,y) : x=+-1 \land y=+-1\}$.
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{example}[Unique and non-unique global minimisers]
+Different points can attain the same minimum value. Figure \ref{fig:example_local_global} illustrates this distinction. The function $(x-1)^2+(y+2)^2$ on the left has the unique global minimiser $(1,-2)$. The function $(x^2-1)^2+(y^2-1)^2$ on the right has four global minimisers, forming the set $\{-1,1\}\times\{-1,1\}$. Both functions have the same minimum value, namely $0$.
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_example_2d_parametric.pdf}
-    \caption{Functions with a unique (left) and non-unique (right) global minima.}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_example_2d_parametric.pdf}
+    \caption{Functions with a unique global minimiser (left) and four global minimisers (right).}
     \label{fig:example_local_global}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
-\begin{mdframed}[style=discusion, frametitle={\center Interplay between constraints and local/global optima}]
-On the other hand, we may be presented with functions such as $f(x,y) = \sin(x)*\sin(y) + 0.1(x^2+y^2)$, which has a global minimum but also local minima. Figure \ref{fig:example_restricted_minima} shows how different restrictions change the number and type of optima. In this case, when restricting the minimisation problem to the circle centred in $(1.5,1)$ with radius $2$, we observe a minimiser that is not the global minimum of the unconstrained problem (an unfeasible point) nor one of the local minima.
+\begin{mdframed}[style=discusion, frametitle={Discussion\enspace\textperiodcentered\enspace Constraints and local/global optima}]
+Constraints can change both the location and the value of the optimum. Consider $f(x,y)=\sin x\cos y+0.1(x^2+y^2)$, the function plotted in Figure \ref{fig:example_restricted_minima}. The left panel shows the unconstrained problem; the right panel restricts the feasible region to the closed disk
+\[
+    C=\{(x,y)\in\R^2\mid (x-1.5)^2+(y-1)^2\leq 4\}.
+\]
+The unconstrained global minimiser lies outside this disk. The constrained minimiser lies on its boundary and need not be a local minimiser of the unconstrained problem: directions that would decrease the objective may lead outside the feasible region. The marked points are numerical approximations obtained by evaluating the function on a grid.
 
 \end{mdframed}
 
@@ -143,7 +166,7 @@ On the other hand, we may be presented with functions such as $f(x,y) = \sin(x)*
     \centering
     \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex.pdf}
 	\includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex_constrained.pdf}
-    \caption{Minima for constrained (left) and unconstrained (right) problems.}
+    \caption{Approximate minimisers for unconstrained (left) and constrained (right) problems.}
     \label{fig:example_restricted_minima}
 \end{figure}
 
@@ -153,16 +176,16 @@ On the other hand, we may be presented with functions such as $f(x,y) = \sin(x)*
 \subsection{Continuous unconstrained optimisation} % (fold)
 \label{sec:continuous_optimisation}
 
-We will ignore constrains in this section, and focus on problems of the form
+We now consider unconstrained optimisation on an open set $\Theta\subseteq\R^d$. We seek a minimiser of the form
 
 \begin{equation}
-	\theta \in \argmin_{\theta\in\Theta} L(\theta).
+	\theta_\star \in \argmin_{\theta\in\Theta} L(\theta).
 \end{equation}
-We emphasise that if $\theta_\star$ satisfies the above, then
+If $\theta_\star\in\Theta$ satisfies the above, then
 \begin{equation}
 	\forall \theta\in\Theta,~ L(\theta_\star) \leq L(\theta),
 \end{equation}
-meaning that it is a \textbf{global} optimum. However, as this might be very hard to find, we are also interested in local optima, that is, $\theta_\star$  such that 
+meaning that it is a \textbf{global minimiser}. Finding one may be difficult, so we also consider local minimisers: points $\theta_\star\in\Theta$ such that 
 \begin{equation}
 \exists\, \delta > 0  \;\; 
 \text{s.t.} \;\; \forall\, \theta \in \Theta \;\; 
@@ -174,35 +197,27 @@ L(\theta_\star) \le L(\theta).
 We now review the \textbf{optimality conditions}.
 
 \begin{assumption}
-The loss function $L$ is twice differentiable.
+The loss function $L:\Theta\to\R$ is twice continuously differentiable on the open set $\Theta$.
 \end{assumption}
 
-Denoting $g(\theta) = \nabla_\theta L(\theta)$ and $H(\theta) = \nabla_\theta^2L(\theta)$, we can state the following optimality conditions. 
+Write $g(\theta)=\nabla L(\theta)$ for the gradient and $H(\theta)=\nabla^2 L(\theta)$ for the Hessian. A point where $g(\theta)=0$ is called a \emph{stationary point}. The following conditions apply:
 
 \begin{itemize}
-	\item \textbf{First order necessary condition:} If $\theta_\star$ is a local minimum, then 
-	\begin{itemize}
-		\item $\nabla_\theta L(\theta_\star)=0$.
-	\end{itemize}
-	\item \textbf{Second order necessary condition:} If $\theta_\star$ is a local minimum, then 
-	\begin{itemize}
-		\item $\nabla_\theta L(\theta_\star)=0$
-		\item $\nabla^ 2_\theta L(\theta_\star)$ is positive semidefinite
-	\end{itemize}
-	\item \textbf{Second order sufficient condition:} If $\theta_\star$ is a local minimum if and only if 
-	\begin{itemize}
-		\item $\nabla_\theta L(\theta_\star)=0$
-		\item $\nabla^ 2_\theta L(\theta_\star)$ is positive definite
-	\end{itemize}
+    \item \textbf{First order necessary condition:} If $\theta_\star$ is a local minimiser, then $g(\theta_\star)=0$.
+    \item \textbf{Second order necessary condition:} If $\theta_\star$ is a local minimiser, then $g(\theta_\star)=0$ and $H(\theta_\star)$ is positive semidefinite.
+    \item \textbf{Second order sufficient condition:} If $g(\theta_\star)=0$ and $H(\theta_\star)$ is positive definite, then $\theta_\star$ is a \emph{strict} local minimiser: every sufficiently close distinct point has a strictly larger loss.
 \end{itemize}
 
+\begin{remark}
+Positive definiteness is sufficient, but not necessary, even for a strict local minimum: $L(\theta)=\theta^4$ has a strict global minimum at $0$, yet $L''(0)=0$. A positive semidefinite Hessian at a stationary point is not sufficient either: for $L(\theta)=\theta^3$, both $L'(0)$ and $L''(0)$ vanish, but $0$ is not a local minimum.
+\end{remark}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: different stationary points}]
+\begin{example}[Different stationary points]
 
-Let us consider the function
+For a fixed parameter $p\in\R$, consider the function
 \begin{align}
   f \colon \R^2 &\to \R\nonumber\\
-  x &\mapsto f(x)=(p-1)x^2 + (p+1)y^2,\quad p\in\R
+  (x,y) &\mapsto f(x,y)=(p-1)x^2 + (p+1)y^2
    \label{eq:example_fn_stationary_points} 
 \end{align}
 Observe that
@@ -210,186 +225,250 @@ Observe that
 	\nabla f = \begin{bmatrix}   2(p-1)x \\ 2(p+1)y   \end{bmatrix},
 	\label{eq:nabla_example_fn_stationary_points}
 \end{equation}
-meaning that the only stationary points is  $(x,y) = (0,0)$. Furthermore, 
+so the origin is the unique stationary point when $p\neq\pm1$. Furthermore, 
 \begin{equation}
 	\nabla^2 f = \begin{bmatrix}   2(p-1) & 0 \\ 0 & 2(p+1)   \end{bmatrix},
 	\label{eq:nabla2_example_fn_stationary_points}
 \end{equation}
-where we have 3 possible cases: 
+The eigenvalues of the Hessian are $2(p-1)$ and $2(p+1)$, giving the following cases:
 
 \begin{itemize}
-	\item $p>1$: The stationary point is a minimum
-	\item $-1<p<1$: The stationary point is a \emph{saddle point}
-		\item $p<-1$: The stationary point is a maximum
+    \item $p>1$: The Hessian is positive definite, and the origin is the unique strict global minimiser.
+    \item $-1<p<1$: The Hessian has one positive and one negative eigenvalue, and the origin is a \emph{saddle point}.
+    \item $p<-1$: The Hessian is negative definite, and the origin is the unique strict global maximiser.
+    \item $p=1$: We have $f(x,y)=2y^2$. Every point on the $x$ axis is stationary and is a global minimiser, with value $0$. None is a strict local minimiser.
+    \item $p=-1$: We have $f(x,y)=-2x^2$. Every point on the $y$ axis is stationary and is a global maximiser, with value $0$. None is a strict local maximiser.
 \end{itemize}
-Figure \ref{fig:critical_points} shows the function behaviour for different $p$. What happens when $|p|=1$?
+Figure \ref{fig:critical_points} illustrates the three cases with $p\neq\pm1$.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_2d_critical_points.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_2d_critical_points.pdf}
     \caption{Different types of critical points for $f(x,y)=(p-1)x^2 + (p+1)y^2$.}
     \label{fig:critical_points} 
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 \subsection{Convex optimisation}
 \label{subsec:convex_opt}
 
 
-This setting is defined by having a convex objective function and a convex feasible region. Critically, in the setting of convex optimisation a local minimum (according to the first/second order conditions presented above) is a global minimum. We next formally provide the relevant definitions.
+A convex optimisation problem minimises a convex objective function over a convex feasible region. Its central property is that \emph{every local minimiser is a global minimiser}; differentiability is not required for this result. We first define convexity and then develop useful conditions for differentiable functions.
 
-\begin{definition}[Convex set] $\cS$ is a convex set if $\forall x,x'\in\cS$, we have:
+\begin{definition}[Convex set]
+A set $\cS\subseteq\R^d$ is convex if it contains the line segment joining any two of its points:
 \begin{equation}
-	\lambda x + (1 - \lambda)x' \in \mathcal{S},
-	\quad \forall\, \lambda \in [0, 1].
+    \lambda x+(1-\lambda)x'\in\cS,
+    \qquad\forall x,x'\in\cS,\quad\forall\lambda\in[0,1].
 \end{equation}
 \end{definition}
-For illustration, Figure \ref{fig:convex_nonconvex_sets} shows two convex and two non-convex sets.
+Figure \ref{fig:convex_nonconvex_sets} shows two convex and two non-convex sets.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{img/optimisation_convex_and_nonconvex_regions.pdf}
     \caption{Examples of convex and non-convex sets, highlighted in blue.}
-    \label{fig:convex_nonconvex_sets} 
+    \label{fig:convex_nonconvex_sets}
 \end{figure}
 
-
-\begin{definition}[Epigraph of a function] The epigraph of a function $f:\cX\to\R$ is the set defined by the region above the graph of the function, that is, 
+\begin{definition}[Epigraph of a function]
+The epigraph of $f:\cX\subseteq\R^d\to\R$ is the set of points on or above its graph:
 \begin{equation}
-	\operatorname{epi}(f) = \{\, (x, t) \in \cX \times \R \mid f(x) \le t \,\}.
+    \operatorname{epi}(f)=\{(x,r)\in\cX\times\R\mid f(x)\leq r\}.
 \end{equation}
-
-
-\begin{definition}[Convex function] $f$ is a convex function if its epigraph is convex. Equivalently, $f$ is convex is it is supported on a convex set and $\forall x,x'\in\cX$
-\begin{equation}
-	f\bigl(\lambda x + (1 - \lambda)x'\bigr)
-	\;\leq\;
-	\lambda f(x) + (1 - \lambda) f(x'),
-	\quad \forall\, \lambda \in [0, 1].
-\end{equation}
-Furthermore, is the inequality is strict, we say that the function is \textbf{strictly convex}.
 \end{definition}
 
+\begin{definition}[Convex function]
+A function $f:\cX\to\R$ on a convex domain $\cX\subseteq\R^d$ is convex if
+\begin{equation}
+    f\bigl(\lambda x+(1-\lambda)x'\bigr)
+    \leq\lambda f(x)+(1-\lambda)f(x'),
+    \quad\forall x,x'\in\cX,\quad\forall\lambda\in[0,1].
+\end{equation}
+Equivalently, $f$ is convex if its epigraph is a convex set. The function is \emph{strictly convex} if the inequality is strict whenever $x\neq x'$ and $0<\lambda<1$.
 \end{definition}
 
+\begin{example}[Convex functions (in 1D)]
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Convex functions (in 1D)}]
-
-The following are convex function from $\R$ to $\R$:
+The following functions are convex on the indicated domains:
 
 \begin{itemize}
-	\item $f(x) = x^2$
-	\item $f(x) = e^{ax},\, a\in\R$
-	\item $f(x) = -\log x$
-	\item $f(x) = x^a,\, a>1,\, x>0$
-	\item $f(x) = |x|^a,\, a\geq 1$
+	\item $f(x)=x^2$, on $\R$.
+	\item $f(x)=e^{ax}$, on $\R$, for any fixed $a\in\R$.
+	\item $f(x)=-\log x$, on $(0,\infty)$.
+	\item $f(x)=x^a$, on $(0,\infty)$, for $a>1$.
+	\item $f(x)=|x|^a$, on $\R$, for $a\geq1$.
 	\item $f(x) = x\log x,\, x>0$
 \end{itemize}
 Figure \ref{fig:epigraphs} shows the epigraphs for these functions.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_convex_1d_examples.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_convex_1d_examples.pdf}
     \caption{Convex 1D functions with their epigraph in light blue.}
     \label{fig:epigraphs} 
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 % TO DO: add epigraph for non-convex functions.
 
 
-We now review some important results in convex optimisation
+We now review some useful results for differentiable functions.
 
-\begin{proposition}
-Consider $f:\cX\subset\R\to\R$ differentiable. We have that if $f'(x)\geq 0\, \forall x\in\R$, $f$ is non-decreasing
+\begin{proposition}[Non-negative derivative]
+Let $f:I\to\R$ be differentiable on an open interval $I\subseteq\R$. If $f'(x)\geq0$ for every $x\in I$, then $f$ is non-decreasing on $I$.
 \end{proposition}
 \begin{proof}
-	By the fundamental theorem of calculus, we have that for $a,b\in\R, a<b,$
-	\begin{equation}
-		f(b)-f(a) = \int_a^b f'(x)dx,
-	\end{equation}
-	since $f'(x)\geq 0, \forall x\in[a,b]$, we have $\int_a^b f'(x)dx\geq 0$, therefore $f(b)\geq f(a)$, which means that $f$ is non-decreasing.
+For any $a,b\in I$ with $a<b$, the mean value theorem gives a point $c\in(a,b)$ such that
+\begin{equation}
+    f(b)-f(a)=f'(c)(b-a)\geq0.
+\end{equation}
+Thus $f(b)\geq f(a)$.
 \end{proof}
 
-
-\begin{proposition}
-Consider $f:\cX\subset\R^d\to\R$ differentiable. The direction of maximum growth of $f$ at $x_0$ is along its gradient $\nabla f(x_0)$
+\begin{proposition}[Direction of steepest ascent]
+Let $f:\cX\to\R$ be differentiable on an open set $\cX\subseteq\R^d$. At a point $x_0\in\cX$ where $\nabla f(x_0)\neq0$, the gradient $\nabla f(x_0)$ points in the direction of greatest local increase of $f$, to first order. For steps of a fixed small Euclidean length, the corresponding unit direction is
+\begin{equation}
+    u_\star=\frac{\nabla f(x_0)}{\norm{\nabla f(x_0)}}.
+\end{equation}
 \end{proposition}
 \begin{proof}
-	Let us consider $x' = x_0 + \rho u$, where $u\in\cX, ||u||=1$, and $\rho>0$ is a small constant. We find the maximum growth direction by maximising $f(x')-f(x_0)$ with respect to $u$. We consider the Taylor expansion
-	\begin{equation}
-		f(x') = f(x_0) + \nabla f(x_0)\rho u  + \mathcal{O}(\rho^2),
-	\end{equation}
-	and thus conclude that $f(x') - f(x_0) \simeq \nabla f(x_0)\rho u$, meaning that the maximum growth can be achieved by choosing $u$ parallel to $\nabla f(x_0)$. That is, $\nabla f(x_0)$ is the direction of maximum growth for $f$ at $x_0$. 
+Consider a small step $x_0+\rho u$, where $u\in\R^d$, $\norm{u}=1$, and $\rho>0$. Differentiability gives
+\begin{equation}
+    f(x_0+\rho u)=f(x_0)+\rho\nabla f(x_0)^\top u+o(\rho),
+    \qquad\rho\to0.
+\end{equation}
+To maximise the increase in $f$ to first order, we therefore maximise $\nabla f(x_0)^\top u$ over unit vectors $u$. By the Cauchy--Schwarz inequality, this inner product is at most $\norm{\nabla f(x_0)}$, with equality when $u=u_\star$. Thus the greatest first-order increase is obtained by moving along the gradient. If the gradient vanishes, the first-order term is zero in every direction, and higher-order terms determine how $f$ changes.
 \end{proof}
 
-
-\begin{theorem}
-Suppose $f:\cX\subset\R^d\to\R$ twice differentiable, then $f$ is convex if and only if $\nabla^2$ is positive semi definite.
+\begin{theorem}[Hessian characterisation of convexity]
+\label{thm:hessian_convexity}
+Let $f:\cX\to\R$ be twice continuously differentiable on an open convex set $\cX\subseteq\R^d$. Then $f$ is convex if and only if $\nabla^2 f(x)$ is positive semidefinite for every $x\in\cX$.
 \end{theorem}
 \begin{proof}
-We consider $d=1$. Using the FTC, 
+\textbf{One dimension.} Suppose first that $f''\geq0$ on an open interval. Then $f'$ is non-decreasing. For any two points $z,w$ in the interval, the fundamental theorem of calculus gives
 \begin{equation}
-	f'(b) - f'(a) = \int_a^b f''(x)dx \geq 0,
- \end{equation}
- which implies that $f'$ is non-decreasing. Therefore (using FTC again),
- \begin{equation}
- 	f(b) - f(a) = \int_a^b f'(x)dx \geq (b-a)f'(a),
- \end{equation}
- equivalently, 
-\begin{equation}
-	f(b)\geq f(a)+ (b-a)f'(a), \label{eq:tanget_PD1}
+    f(w)\geq f(z)+f'(z)(w-z).
+    \label{eq:tanget_PD1}
 \end{equation}
-meaning that the function $f$ \emph{is always above its tangent}. Evaluating \eqref{eq:tanget_PD1} for $(a,z)$ and $(b,z)$, where $z=(1-t)a + tb$, we have
+Indeed, if $w>z$, integrate $f'(s)\geq f'(z)$ from $z$ to $w$; if $w<z$, integrate $f'(s)\leq f'(z)$ from $w$ to $z$ and rearrange. Thus the graph lies above each tangent.
+
+Let $a<b$, $t\in[0,1]$, and $z=(1-t)a+tb$. Apply \eqref{eq:tanget_PD1} with the \emph{same tangent point $z$} to both endpoints:
 \begin{align}
-	f(z) &\geq f(a) + (z-a)f'(a)\\
-	f(z) &\geq f(b) + (z-b)f'(b).
+    f(a)&\geq f(z)+f'(z)(a-z),\\
+    f(b)&\geq f(z)+f'(z)(b-z).
 \end{align}
-Then, multiplying the above equations by $(1-t)$ and $t$ respectively and summing them, we obtain: 
-\begin{align}
-	f(z) &\geq (1-t)f(a) + tf(b) + (1-t)(tb-ta)f'(a) +t[(1-t)a - (1-t)b]f'(b)\\
-	     &=    (1-t)f(a) + tf(b) + (1-t)t(b-a) [f'(a) - f'(b)]\\
-	     &\geq (1-t)f(a) + tf(b).
-\end{align}
-This concludes the proof. Discuss in class how to extend this to arbitrary dimension $d>1$.
+Multiply the first inequality by $1-t$ and the second by $t$, then add. Since $(1-t)(a-z)+t(b-z)=0$, the derivative terms cancel, leaving
+\begin{equation}
+    f\bigl((1-t)a+tb\bigr)\leq(1-t)f(a)+tf(b).
+\end{equation}
+This is the convexity inequality: the graph lies below the chord joining the endpoints.
+
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+\centering
+\begin{tikzpicture}[x=1.5cm,y=1.05cm,font=\small]
+    \draw[->] (0,0) -- (4.05,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,3.9);
+    \draw[exampleaccent,thick,domain=0.25:3.7,samples=70]
+        plot (\x,{0.3*(\x-0.5)^2+0.5}) node[right] {$f$};
+    \draw[discussionaccent,thick] (0.5,0.5) -- (3.5,3.2)
+        node[pos=0.75,above,sloped] {chord};
+    \draw[gray,thick] (0.6,0.071) -- (3.6,2.411)
+        node[pos=0.86,below,sloped] {tangent at $z$};
+    \draw[densely dashed,gray] (0.5,0) -- (0.5,0.5);
+    \draw[densely dashed,gray] (1.8,0) -- (1.8,1.67);
+    \draw[densely dashed,gray] (3.5,0) -- (3.5,3.2);
+    \foreach \x/\name in {0.5/a,1.8/z,3.5/b}
+        \node[below] at (\x,0) {$\name$};
+    \fill[exampleaccent] (0.5,0.5) circle (1.5pt);
+    \fill[exampleaccent] (3.5,3.2) circle (1.5pt);
+    \fill[exampleaccent] (1.8,1.007) circle (1.5pt) node[left] {$f(z)$};
+    \fill[discussionaccent] (1.8,1.67) circle (1.5pt);
+\end{tikzpicture}
+
+\small At $z=(1-t)a+tb$, the chord has height $(1-t)f(a)+tf(b)\geq f(z)$.
+\end{minipage}
+\end{center}
+
+Conversely, suppose $f$ is convex. Applying convexity at the midpoint of $x-h$ and $x+h$ gives
+\begin{equation}
+    f(x+h)-2f(x)+f(x-h)\geq0.
+\end{equation}
+Divide by $h^2$ and let $h\to0$. Twice differentiability gives $f''(x)\geq0$.
+
+\textbf{Higher dimensions.} Restrict $f$ to any line: for $x\in\cX$ and $v\in\R^d$, define $\phi(s)=f(x+sv)$ wherever $x+sv\in\cX$. Its domain is an open interval (or all of $\R$), and the chain rule gives
+\begin{equation}
+    \phi''(s)=v^\top\nabla^2 f(x+sv)v.
+\end{equation}
+If the Hessian is positive semidefinite everywhere, every such restriction is convex by the result above. Applying this to each line segment in $\cX$ proves that $f$ is convex. Conversely, if $f$ is convex, each restriction is convex, so $\phi''(0)=v^\top\nabla^2 f(x)v\geq0$ for every $v$. This is precisely positive semidefiniteness of the Hessian.
 \end{proof}
 
+\begin{remark}[Local and global minimisers]
+To see why a local minimiser of a convex function must be global, suppose $x_\star$ is local but some feasible $y$ satisfies $f(y)<f(x_\star)$. Convexity gives
+\[
+    f\bigl((1-t)x_\star+ty\bigr)
+    \leq(1-t)f(x_\star)+tf(y)<f(x_\star),\qquad0<t<1.
+\]
+For sufficiently small $t$, this contradicts local minimality. A strictly convex function has at most one global minimiser, but a minimiser need not exist.
+\end{remark}
 
-
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Explore some functions}]
-
-\felipe{Choose some functions, compute the derivative and Hessian, analyse them}
-
-\end{mdframed}
+\begin{example}[Using gradients and Hessians]
+Consider three functions on $\R^2$.
+\begin{enumerate}
+    \item \textbf{A strictly convex quadratic.} For $f(x,y)=x^2+xy+y^2$,
+    \[
+        \nabla f=\begin{bmatrix}2x+y\\x+2y\end{bmatrix},
+        \qquad\nabla^2 f=\begin{bmatrix}2&1\\1&2\end{bmatrix}.
+    \]
+    The Hessian has eigenvalues $1$ and $3$, so it is positive definite everywhere. The unique stationary point $(0,0)$ is the unique global minimiser, with value $0$.
+    \item \textbf{A convex function with a singular Hessian at its minimum.} For $f(x,y)=x^4+y^4$,
+    \[
+        \nabla f=\begin{bmatrix}4x^3\\4y^3\end{bmatrix},
+        \qquad\nabla^2 f=\begin{bmatrix}12x^2&0\\0&12y^2\end{bmatrix}.
+    \]
+    The Hessian is positive semidefinite everywhere, so $f$ is convex. Its unique global minimiser is $(0,0)$, since $x^4+y^4>0$ at every other point. The minimum is strict even though the Hessian there is zero.
+    \item \textbf{A non-convex function.} For $f(x,y)=x^2-y^2$,
+    \[
+        \nabla f=\begin{bmatrix}2x\\-2y\end{bmatrix},
+        \qquad\nabla^2 f=\begin{bmatrix}2&0\\0&-2\end{bmatrix}.
+    \]
+    The Hessian is indefinite, so $f$ is not convex. The origin is a stationary saddle point: $f(x,0)>0$ for $x\neq0$, whereas $f(0,y)<0$ for $y\neq0$. The function is unbounded below and has no global minimiser.
+\end{enumerate}
+\end{example}
 
 \subsection{First order methods}
 \label{sub:first_order_methods}
 
-In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is not possible. For that reason, we will consider iterative methods based on gradients. The idea here is to go \emph{downhill} following the gradient towards the minimum (ignoring the curvature information for now). 
+In general, finding a minimum by setting $\nabla f(x) = 0$ and solving for $x$ is often impractical; moreover, a stationary point need not be a minimum. For that reason, we will consider iterative methods based on gradients. The idea here is to go \emph{downhill} following the negative gradient towards a minimum (ignoring the curvature information for now). 
 
 We will specify a starting point $x_0$ and calculate
 
 \begin{equation}
 	x_{t+1} = x_t + \eta_t d_t,
 \end{equation}
-where $\eta_t$ is a \emph{step size} and $d_t$ is a \emph{descent direction}, such as $-\nabla f$. Here, the subindex $\cdot_t$ represents the iteration number (starting from iteration $t=0$). We iterate until convergence, that is, until the elements in the sequence $x_t,x_{t+1}, x_{t+2},\ldots$ become constant (or very similar). If convergence is achieved, we will assume the minimum has been found. 
+where $\eta_t>0$ is a \emph{step size} and $d_t$ is a \emph{descent direction}, such as $-\nabla f(x_t)$. Here, the subindex $\cdot_t$ represents the iteration number (starting from iteration $t=0$). We iterate until convergence, that is, until the sequence $x_t$ approaches a limit. In practice, we may stop when successive iterates become very similar, but this alone does not guarantee that a minimum has been found. 
 
-Note that there are several \emph{descent directions}, that is, directions $d_t$ such that 
+Note that there are several \emph{descent directions}, that is, directions $d_t$ such that, for all sufficiently small positive step sizes, 
 \begin{equation}
-	L( x_t + \eta_t d_t) \leq L(x_t).
+	f(x_t + \eta_t d_t) < f(x_t).
 \end{equation}
-In fact, as long as $d_t^\top\nabla f \leq 0$, $d_t$ is a descent direction. Clearly, choosing $d_t = -\nabla f(x_t)$ is the \emph{steepest descent direction}.
+In fact, as long as $d_t^\top\nabla f(x_t)<0$, $d_t$ is a descent direction. When the gradient is nonzero, choosing $d_t = -\nabla f(x_t)$ gives the \emph{steepest descent direction} for the Euclidean norm.
 
 
 \subsubsection{Role of the step size}
 \label{ssub:stepsize}
 
-The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule. We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to it: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, it may not converge at all. 
+The step size $\eta_t$ is also known as \emph{learning rate}. Furthermore,  we refer to the set $\{\eta_1,\eta_2,\ldots\}$ as the learning rate schedule. We will usually consider a constant learning rate, that is, $\eta_t = \eta$, $\forall t\in\N$. Though this is the simplest choice, there are some concerns to it: if $\eta$ is too large, the iteration may fail to converge; whereas if it is too small, convergence may be very slow. 
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola}]
+\begin{example}[Convergence for a parabola]
 
 Let us consider the function
 \begin{equation}
@@ -398,21 +477,23 @@ Let us consider the function
 
 In Figure \ref{fig:parabola_lr} we show how the steepest descent converges/diverges for different learning rates.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_parabola_lr.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_parabola_lr.pdf}
     \caption{Gradient based optimisation with different learning rates.}
     \label{fig:parabola_lr}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 The learning rate is usually tuned based on heuristics. When implementing the rule 
 \begin{equation}
-	x_{t+1} = x_t + \eta \nabla f(x_t),
+	x_{t+1} = x_t - \eta \nabla f(x_t),
 \end{equation}
-we will usually set $\eta<||\nabla f||^{-1}$, as this will result in a stable autoregressive system for the sequence $x_t$ (discuss this in class).
+the appropriate learning rate depends on the curvature of $f$. For the parabola above, the error $e_t=\theta_t-3$ satisfies $e_{t+1}=(1-2\eta)e_t$. This is a stable autoregressive system when $|1-2\eta|<1$, that is, $0<\eta<1$ (discuss this in class).
 
 
 
@@ -422,9 +503,9 @@ we will usually set $\eta<||\nabla f||^{-1}$, as this will result in a stable au
 In higher dimensions, we want to move faster in some directions and slower in others, depending on the value of the gradient in each coordinate. This can be achieved by: 
 \begin{align}
 	m_t &= \beta m_{t-1} + \nabla f(x_{t-1})\\
-	x_t &= x_{t-1} - \nabla_t m_t,
+	x_t &= x_{t-1} - \eta_t m_t,
 \end{align}
-where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient is consistently large, then that coordinate receives updates of a higher magnitude. This is particularly useful when the evaluation of the gradient is noisy. Figure \ref{fig:parabola_momentum} shows how learning changes using momentum, with the same learning rates as the previous example.
+where $m_t$ accumulates past gradients, $m_0=0$, and $\beta\in[0,1)$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient consistently has the same sign, its contributions accumulate, whereas contributions that alternate in sign can cancel. This is particularly useful when the evaluation of the gradient is noisy. Figure \ref{fig:parabola_momentum} shows how learning changes using momentum, with the same learning rates as the previous example.
 
 \begin{figure}[ht]
     \centering
@@ -435,38 +516,37 @@ where $m_t$ is a smoothed version of the gradient, and $\beta\in[0,1]$ is a desi
 
 \subsubsection{Newton method}
 \label{ssub:newton}
-Newton's method is
+For comparison, Newton's method uses second-order information:
 \begin{equation}
 	x_{t+1} = x_t -\eta_t H_t^{-1}\nabla f(x_t),	
 \end{equation}
-where recall that $H_t = \nabla^2 f(x_t)$ denotes the Hessian of $f$ at $x_t$. This update follows from considering the second order approximation of the loss function around the current point, that is: 
+where recall that $H_t = \nabla^2 f(x_t)$ denotes the Hessian of $f$ at $x_t$, assumed invertible. This update follows from considering the second order approximation of the loss function around the current point, that is: 
 
 \begin{equation}
-	L(x) \simeq L(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t),
+	f(x) \simeq f(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t),
 \end{equation}
-the minimum of which is given by 
+If $H_t$ is positive definite, the minimum of this quadratic approximation is given by 
 \begin{equation}
-	x_\star = x_t - H^{-1}_t\nabla L(x_t),
+	\tilde{x}_\star = x_t - H^{-1}_t\nabla f(x_t),
 \end{equation}
-where the learning rate can also be used to accelerate (or de-accelerate) convergence. 
+where $\tilde{x}_\star$ minimises the approximation, rather than necessarily $f$. Taking $\eta_t=1$ gives this full Newton step; a smaller positive learning rate damps the step, which can help convergence. 
 
-\noindent\begin{minipage}{0.58\textwidth}
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: convergence for a parabola (2)}]
+\begin{example}[Convergence for a parabola (2)]
 
 Let us consider the same parabolic function as before. This time we will use the Newton method presented above.
 
-As shown in Figure \ref{fig:newton_method}, this method converges in one step (for a quadratic function). That is, the update corresponds to the closed form solution of the minimisation problem.
+As shown in Figure \ref{fig:newton_method}, this method converges in one step with $\eta=1$ (for a quadratic function with a positive definite Hessian). That is, the update corresponds to the closed form solution of the minimisation problem.
 
-\end{mdframed}
-\end{minipage}\hfill
-\begin{minipage}{0.4\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{img/optimisation_parabola_newton.pdf}
-	\captionof{figure}{One-step parabola minimisation with the Newton method.}
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
+    \centering
+\includegraphics[width=0.65\linewidth]{img/optimisation_parabola_newton.pdf}
+	\caption{One-step parabola minimisation with the Newton method.}
 	\label{fig:newton_method}
-\end{minipage}
-
-\vspace{1cm}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 \subsection{Stochastic gradient descent}
@@ -491,20 +571,22 @@ The gradient is then also approximated using a batch of, say, $B$ samples. That 
 	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i).
 \end{equation}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: random loss function for linear regression}]
+\begin{example}[Random loss function for linear regression]
 
 Consider a toy example of linear regression where $q(y|x) = \mathcal{N}(y;x,\sigma^2)$ for a given $\sigma >0$. Consequently, we can compare the true expectation (equal to the variance in this case) with the empirical approximation for increasing values of $N$.
 
 Figure \ref{fig:stochastic_loss} shows how the empirical loss changes as we consider more and more samples.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_toy_SGD.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_toy_SGD.pdf}
     \caption{Estimation of the true loss via the empirical value from data.}
     \label{fig:stochastic_loss}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 Recall that, in general, we will consider parameter updates of the form 
@@ -551,7 +633,7 @@ Then,
 \end{equation}
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: different optimisers}]
+\begin{example}[Different optimisers]
 	
 We will consider the function
 \begin{equation}
@@ -562,14 +644,16 @@ Notice that this function is convex, hence we would expect a reasonable gradient
 
 We visualise the effect of the different optimisers presented above in Figure \ref{fig:optimisers}. Notice that SGD converges more slowly than RMSprop and Adam. Adagrad, on the other hand, slows down too early.
 	
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_optimisers_comparison.pdf}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_optimisers_comparison.pdf}
     \caption{Convergence comparison for different optimisers.}
     \label{fig:optimisers}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 %%%%%%%%%########
 \subsection{Training and Regularisation of Neural Networks}

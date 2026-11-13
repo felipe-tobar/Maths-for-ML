@@ -39,9 +39,9 @@ Why is the probability defined over $\cA$ and not over $\Omega$? Elaborate over 
 
 \end{mdframed}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Examples}]
+\begin{example}[Sample spaces and events]
 \felipe{Consider basic examples (dice, coin, uniform, rain), and present the sample space, event space, and probability}
-\end{mdframed}
+\end{example}
 
 \begin{definition}
 We refer to the triplet $(\Omega,\cA,\Pb)$ as \textbf{probability space}. 
@@ -109,7 +109,7 @@ denotes the probability of the event where the RV $X$ takes the value $x\in\cX$.
 \end{equation}
 \end{definition}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Discrete RV: time to first heads}]
+\begin{example}[Discrete RV: time to first heads]
 
 
 Consider an infinite sequence of independent coin flips, each taking values
@@ -149,7 +149,7 @@ For the particular case of $p=1/2$, we have
 \]
 Where it holds that $\sum_{k=1}^\infty \Pb(T=k) = \sum_{k=1}^\infty \frac{1}{2^k} = 1$.
 
-\end{mdframed}
+\end{example}
 
 \subsubsection{Continuous RVs}
 \label{cap:prob_cont_RV}
@@ -211,9 +211,9 @@ Why is the quantile function useful?
 
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Gaussian distribution}]
+\begin{example}[Gaussian distribution]
 In Figure \ref{fig:gaussian_pdf} we can see the probability density function and the cumulative density function of the one dimensional Gaussian distribution. We will define this distribution in Section~\ref{cap:prob_Gaussian}.
-\end{mdframed}
+\end{example}
 
 \begin{figure}[ht]
     \centering
@@ -258,7 +258,7 @@ This operation is usually called \textbf{marginalisation}, or \textbf{disintegra
 
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: The Monty Hall problem}]
+\begin{example}[The Monty Hall problem]
 
 You are on a game show with three doors: behind one is a car (C), behind the others goats (G).  
 You choose door $1$. The host, who knows what’s behind each door, opens door $3$ revealing a goat.  
@@ -294,7 +294,7 @@ P(A_2 \mid B) = \tfrac{2}{3}.
 \textbf{Conclusion:} Switching doubles your chance of winning.
 
 
-\end{mdframed}
+\end{example}
 
 \subsubsection{Moments}
 \label{cap:prob_moments}
@@ -405,7 +405,7 @@ Let us now consider $N$ Bernoulli trials, denoted $Y_i\sim \ber(\cdot|\theta), i
  \end{equation}
 which is known as the Binomial distribution, where $\binom{N}{s} = \frac{N!}{(N-s)!s!}$.
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Logistic regression}]
+\begin{example}[Logistic regression]
 
 Within ML, the Bernoulli distribution is largely used for (probabilistic) classification. In such case we want to predict a binary variable $y\in\{0,1\}$, representing a sample being class 1 (and not class 0), conditional to some observed features $x\in\R^d$. We can then model $p(y=1)$ as 
 \begin{equation}
@@ -423,7 +423,7 @@ is the logistic function.
 When we choose $f(x,\theta) = \theta_1^\top x + \theta_2$, we obtain the logistic regression model.
 
 We show the sigmoid function in Figure \ref{fig:sigmoid}. A visualisation of an adjusted logistic regression model was shown in Figure\ref{fig:lr_crickets}.
-\end{mdframed}
+\end{example}
 
 \noindent\begin{minipage}{0.58\textwidth}
 The extension of the Bernoulli (resp.~Binomial) distribution to the multivariate case, i.e., when the output of the experiments take values on categories $\{1,2,\ldots,K\}$ with $K>2$ is known as the categorical (resp.~Multinomial). These distributions will be left for personal study. 
@@ -569,7 +569,7 @@ The discrete case is straightforward, as we just need to sum over the possible (
 	p_Y(y) = \sum_{x:y=f(x)}p_X(x).
 \end{equation}
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Uniform into binary}]
+\begin{example}[Uniform into binary]
 Consider 
 \begin{equation}
 	p_X = \unif(\{0,1,\ldots,9\}),
@@ -583,7 +583,7 @@ y = f(x) =
 \end{cases}
 \]
 
-\end{mdframed}
+\end{example}
 
 The continuous case is a bit more involved, since we cannot directly sum over all possible values of the RV. However, we can work with the cdf to show that 
 \begin{equation}
@@ -611,9 +611,9 @@ In the multivariate case, the CVT reads
  \end{equation}
  where $J_q(y) = \frac{dg(y)}{dy}$ is the Jacobian of $g=f^{-1}$. 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: $\chi^2$ family of distributinons.}]
+\begin{example}[$\chi^2$ family of distributinons.]
 A random variable $Z$ is said to distribute according to a $\chi^2$ (denoted $Z \sim \chi^2$) when $Z = \sum^k_{i=1} X^2_i$ for $X\sim\mathcal{N}(0,1)$. We provide a visualisation of the probability density function of $\chi^2$ distributions for various $k$ in Figure \ref{fig:parabola_momentum}.
-\end{mdframed}
+\end{example}
 
 \begin{figure}[ht]
     \centering
@@ -689,7 +689,7 @@ z \sim p(z), \qquad x \sim p(x \mid z).
 \]
 
 
-\begin{mdframed}[style=ejemplo, frametitle={\center Example: Gaussian mixture.}]
+\begin{example}[Gaussian mixture.]
 	The Gaussian mixture model (GMM) is a random variable with a pdf given by a mixture of Gaussian components. For mixture weights $\pi_k \ge 0$, with $\sum_{k=1}^K \pi_k = 1$, and component
 	densities $X \mid Z=k \sim \mathcal{N}(\mu_k,\Sigma_k)$, the marginal density of $X$ is
 	\[
@@ -710,7 +710,7 @@ z \sim p(z), \qquad x \sim p(x \mid z).
 	\]
 
 	\textbf{The extension to arbitrary $K>2$ is left as an exercise.} Notice that in this case, the component index $Z$ is given by a Categorical distribution with parameters $\pi_k \ge 0$, with $\sum_{k=1}^K \pi_k = 1$.
-\end{mdframed}
+\end{example}
 
 
 
