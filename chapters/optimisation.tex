@@ -6,7 +6,7 @@
 
 \textbf{NB:} This chapter follows \cite{pml1Book} and \cite{deisenroth2020mathematics}. For a deeper presentation, also see \cite{nesterov2018lectures} and \cite{boyd2004convex}.\\
 
-\noindent Optimisation is central to ML: in the vast majority of cases, models are \emph{trained} by either minimising a loss function or maximising a reward function. In general, model design involves the definition of a training objective or \textbf{loss}, that is, a function that denotes \textbf{how well a model fits the data}. This training objective is a function of the training data and a chosen model, the latter usually represented by its parameters. The best model is thus chosen by optimising the loss function. 
+\noindent Optimisation is central to ML: in the vast majority of cases, models are \emph{trained} by either minimising a loss function or maximising a reward function. In general, model design involves the definition of a training objective or \textbf{loss}, that is, a function that denotes \textbf{how well a model fits the data}. This objective is a function of the dataset of available observations and the chosen model, the latter usually represented by its parameters. The best model is thus chosen by optimising this objective. 
 
 \begin{example}[Linear regression (LR)]
 
@@ -115,17 +115,18 @@ Its components are:
 
 \begin{itemize}
     \item \textbf{Objective function:} The function $f:\cX\to\R$ assigns a value to each candidate $x$. We seek to minimise this value.
-    \item \textbf{Optimisation variable and minimiser:} The variable $x$ is the quantity we choose. A global minimiser $x_\star$, when one exists, satisfies
-    \begin{equation}
-        x_\star\in\argmin_{x\in C} f(x),
-    \end{equation}
-    where $C$ is the feasible region defined below. The operator $\argmin$ denotes the \emph{set} of minimisers; the minimum value is $f(x_\star)$. A minimiser need not exist, and it need not be unique.
     \item \textbf{Constraints:} The inequalities $g_i(x)\leq 0$ and equalities $h_j(x)=0$ specify which choices of $x$ are allowed.
     \item \textbf{Feasible region:} The set of all points satisfying the constraints is
     \begin{equation}
         C=\bigl\{x\in\cX\mid g_i(x)\leq 0\ \forall i=1,\ldots,I,\quad
         h_j(x)=0\ \forall j=1,\ldots,J\bigr\}.
     \end{equation}
+    For an unconstrained problem, $C=\cX$.
+    \item \textbf{Optimisation variable and minimiser:} The variable $x$ is the quantity we choose. A global minimiser $x_\star$, when one exists, satisfies
+    \begin{equation}
+        x_\star\in\argmin_{x\in C} f(x),
+    \end{equation}
+    where $C$ is the feasible region defined below. The operator $\argmin$ denotes the \emph{set} of minimisers; the minimum value is $f(x_\star)$. A minimiser need not exist, and it need not be unique.
     \item \textbf{Local and global minimisers:} Let $x_\star\in C$. It is a local minimiser if it minimises $f$ among nearby \emph{feasible} points:
     \begin{equation}
         \exists\,\delta>0\quad\text{such that}\quad
@@ -136,11 +137,21 @@ Its components are:
     \begin{equation}
         f(x_\star)\leq f(x)\quad\forall x\in C.
     \end{equation}
-    Every global minimiser is also a local minimiser. For an unconstrained problem, $C=\cX$.
+    Every global minimiser is also a local minimiser.
 \end{itemize}
 
 \begin{example}[Unique and non-unique global minimisers]
-Different points can attain the same minimum value. Figure \ref{fig:example_local_global} illustrates this distinction. The function $(x-1)^2+(y+2)^2$ on the left has the unique global minimiser $(1,-2)$. The function $(x^2-1)^2+(y^2-1)^2$ on the right has four global minimisers, forming the set $\{-1,1\}\times\{-1,1\}$. Both functions have the same minimum value, namely $0$.
+Consider the functions $f,g\colon\mathbb{R}^2\to\mathbb{R}$ defined by
+\begin{equation*}
+    f(x,y) = (x-1)^2+(y+2)^2
+\end{equation*}
+and
+\begin{equation*}
+    g(x,y) = (x^2-1)^2+(y^2-1)^2.
+\end{equation*}
+The functions $f$ and $g$ are plotted in the left and right panels of Figure~\ref{fig:example_local_global}, respectively.
+Both functions are sums of squares and attain their global minimum of $0$ precisely where both squared terms vanish.
+Thus $f$ has the unique global minimiser $(1,-2)$, whereas the set of global minimisers of $g$ is $\{-1,1\}\times\{-1,1\}$.
 \begin{center}
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
@@ -153,28 +164,38 @@ Different points can attain the same minimum value. Figure \ref{fig:example_loca
 \end{example}
 
 
-\begin{mdframed}[style=discusion, frametitle={Discussion\enspace\textperiodcentered\enspace Constraints and local/global optima}]
-Constraints can change both the location and the value of the optimum. Consider $f(x,y)=\sin x\cos y+0.1(x^2+y^2)$, the function plotted in Figure \ref{fig:example_restricted_minima}. The left panel shows the unconstrained problem; the right panel restricts the feasible region to the closed disk
+\begin{example}[Constrained and unconstrained minimisers]
+Constraints can change both the location and the value of the optimum. Consider the function $f\colon\mathbb{R}^2\to\mathbb{R}$ defined by
+\begin{equation*}
+    f(x,y) = \sin x\cos y+0.1(x^2+y^2).
+\end{equation*}
+Figure~\ref{fig:example_restricted_minima} shows the unconstrained problem in the left panel and the problem restricted to the following closed disk in the right panel:
 \[
     C=\{(x,y)\in\R^2\mid (x-1.5)^2+(y-1)^2\leq 4\}.
 \]
 The unconstrained global minimiser lies outside this disk. The constrained minimiser lies on its boundary and need not be a local minimiser of the unconstrained problem: directions that would decrease the objective may lead outside the feasible region. The marked points are numerical approximations obtained by evaluating the function on a grid.
 
-\end{mdframed}
-
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
     \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex.pdf}
-	\includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex_constrained.pdf}
+    \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex_constrained.pdf}
     \caption{Approximate minimisers for unconstrained (left) and constrained (right) problems.}
     \label{fig:example_restricted_minima}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 
 % subsection terminology (end)
 
 \subsection{Continuous unconstrained optimisation} % (fold)
 \label{sec:continuous_optimisation}
+
+\begin{remark}[Optimisation variable]
+In this section, the optimisation variable is the model parameter vector $\theta$.
+\end{remark}
 
 We now consider unconstrained optimisation on an open set $\Theta\subseteq\R^d$. We seek a minimiser of the form
 
@@ -404,7 +425,7 @@ Conversely, suppose $f$ is convex. Applying convexity at the midpoint of $x-h$ a
 \end{equation}
 Divide by $h^2$ and let $h\to0$. Twice differentiability gives $f''(x)\geq0$.
 
-\textbf{Higher dimensions.} Restrict $f$ to any line: for $x\in\cX$ and $v\in\R^d$, define $\phi(s)=f(x+sv)$ wherever $x+sv\in\cX$. Its domain is an open interval (or all of $\R$), and the chain rule gives
+\textbf{Higher dimensions.} Restrict $f$ to any line: for $x\in\cX$ and $v\in\R^d$, define $\phi(s)=f(x+sv)$ for all $s\in\R$ such that $x+sv\in\cX$. Its domain is an open interval (or all of $\R$), and the chain rule gives
 \begin{equation}
     \phi''(s)=v^\top\nabla^2 f(x+sv)v.
 \end{equation}
@@ -453,7 +474,7 @@ We will specify a starting point $x_0$ and calculate
 \begin{equation}
 	x_{t+1} = x_t + \eta_t d_t,
 \end{equation}
-where $\eta_t>0$ is a \emph{step size} and $d_t$ is a \emph{descent direction}, such as $-\nabla f(x_t)$. Here, the subindex $\cdot_t$ represents the iteration number (starting from iteration $t=0$). We iterate until convergence, that is, until the sequence $x_t$ approaches a limit. In practice, we may stop when successive iterates become very similar, but this alone does not guarantee that a minimum has been found. 
+where $\eta_t>0$ is a \emph{step size} and $d_t$ is a \emph{descent direction}, such as $-\nabla f(x_t)$. Here, the subindex $\cdot_t$ represents the iteration number (starting from iteration $t=0$). We iterate until convergence, that is, until the sequence $x_0,x_1,x_2,\ldots$ approaches a limiting value. In practice, we may stop when successive iterates become very similar, but this alone does not guarantee that a minimum has been found. 
 
 Note that there are several \emph{descent directions}, that is, directions $d_t$ such that, for all sufficiently small positive step sizes, 
 \begin{equation}
@@ -511,14 +532,20 @@ In higher dimensions, we want to move faster in some directions and slower in ot
 \end{align}
 where $m_t$ accumulates past gradients, $m_0=0$, and $\beta\in[0,1)$ is a design (memory) parameter. This way, previous values of the gradient have effect on future updates: if a particular coordinate of the gradient consistently has the same sign, its contributions accumulate, whereas contributions that alternate in sign can cancel. This is particularly useful when the evaluation of the gradient is noisy.
 
-Figure \ref{fig:parabola_momentum} illustrates the effect of momentum on the parabola from Example~\ref{ex:parabola_lr}, using the same learning rates.
+\begin{example}[Momentum on a parabola]
+\label{ex:parabola_momentum}
+Apply gradient descent with momentum to the objective $J(\theta)=(\theta-3)^2$ from Example~\ref{ex:parabola_lr}. Figure~\ref{fig:parabola_momentum} shows the resulting iterates for the same learning rates as in that example.
 
-\begin{figure}[ht]
+\begin{center}
+    \begin{minipage}{\linewidth}
+    \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_parabola_momentum.pdf}
-    \caption{Gradient based optimisation with momentum.}
+    \includegraphics[width=0.9\linewidth]{img/optimisation_parabola_momentum.pdf}
+    \caption{Gradient descent with momentum on a parabola.}
     \label{fig:parabola_momentum}
-\end{figure}
+    \end{minipage}
+\end{center}
+\end{example}
 
 \subsubsection{Newton method}
 \label{ssub:newton}
@@ -529,7 +556,7 @@ For comparison, Newton's method uses second-order information:
 where recall that $H_t = \nabla^2 f(x_t)$ denotes the Hessian of $f$ at $x_t$, assumed invertible. This update follows from considering the second order approximation of the loss function around the current point, that is: 
 
 \begin{equation}
-	f(x) \simeq f(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t),
+	f(x) \simeq f(x_t) + (\nabla f(x_t))^\top(x-x_t) + \frac{1}{2} (x-x_t)^\top H_t  (x-x_t).
 \end{equation}
 If $H_t$ is positive definite, the minimum of this quadratic approximation is given by 
 \begin{equation}
@@ -537,9 +564,9 @@ If $H_t$ is positive definite, the minimum of this quadratic approximation is gi
 \end{equation}
 where $\tilde{x}_\star$ minimises the approximation, rather than necessarily $f$. Taking $\eta_t=1$ gives this full Newton step; a smaller positive learning rate damps the step, which can help convergence. 
 
-\begin{example}[Convergence for a parabola (2)]
+\begin{example}[Newton's method on a parabola]
 
-Let us consider the same parabolic function as before. This time we will use the Newton method presented above.
+Apply Newton's method to the objective $J(\theta)=(\theta-3)^2$ used in Example~\ref{ex:parabola_momentum}.
 
 As shown in Figure \ref{fig:newton_method}, this method converges in one step with $\eta=1$ (for a quadratic function with a positive definite Hessian). That is, the update corresponds to the closed form solution of the minimisation problem.
 
@@ -566,20 +593,20 @@ As shown in Figure \ref{fig:newton_method}, this method converges in one step wi
 
 We now consider stochastic optimisation, where
 \begin{equation}
-	L(x) = \E_{q(z)}L(x,z),
+	L(\theta) = \E_{q(x)}L(\theta,x),
 \end{equation}
 that is, when the loss function is random and we aim to minimise its expected value.  For instance, in linear regression we have $L(\theta)=\E_{q(y|x)}(y-\theta^\top x)$.
 
-In practice, we are unable to compute this expectation since the law $q(z)$ is unknown. However, since we usually have samples of $q$, we can do a sample approximation of the expectation. In fact, we will consider
+In practice, we are unable to compute this expectation since the law $q(x)$ is unknown. However, since we usually have samples of $q$, we can do a sample approximation of the expectation. In fact, we will consider
 \begin{equation}
-	L(\theta) = \frac{1}{N}\sum_{i=1}^nL(x,z_i).
+	L(\theta) = \frac{1}{N}\sum_{i=1}^nL(\theta,x_i).
 \end{equation}
 In the linear regression example, this would be $L(\theta) = \frac{1}{N}\sum_{i=1}^n(y_i-\theta^\top x_i)^2.$ 
 
 The gradient is then also approximated using a batch of, say, $B$ samples. That is, 
 
 \begin{equation}
-	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(x,z_i).
+	\nabla L(\theta)\simeq \frac{1}{N}\sum_{i=1}^B\nabla L(\theta,x_i).
 \end{equation}
 
 \WFclear
@@ -617,14 +644,15 @@ where $M_t$ is an estimate of the magnitudes of the coordinates of the gradient 
 
 \subsubsection{Adagrad}
 
-This considers the following iterative rule ($d$ denotes the coordinate):  
+The adaptive gradient (Adagrad) method considers the following iterative rule ($d$ denotes the coordinate):  
 \begin{equation}
 	\theta_{t+1,d} = \theta_{t,d} - \eta_t \frac{1}{\sqrt{s_{t,d}+\epsilon}} g_{t,d},
 \end{equation}
-where $s_{t,d} = \sum_{i=1}^t g_{i,d}^2$. This can also be expressed in vector format as
+where $s_{t,d} = \sum_{i=1}^t g_{i,d}^2$ and $\epsilon>0$. Writing $\Delta\theta_t=\theta_{t+1}-\theta_t$, the vector form is
 \begin{equation}
-	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
+	\Delta \theta_t = -\eta_t \frac{g_t}{\sqrt{s_t+\epsilon\mathbf{1}}},
 \end{equation}
+where $\mathbf{1}$ is the all-ones vector and the square root and division are applied elementwise.
 The aim of Adagrad is to control the magnitude of the step size for each coordinate of the parameter independently, based on a rolling estimate using previous gradient evaluations. Notice that the computation of $s_{t,d}$ assigns the same importance to all gradient evaluations in time.
 
 
@@ -633,37 +661,40 @@ The aim of Adagrad is to control the magnitude of the step size for each coordin
 Adagrad might fail to represent the current gradient magnitude by not emphasising current evaluations of the gradient. This can be solved by replacing the sum in the computation of $s_{t,d}$  by a moving average. That is, 
 
 \begin{equation}
-	s_{t+1,d} = \beta s_{t,d} + (1-\beta) g_{t,d}^2,
+	s_{t,d} = \beta s_{t-1,d} + (1-\beta) g_{t,d}^2,
 \end{equation}
 where the \emph{forgetting factor} $\beta$ is usually chosen close to 0.9. Then, the update rule also follows
 \begin{equation}
-	\Delta \theta_t = -\eta_t \frac{1}{s_t} g_t.
+	\Delta \theta_t = -\eta_t \frac{g_t}{\sqrt{s_t+\epsilon\mathbf{1}}}.
 \end{equation}
  
 \subsubsection{Adam}
 
-The de facto optimiser in deep learning is Adam (Adaptive Moment Estimation) proposed by \cite{kingma2015adam}, which combines RMSProp and momentum. Adam's update follows: 
+Adam (Adaptive Moment Estimation) \cite{kingma2015adam} maintains exponential moving averages of the stochastic gradient and its elementwise square. Initialise $m_0=s_0=0$ and let $g_t$ be the stochastic gradient evaluated at $\theta_{t-1}$. For decay rates $\beta_m,\beta_s\in[0,1)$, the moment estimates are
 \begin{align}
 	m_t = \beta_m m_{t-1} + (1-\beta_m) g_{t}\\
 	s_t = \beta_s s_{t-1} + (1-\beta_s) g^2_{t}.
 \end{align}
-Then, 
+To correct for zero initialisation, define
+\begin{equation*}
+    \widehat m_t = \frac{m_t}{1-\beta_m^t},
+    \qquad
+    \widehat s_t = \frac{s_t}{1-\beta_s^t}.
+\end{equation*}
+The parameter update is
 \begin{equation}
-	\theta_{t} = \theta_{t-1} - \eta_t \frac{m_t}{\sqrt{s_t} + \epsilon}.
+	\theta_t = \theta_{t-1} - \eta_t \frac{\widehat m_t}{\sqrt{\widehat s_t} + \epsilon\mathbf{1}},
 \end{equation}
+where $\epsilon>0$ and the square root and division are applied elementwise.
 
 
-\begin{example}[Different optimisers]
-	
-We will consider the function
+\begin{example}[Different optimisers] 
+Consider the convex quadratic
 \begin{equation}
-	f(x,y)=0.1 x^2 + y^2\,.
+	f(x,y)=0.1x^2+y^2.
 \end{equation}
+The curvature is greater along the $y$ axis. In Figure~\ref{fig:optimisers}, SGD converges more slowly than RMSProp and Adam, while AdaGrad slows early in the run.
 
-Notice that this function is convex, hence we would expect a reasonable gradient based method to converge. However, the speed and way in which they converge might be different in every case. This text function will illustrate this, since its curvature is much more pronounced along the $y$ axis.
-
-We visualise the effect of the different optimisers presented above in Figure \ref{fig:optimisers}. Notice that SGD converges more slowly than RMSprop and Adam. Adagrad, on the other hand, slows down too early.
-	
 \begin{center}
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
@@ -683,68 +714,135 @@ We visualise the effect of the different optimisers presented above in Figure \r
 The \textbf{architecture} of a neural network refers to its overall structure: number of layers, neurons per layer, connectivity, and activation functions.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[scale=.5]{img/optimisation_nn.png}
-	\caption{A neural network of depth $l$.}
-	\label{fig:dnn}
+    \centering
+    \begin{tikzpicture}[
+        input/.style={draw, minimum width=9mm, minimum height=6mm, inner sep=1pt},
+        unit/.style={draw, ellipse, minimum width=10mm, minimum height=7mm, inner sep=1pt},
+        connection/.style={thin},
+        omitted/.style={densely dotted}
+    ]
+        \node[input] (x1) at (0,1.6) {$x_1$};
+        \node[input] (x2) at (0,0) {$x_2$};
+        \node[input] (xn) at (0,-1.6) {$x_n$};
+
+        \node[unit] (h11) at (2.8,1.15) {$h^{(1)}_1$};
+        \node[unit] (h12) at (2.8,0) {$h^{(1)}_2$};
+        \node[unit] (h1k) at (2.8,-1.15) {$h^{(1)}_{k_1}$};
+
+        \node[unit] (h21) at (5.1,0.65) {$h^{(2)}_1$};
+        \node[unit] (h2k) at (5.1,-0.65) {$h^{(2)}_{k_2}$};
+
+        \node[unit] (hl1) at (7.7,2) {$h^{(l)}_1$};
+        \node[unit] (hl2) at (7.7,1) {$h^{(l)}_2$};
+        \node[unit] (hl3) at (7.7,0) {$h^{(l)}_3$};
+        \node[unit] (hl4) at (7.7,-1) {$h^{(l)}_4$};
+        \node[unit] (hlk) at (7.7,-2) {$h^{(l)}_{k_l}$};
+        \node[unit] (output) at (10.4,0) {$\hat y$};
+
+        \foreach \source in {x1,x2,xn}
+            \foreach \target in {h11,h12,h1k}
+                \draw[connection] (\source.east) -- (\target.west);
+        \foreach \source in {h11,h12,h1k}
+            \foreach \target in {h21,h2k}
+                \draw[connection] (\source.east) -- (\target.west);
+        \foreach \source in {hl1,hl2,hl3,hl4,hlk}
+            \draw[connection] (\source.east) -- (output.west);
+
+        \draw[omitted] (x2.south) -- (xn.north);
+        \draw[omitted] (h12.south) -- (h1k.north);
+        \draw[omitted] (h21.south) -- (h2k.north);
+        \draw[omitted] (hl4.south) -- (hlk.north);
+        \draw[omitted] (5.8,0) -- (7,0);
+
+        \node[anchor=south] at (1.4,2.05) {$W^{(1)}, b^{(1)}, f^{(1)}$};
+        \node[anchor=south] at (4,2.05) {$W^{(2)}, b^{(2)}, f^{(2)}$};
+        \node at (9.5,1.75) {$U,c,g$};
+    \end{tikzpicture}
+    \caption{A neural network of depth $l$.}
+    \label{fig:dnn}
 \end{figure}
 
-We adopt the following notation (as illustrated in Fig.~\ref{fig:dnn}):
+For training example $d$, let $\bm{x}_d$ be the input row vector. Figure~\ref{fig:dnn} shows the components of the activations with the example index suppressed. For hidden layer $k$, let $W^{(k)}$ be its weight matrix, $b^{(k)}$ its bias row vector, and $f^{(k)}$ its activation function. Starting with $\bm{h}_d^{(0)}=\bm{x}_d$, compute
 \begin{equation}
-	h^{(k)} = f^{(k)}(h^{(k-1)}W^{(k)} + b^{(k)}), \quad k \in \{1,\dots,l\}, \quad h^{(0)} = x,
+	\bm{u}_d^{(k)} = \bm{h}_d^{(k-1)}W^{(k)} + b^{(k)}, \qquad
+	\bm{h}_d^{(k)} = f^{(k)}(\bm{u}_d^{(k)}), \qquad k=1,\dots,l.
 \end{equation}
+The output layer computes
 \begin{equation}
-	\hat{y} = g(h^{(l)}U + c),
+	\bm{z}_d = \bm{h}_d^{(l)}U + c, \qquad
+	\hat{\bm{y}}_d = g(\bm{z}_d),
 \end{equation}
-where $f$ is the activation function for all (hidden) neurons, and $g$ is the activation function of the \textbf{output neurons}. Furthermore, $h^{(k)}$ denotes the output of the $k$-th layer. 
+where $U$ is the weight matrix connecting the final hidden layer to the output layer, $c$ is the output bias row vector, and $g$ is the output activation function.
+
+\begin{mdframed}[style=discusion, frametitle={Intuition for backpropagation}]
+A feedforward network computes a composition of functions. To see how a derivative passes through that composition, consider a scalar chain in which $a=f(s)$, $b=g(a)$, and $J=\ell(b)$.
+
+\begin{center}
+    \begin{tikzpicture}[stage/.style={draw, rounded corners, minimum width=9mm, minimum height=7mm}]
+        \node[stage] (input) at (0,0) {$s$};
+        \node[stage] (first) at (2.8,0) {$a$};
+        \node[stage] (second) at (5.6,0) {$b$};
+        \node[stage] (loss) at (8.4,0) {$J$};
+        \draw[->] (input) -- node[above] {$f$} (first);
+        \draw[->] (first) -- node[above] {$g$} (second);
+        \draw[->] (second) -- node[above] {$\ell$} (loss);
+        \draw[<-, dashed] (0,-0.7) -- node[below] {$\frac{da}{ds}$} (2.8,-0.7);
+        \draw[<-, dashed] (2.8,-0.7) -- node[below] {$\frac{db}{da}$} (5.6,-0.7);
+        \draw[<-, dashed] (5.6,-0.7) -- node[below] {$\frac{dJ}{db}$} (8.4,-0.7);
+    \end{tikzpicture}
+\end{center}
+
+The solid arrows show how values are computed from input to loss. The dashed arrows show the order in which backpropagation uses the local derivatives. Starting from $dJ/db$, multiply by $db/da$ to obtain $dJ/da$, then multiply by $da/ds$ to obtain
+\begin{equation*}
+    \frac{dJ}{ds}=\frac{dJ}{db}\frac{db}{da}\frac{da}{ds}.
+\end{equation*}
+In a network, a neuron can feed into several neurons in the next layer. The chain rule then adds the contributions through those neurons. Backpropagation reuses the resulting derivative at each layer to compute gradients for its weights and to continue backwards.
+\end{mdframed}
 
 \subsubsection{Cost Function and Output Units}
 
-Unlike linear models, the use of nonlinear activations renders the cost function generally non-convex, so gradient descent does not guarantee convergence to a global optimum. Although least squares may be used, in practice one minimises the negative log-likelihood of a probabilistic model $p(y|\bm{x};\bm{\theta})$:
+The training objective is generally non-convex in the network parameters $\bm{\theta}$, so gradient descent does not guarantee convergence to a global optimum. A common objective is the mean negative log-likelihood of a probabilistic model $p_{\mathrm{model}}(\bm{y}\mid\bm{x};\bm{\theta})$, where $\bm{\theta}$ collects all the weights and biases.
 \begin{equation}
 	\label{eq:loss_NN_optim}
-	J(\bm{\theta}) = -\E_{(\bm{x},\bm{y}) \sim \hat{p}_{\mathrm{data}}} [\log p_{\mathrm{model}}(\bm{y}|\bm{x})].
+	J(\bm{\theta}) = -\E_{(\bm{x},\bm{y}) \sim \hat{p}_{\mathrm{data}}} [\log p_{\mathrm{model}}(\bm{y}\mid\bm{x};\bm{\theta})].
 \end{equation}
 The choice of output unit determines the appropriate likelihood and loss:
 \begin{enumerate}
-	\item \textbf{Linear:} $\hat{\bm{y}} = h^{(l)}U + c$  
+	\item \textbf{Linear.} For regression, $\hat{\bm{y}}_d=\bm{z}_d$. A Gaussian model $\mathcal{N}(\bm{y}_d\mid\hat{\bm{y}}_d,\bm{I})$ gives the per-example loss $J_d=\frac12\|\hat{\bm{y}}_d-\bm{y}_d\|_2^2$ up to an additive constant.
 	
-	Models $\mathcal{N}(\bm{y}|\hat{\bm{y}}, \bm{I})$ and is equivalent to minimising MSE; suited for regression.
+	\item \textbf{Sigmoid.} For binary classification, the scalar prediction $\hat{y}_d=\mathrm{sig}(z_d)$ is the Bernoulli probability $p_{\mathrm{model}}(y_d=1\mid\bm{x}_d;\bm{\theta})$.
 	
-	\item \textbf{Sigmoid:} $\hat{y} = \mathrm{sig}(h^{(l)}U + c)$  
-	
-	Used for binary classification with $p(y|\bm{x}) = \mathrm{Bernoulli}(y|p)$ and $\hat{y} = p(y=1|\bm{x})$.
-	
-	\item \textbf{Softmax:} $\hat{\bm{y}} = \mathrm{softmax}(h^{(l)}U + c)$  
-	
-	For multiclass problems, with
+	\item \textbf{Softmax.} For multiclass classification, $\hat{\bm{y}}_d=\mathrm{softmax}(\bm{z}_d)$ gives the categorical class probabilities.
 	\[
-	\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}.
+	\mathrm{softmax}(\bm{z}_d)_i = \frac{e^{z_{di}}}{\sum_j e^{z_{dj}}}.
 	\]
 \end{enumerate}
 
-Recall that, in practice, since $p_{\mathrm{data}}$ in eq.~\eqref{eq:loss_NN_optim} is unknown, we optimise an empirical estimate of that loss given by 
+For a training set of $N$ pairs $(\bm{x}_d,\bm{y}_d)$, the expectation under the empirical distribution $\hat{p}_{\mathrm{data}}$ in Equation~\eqref{eq:loss_NN_optim} is the sample average
 \begin{equation}
 	\label{eq:loss_NN_optim_emp}
-	J(\bm{\theta}) = -\sum_i \log p_{\mathrm{model}}(\bm{y}_i|\bm{x}_i).
+	J(\bm{\theta}) = \frac{1}{N}\sum_{d=1}^N J_d, \qquad
+	J_d=-\log p_{\mathrm{model}}(\bm{y}_d\mid\bm{x}_d;\bm{\theta}).
 \end{equation}
-The rest of this section is devoted to the calculation of this loss and its gradient. 
+The rest of this section is devoted to the calculation of this loss and the recursive calculation of its gradient, with respect to the parameters $\theta$. 
 
 \subsubsection{Forward Propagation}
 
-In a feedforward network, information flows from input $\bm{x}$ to output $\hat{\bm{y}}$. During training, this process computes the cost $J(\bm{X},\bm{\theta})$.
+For training pair $(\bm{x}_d,\bm{y}_d)$, the forward pass computes the prediction $\hat{\bm{y}}_d$ and the per-example loss $J_d=L(\hat{\bm{y}}_d,\bm{y}_d)$. The mini-batch objective is the mean of the per-example losses.
 
 \begin{algorithm}[H]
 	\caption{Forward Propagation}
-	\textbf{Require:} Depth $l$, weights $\bm{W}^{(k)}$, biases $\bm{b}^{(k)}$, input $\bm{x}$, output $\bm{y}$, and output parameters $U$, $c$, $g$.\\
+	\textbf{Require:} Training pair $(\bm{x}_d,\bm{y}_d)$, depth $l$, hidden-layer weights $W^{(k)}$, biases $b^{(k)}$, and activations $f^{(k)}$, output weights $U$, bias $c$, and activation $g$, and loss function $L$.\\
 	\begin{algorithmic}[1]
-		\State $\bm{h}^{(0)} \gets \bm{x}$
+		\State $\bm{h}_d^{(0)} \gets \bm{x}_d$
 		\For{$k = 1,\dots,l$}
-			\State $\bm{u}^{(k)} \gets \bm{h}^{(k-1)}\bm{W}^{(k)} + \bm{b}^{(k)}$
-			\State $\bm{h}^{(k)} \gets f^{(k)}(\bm{u}^{(k)})$
+			\State $\bm{u}_d^{(k)} \gets \bm{h}_d^{(k-1)}W^{(k)} + b^{(k)}$
+			\State $\bm{h}_d^{(k)} \gets f^{(k)}(\bm{u}_d^{(k)})$
 		\EndFor
-		\State $\bm{\hat{y}} \gets g(\bm{h}^{(l)}U + c)$
-		\State $J \gets L(\bm{\hat{y}},\bm{y})$
+		\State $\bm{z}_d \gets \bm{h}_d^{(l)}U+c$
+		\State $\hat{\bm{y}}_d \gets g(\bm{z}_d)$
+		\State $J_d \gets L(\hat{\bm{y}}_d,\bm{y}_d)$
+		\State Return $\hat{\bm{y}}_d$ and $J_d$
 	\end{algorithmic}
 \end{algorithm}
 
@@ -752,83 +850,109 @@ In a feedforward network, information flows from input $\bm{x}$ to output $\hat{
 
 The \textbf{backpropagation} algorithm propagates cost information backwards to compute gradients efficiently. In practice, this is achieved by means of \textbf{automatic differentiation}, which provides fast and scalable computation, thus enabling modern deep learning.
 
-Assume training is performed in \textbf{mini-batches} $(x^d)_{d=1}^N$, enabling efficient matrix operations on GPUs. For an MSE loss in regression:
+Consider a mini-batch of $N$ training pairs $(\bm{x}_d,\bm{y}_d)$. Let $J_d=L(\hat{\bm{y}}_d,\bm{y}_d)$ be the loss for example $d$, so $J=\frac{1}{N}\sum_{d=1}^N J_d$. For scalar regression with squared error, take $J_d=\frac12(\hat{y}_d-y_d)^2$.
+
+Let $H^{(k)}$ and $A^{(k)}$ be the matrices whose rows are the hidden activations $\bm{h}_d^{(k)}$ and pre-activations $\bm{u}_d^{(k)}$, respectively, and let $H^{(0)}$ contain the inputs. Define the hidden-layer error by
 \[
-J(\bm{X},\bm{\theta}) = \frac{1}{2N}\sum_{d=1}^N (\hat{y}_d - y_d)^2,
+    \delta_{dj}^{(k)}=\frac{\partial J_d}{\partial u_{dj}^{(k)}}.
 \]
-where $J_d=(\hat{y}_d - y_d)^2$, our goal is to update all weights $w_{ij}^{(k)}$. Using the chain rule:
-\[
-\frac{\partial J_d}{\partial w_{ij}^{(k)}} 
-= \frac{\partial J_d}{\partial u_{dj}^{(k)}} 
-  \frac{\partial u_{dj}^{(k)}}{\partial w_{ij}^{(k)}},
-\]
-where we define the \textbf{error term}
-\[
-\delta_{dj}^{(k)} \equiv \frac{\partial J_d}{\partial u_{dj}^{(k)}},
-\]
-and note that
-\[
-\frac{\partial u_{dj}^{(k)}}{\partial w_{ij}^{(k)}} 
-= h_{di}^{(k-1)}.
-\]
-Hence,
-\[
-\frac{\partial J_d}{\partial w_{ij}^{(k)}} = \delta_{dj}^{(k)} h_{di}^{(k-1)},
-\]
-and the total gradient (ignoring the constant $1/N$ for now) is
+Since $\partial u_{dj}^{(k)}/\partial w_{ij}^{(k)}=h_{di}^{(k-1)}$, the chain rule gives $\partial J_d/\partial w_{ij}^{(k)}=h_{di}^{(k-1)}\delta_{dj}^{(k)}$. Stacking the errors into the matrix $\Delta^{(k)}=(\delta_{dj}^{(k)})$ and averaging over the batch gives
 \begin{equation}
-\frac{\partial J}{\partial W^{(k)}} = (h^{(k-1)})^T @ \delta^{(k)}.
+    \frac{\partial J}{\partial W^{(k)}}=\frac{1}{N}(H^{(k-1)})^\top\Delta^{(k)}.
 \end{equation}
 
 \subsubsection{Backward Propagation – Hidden Layers}
 
-From the chain rule:
+For $k=l-1,\dots,1$, assume the hidden activations are applied elementwise. The chain rule gives
 \[
-\delta_{dj}^{(k)} = \frac{\partial J_d}{\partial u_{dj}^{(k)}} = \sum_{a=1}^{k_{k+1}} \frac{\partial J_d}{\partial u_{da}^{(k+1)}} \frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}} = \sum_{a=1}^{k_{k+1}} \delta_{da}^{(k+1)} \frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}},
-\] 
-where, since $\frac{\partial u_{da}^{(k+1)}}{\partial u_{dj}^{(k)}} = w_{ja}^{(k+1)}f'(u_{dj}^{(k)})$, we have
-
-\[
-\delta_{dj}^{(k)} = f'(u_{dj}^{(k)})\sum_{a=1}^{k_{k+1}}w_{ja}^{(k+1)}\delta_{da}^{(k+1)}.
+    \delta_{dj}^{(k)}
+    =(f^{(k)})'(u_{dj}^{(k)})\sum_a w_{ja}^{(k+1)}\delta_{da}^{(k+1)},
 \]
-In matrix form:
+where $a$ ranges over the neurons in layer $k+1$. In matrix form,
 \begin{equation}
-\delta^{(k)} = f'(u^{(k)}) * (\delta^{(k+1)} @ (W^{(k+1)})^T).
+    \Delta^{(k)}=\bigl(\Delta^{(k+1)}(W^{(k+1)})^\top\bigr)
+    \odot(f^{(k)})'(A^{(k)}),
 \end{equation}
+where $\odot$ denotes elementwise multiplication and the activation derivative is evaluated elementwise.
+
+\begin{mdframed}[style=discusion, frametitle={Backpropagation through a sum}]
+The hidden-layer recursion above sums one contribution from each neuron that receives the activation of neuron $j$. The diagram illustrates this chain-rule step with two paths. A scalar activation $h$ feeds into $a=F(h)$ and $b=G(h)$, whose outputs are added to form $z=a+b$. Let $J$ be the downstream loss.
+
+\begin{center}
+    \begin{tikzpicture}[stage/.style={draw, rounded corners, minimum width=9mm, minimum height=7mm}]
+        \node[stage] (input) at (0,0) {$h$};
+        \node[stage] (first) at (2.6,0.95) {$a$};
+        \node[stage] (second) at (2.6,-0.95) {$b$};
+        \node[stage] (sum) at (5.2,0) {$z=a+b$};
+        \node[stage] (loss) at (7.7,0) {$J$};
+        \draw[->] (input.north east) -- node[above] {$F$} (first.west);
+        \draw[->] (input.south east) -- node[below] {$G$} (second.west);
+        \draw[->] (first.east) -- (sum.north west);
+        \draw[->] (second.east) -- (sum.south west);
+        \draw[->] (sum.east) -- (loss.west);
+        \draw[->, dashed] (loss.south west) to[bend left=20] node[below] {$dJ/dz$} (sum.south east);
+        \draw[->, dashed] (sum.west) -- (first.south east);
+        \draw[->, dashed] (sum.west) -- (second.north east);
+        \draw[->, dashed] (first.south west) -- (input.east);
+        \draw[->, dashed] (second.north west) -- (input.east);
+        \node[inner sep=0pt, anchor=east] at (2.55,0.21) {$F'(h)$};
+        \node[inner sep=0pt, anchor=east] at (2.55,-0.21) {$G'(h)$};
+        \node[inner sep=0pt, anchor=west] at (2.9,0.21) {$1$};
+        \node[inner sep=0pt, anchor=west] at (2.9,-0.21) {$1$};
+    \end{tikzpicture}
+\end{center}
+
+The solid arrows show the forward computation. The dashed arrows show the backward paths, labelled with the local factors after $dJ/dz$. Each summand changes $z$ at unit rate, so the gradient arriving at the sum is passed to both branches:
+\begin{equation*}
+    \frac{\partial J}{\partial a}
+    =\frac{\partial J}{\partial b}
+    =\frac{dJ}{dz}.
+\end{equation*}
+Each branch then multiplies that gradient by its own local derivative. Because both branches depend on the same $h$, their contributions add:
+\begin{equation*}
+    \frac{dJ}{dh}
+    =\frac{\partial J}{\partial a}F'(h)
+    +\frac{\partial J}{\partial b}G'(h).
+\end{equation*}
+In the hidden-layer recursion, $h$ plays the role of $h_{dj}^{(k)}$. Each path goes through a neuron $a$ in layer $k+1$ and contributes $w_{ja}^{(k+1)}\delta_{da}^{(k+1)}$. Their sum gives the derivative with respect to $h_{dj}^{(k)}$. Multiplying by $(f^{(k)})'(u_{dj}^{(k)})$ carries it one step further back to $\delta_{dj}^{(k)}$.
+\end{mdframed}
 
 \subsubsection{Backward Propagation – Output Layer}
 
-For a regression problem with linear output and MSE loss:
+Let $\bm{z}_d=\bm{h}_d^{(l)}U+c$ be the output pre-activation and let $\Delta^{\mathrm{out}}$ have rows $\partial J_d/\partial\bm{z}_d$. For scalar regression with a linear output and the squared loss above, $\hat{y}_d=z_d$, so
+\begin{equation}
+    \label{eq:capa_output}
+    \delta_d^{\mathrm{out}}=\hat{y}_d-y_d.
+\end{equation}
+The final hidden-layer error is obtained by propagating the output error through $U$:
 \[
-\delta_{d1}^{(l)} = (\hat{y}_d - y_d)(\hat{y}_d)' = (\hat{y}_d - y_d),
+    \Delta^{(l)}=\bigl(\Delta^{\mathrm{out}}U^\top\bigr)
+    \odot(f^{(l)})'(A^{(l)}).
 \]
-and with the normalisation term:
+The remaining parameter gradients are
 \begin{equation}
-\label{eq:capa_output}
-\delta^{(l)} = \frac{1}{N}(\hat{y} - y).
+    \frac{\partial J}{\partial b^{(k)}}=\frac{1}{N}\mathbf{1}^\top\Delta^{(k)},\quad
+    \frac{\partial J}{\partial U}=\frac{1}{N}(H^{(l)})^\top\Delta^{\mathrm{out}},\quad
+    \frac{\partial J}{\partial c}=\frac{1}{N}\mathbf{1}^\top\Delta^{\mathrm{out}},
 \end{equation}
-Furthermore,
-\begin{equation}
-\frac{\partial J}{\partial b^{(k)}} = \mathrm{Sum}_1(\delta^{(k)}), \quad
-\frac{\partial J}{\partial U} = (h^{(l)})^T @ \delta^{(l)}, \quad
-\frac{\partial J}{\partial c} = \mathrm{Sum}_1(\delta^{(l)}),
-\end{equation}
-where $\mathrm{Sum}_1(A)$ denotes summation over the first axis.
+where $\mathbf{1}$ is an $N$-dimensional column vector of ones.
 
 \begin{algorithm}[H]
-	\caption{Backward Propagation}
-	\textbf{Require:} Learning rate $\lambda$.\\
-	\begin{algorithmic}[1]
-	\State Perform forward propagation, store $(\hat{y}), (u^{(k)}), (h^{(k)})$.
-	\State Compute output error $\delta^{(l)}$ according to the output unit.
-	\State Update $U \gets U - \lambda \frac{\partial J}{\partial U}$, \quad $c \gets c - \lambda \frac{\partial J}{\partial c}$.
-	\For{$k = l,\dots,1$}
-		\State Compute $\delta^{(k)}$ using the hidden-layer recursion.
-		\State Evaluate $\frac{\partial J}{\partial W^{(k)}}, \frac{\partial J}{\partial b^{(k)}}$.
-		\State Update $W^{(k)} \gets W^{(k)} - \lambda \frac{\partial J}{\partial W^{(k)}}$.
-		\State Update $b^{(k)} \gets b^{(k)} - \lambda \frac{\partial J}{\partial b^{(k)}}$.
-	\EndFor
-	\end{algorithmic}
+    \caption{Backward Propagation}
+    \textbf{Require:} Mini-batch, current parameters $\bm{\theta}$, and learning rate $\lambda$.\\
+    \begin{algorithmic}[1]
+        \State Run forward propagation and store the pre-activations, hidden activations, and predictions.
+        \State Compute $\Delta^{\mathrm{out}}$ for the chosen output activation and loss.
+        \State Compute $\partial J/\partial U$ and $\partial J/\partial c$.
+        \State Compute $\Delta^{(l)}$ from $\Delta^{\mathrm{out}}$ using $U$.
+        \For{$k=l,\dots,1$}
+            \State Compute $\partial J/\partial W^{(k)}$ and $\partial J/\partial b^{(k)}$.
+            \If{$k>1$}
+                \State Compute $\Delta^{(k-1)}$ using the hidden-layer recursion.
+            \EndIf
+        \EndFor
+        \State Update all parameters: $\bm{\theta}\gets\bm{\theta}-\lambda\nabla_{\bm{\theta}}J$.
+    \end{algorithmic}
 \end{algorithm}
 
 \begin{remark}
@@ -841,9 +965,10 @@ Neural networks are often large models; controlling their complexity is crucial.
 
 \paragraph{L2 Regularisation.} Adds a quadratic penalty on weights:
 \[
-\tilde{J}(\bm{\theta}) = J(\bm{\theta}) + \frac{\alpha}{2}\|\bm{\theta}\|_2^2.
+\tilde{J}(\bm{\theta}) = J(\bm{\theta}) + \frac{\alpha}{2}
+\left(\sum_{k=1}^l\|W^{(k)}\|_{\mathrm{F}}^2+\|U\|_{\mathrm{F}}^2\right).
 \]
-The hyperparameter $\alpha$ controls the regularisation strength. Usually, only weights are penalised, not biases. In practice this corresponds to \textit{weight decay}:
+The hyperparameter $\alpha$ controls the regularisation strength, and $\|\cdot\|_{\mathrm{F}}$ is the Frobenius norm. With a gradient descent step of size $\lambda$, this penalty gives \textit{weight decay}. For example, the update for hidden-layer weights is
 \[
 W^{(k)} \gets (1-\beta)W^{(k)} - \lambda \frac{\partial J}{\partial W^{(k)}}, \quad \beta = \lambda \alpha.
 \]
