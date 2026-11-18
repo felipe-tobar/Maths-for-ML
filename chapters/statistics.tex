@@ -369,7 +369,7 @@ The MLE can be defined either in terms of the likelihood itself or any non-decre
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/stats_bernoulli_mle.pdf}
+    \includegraphics{img/stats_bernoulli_mle.pdf}
     \caption{Likelihood plot for the Bernoulli model with maximum (MLE estimator)}
     \label{fig:mle} 
 \end{figure}
@@ -562,7 +562,7 @@ As a generalisation of the above, one can consider the Beta distribution itself 
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/stats_beta_posterior.pdf}
+    \includegraphics{img/stats_beta_posterior.pdf}
     \caption{Example of the likelihood, Beta prior and posterior for the Bernoulli model.}
     \label{fig:beta_post} 
 \end{figure}
@@ -650,10 +650,9 @@ where $\alpha = (\alpha_1,\ldots,\alpha_k)$ is a concentration parameter and the
 For $k=3$, Dirichlet's distribution can be plotted in 2 dimensions. Fig.~\ref{fig:dist_Dirichlet} shows three plots for different values of the concentration parameter.
 
 \begin{figure}[H]
-\includegraphics[width=0.3\textwidth]{img/stats_dirichlet111.png}
-\includegraphics[width=0.3\textwidth]{img/stats_dirichlet101010.png}
-\includegraphics[width=0.3\textwidth]{img/stats_dirichlet1022.png}
-\caption{Dirichlet distribution for $k=3$ with concentration parameters  $\alpha$ (left to right) $[1,1,1]$, $[10,10,10]$ y $[10,2,2]$. }.
+\centering
+\includegraphics{img/stats_dirichlet_densities.pdf}
+\caption{Dirichlet densities on the simplex for three concentration vectors $\alpha$. Colours are scaled to the maximum density in each panel.}
 \label{fig:dist_Dirichlet}
 \centering
 \end{figure}
@@ -686,13 +685,13 @@ The obtained parameters are $ \theta = [0.034, 0.171, 0.286, 0.185, 0.324]$.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_0.pdf}
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_10.pdf}
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_100.pdf}\\
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_1000.pdf}
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_10000.pdf}
-\includegraphics[width=0.3\linewidth]{img/stats_post_dirichlet_100000.pdf}
-\caption{Posterior concentration around the real parameter for a model $X\sim\mul{\theta}$ and the prior Dirichlet distribution $\theta\sim\dir{\alpha}$. Observations considered ranged between 0 and $10^5$, and each plot whows the the true parameter in (broken red line), the posterior mean (broken blue line) and 50 samples from thr posterior (light blue). Observe how the effect of the prior (broken blue line in the first plot) vanishes as the number of observations grows.}
+\includegraphics{img/stats_post_dirichlet_0.pdf}
+\includegraphics{img/stats_post_dirichlet_10.pdf}
+\includegraphics{img/stats_post_dirichlet_100.pdf}\\
+\includegraphics{img/stats_post_dirichlet_1000.pdf}
+\includegraphics{img/stats_post_dirichlet_10000.pdf}
+\includegraphics{img/stats_post_dirichlet_100000.pdf}
+\caption{Posterior concentration around the real parameter for a model $X\sim\mul{\theta}$ and the prior Dirichlet distribution $\theta\sim\dir{\alpha}$. Observations considered ranged between 0 and $10^5$, and each plot shows the true parameter (dashed clay-red outline), the posterior mean (dashed blue outline), and 50 posterior samples (light blue outlines). The influence of the prior fades as the number of observations grows.}
 \label{fig:post_Dirichlet}
 \end{figure}
 \end{example}
@@ -836,7 +835,7 @@ The posterior predictive is generally different from the \emph{plug-in} predicti
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/stats_posterior_plugin.pdf}
+    \includegraphics{img/stats_posterior_plugin.pdf}
     \caption{Bayesian versus frequentist inference of a Gaussian distribution mean.}
     \label{fig:bayesian_plugin} 
 \end{figure}

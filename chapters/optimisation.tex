@@ -33,7 +33,7 @@ We show an example of a linear model learnt from data in Figure \ref{fig:lr_cric
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_example_lr_crickets.pdf}
+    \includegraphics{img/optimisation_example_lr_crickets.pdf}
     \caption{Example of a linear regression model minimising the least squares loss.}
     \label{fig:lr_crickets} 
     \end{minipage}
@@ -66,7 +66,7 @@ Figure \ref{fig:log_reg_example} shows an example of a binary classification tas
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_example_logreg.pdf}
+    \includegraphics{img/optimisation_example_logreg.pdf}
     \caption{Example of a logistic regression model to classify data from two Gaussians.}
     \label{fig:log_reg_example}
     \end{minipage}
@@ -92,8 +92,8 @@ An example of a $K$-means model after the loss minimisation is shown on Figure \
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_example_kmeans.pdf}
-    \caption{Implementation of the $K$-means method to clustering data from two Gaussians. The figure shows the learnt centroids (black cross) and the colours correspond to the cluster assignments.}
+    \includegraphics{img/optimisation_example_kmeans.pdf}
+    \caption{Implementation of the $K$-means method to clustering data from two Gaussians. Black crosses mark the learned centroids. Shading shows the region assigned to each nearest centroid, and points are coloured by cluster.}
     \label{fig:kmeans_example}
     \end{minipage}
 \end{center}
@@ -156,7 +156,7 @@ Thus $f$ has the unique global minimiser $(1,-2)$, whereas the set of global min
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_example_2d_parametric.pdf}
+    \includegraphics{img/optimisation_example_2d_parametric.pdf}
     \caption{Functions with a unique global minimiser (left) and four global minimisers (right).}
     \label{fig:example_local_global}
     \end{minipage}
@@ -179,8 +179,8 @@ The unconstrained global minimiser lies outside this disk. The constrained minim
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex.pdf}
-    \includegraphics[width=0.45\textwidth]{img/optimisation_example_nonconvex_constrained.pdf}
+    \includegraphics{img/optimisation_example_nonconvex.pdf}
+    \includegraphics{img/optimisation_example_nonconvex_constrained.pdf}
     \caption{Approximate minimisers for unconstrained (left) and constrained (right) problems.}
     \label{fig:example_restricted_minima}
     \end{minipage}
@@ -266,7 +266,7 @@ Figure \ref{fig:critical_points} illustrates the three cases with $p\neq\pm1$.
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_2d_critical_points.pdf}
+    \includegraphics{img/optimisation_2d_critical_points.pdf}
     \caption{Different types of critical points for $f(x,y)=(p-1)x^2 + (p+1)y^2$.}
     \label{fig:critical_points} 
     \end{minipage}
@@ -291,7 +291,7 @@ Figure \ref{fig:convex_nonconvex_sets} shows two convex and two non-convex sets.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/optimisation_convex_and_nonconvex_regions.pdf}
+    \includegraphics{img/optimisation_convex_and_nonconvex_regions.pdf}
     \caption{Examples of convex and non-convex sets, highlighted in blue.}
     \label{fig:convex_nonconvex_sets}
 \end{figure}
@@ -331,7 +331,7 @@ Figure \ref{fig:epigraphs} shows the epigraphs for these functions.
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_convex_1d_examples.pdf}
+    \includegraphics{img/optimisation_convex_1d_examples.pdf}
     \caption{Convex 1D functions with their epigraph in light blue.}
     \label{fig:epigraphs} 
     \end{minipage}
@@ -395,24 +395,26 @@ This is the convexity inequality: the graph lies below the chord joining the end
 \begin{center}
 \begin{minipage}{0.9\linewidth}
 \centering
+\definecolor{plotblue}{HTML}{245B83}
+\definecolor{plotclay}{HTML}{914B43}
 \begin{tikzpicture}[x=1.5cm,y=1.05cm,font=\small]
     \draw[->] (0,0) -- (4.05,0) node[right] {$x$};
     \draw[->] (0,0) -- (0,3.9);
-    \draw[exampleaccent,thick,domain=0.25:3.7,samples=70]
+    \draw[plotblue,thick,domain=0.25:3.7,samples=70]
         plot (\x,{0.3*(\x-0.5)^2+0.5}) node[right] {$f$};
-    \draw[discussionaccent,thick] (0.5,0.5) -- (3.5,3.2)
+    \draw[plotclay,thick] (0.5,0.5) -- (3.5,3.2)
         node[pos=0.75,above,sloped] {chord};
-    \draw[gray,thick] (0.6,0.071) -- (3.6,2.411)
+    \draw[plotclay,thick,dashed] (0.6,0.071) -- (3.6,2.411)
         node[pos=0.86,below,sloped] {tangent at $z$};
     \draw[densely dashed,gray] (0.5,0) -- (0.5,0.5);
     \draw[densely dashed,gray] (1.8,0) -- (1.8,1.67);
     \draw[densely dashed,gray] (3.5,0) -- (3.5,3.2);
     \foreach \x/\name in {0.5/a,1.8/z,3.5/b}
         \node[below] at (\x,0) {$\name$};
-    \fill[exampleaccent] (0.5,0.5) circle (1.5pt);
-    \fill[exampleaccent] (3.5,3.2) circle (1.5pt);
-    \fill[exampleaccent] (1.8,1.007) circle (1.5pt) node[left] {$f(z)$};
-    \fill[discussionaccent] (1.8,1.67) circle (1.5pt);
+    \fill[plotblue] (0.5,0.5) circle (1.5pt);
+    \fill[plotblue] (3.5,3.2) circle (1.5pt);
+    \fill[plotblue] (1.8,1.007) circle (1.5pt) node[left] {$f(z)$};
+    \fill[plotclay] (1.8,1.67) circle (1.5pt);
 \end{tikzpicture}
 
 \small At $z=(1-t)a+tb$, the chord has height $(1-t)f(a)+tf(b)\geq f(z)$.
@@ -511,7 +513,7 @@ In Figure \ref{fig:parabola_lr} we show how the steepest descent converges/diver
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_parabola_lr.pdf}
+    \includegraphics{img/optimisation_parabola_lr.pdf}
     \caption{Gradient based optimisation with different learning rates.}
     \label{fig:parabola_lr}
     \end{minipage}
@@ -540,7 +542,7 @@ Apply gradient descent with momentum to the objective $J(\theta)=(\theta-3)^2$ f
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_parabola_momentum.pdf}
+    \includegraphics{img/optimisation_parabola_momentum.pdf}
     \caption{Gradient descent with momentum on a parabola.}
     \label{fig:parabola_momentum}
     \end{minipage}
@@ -574,7 +576,7 @@ As shown in Figure \ref{fig:newton_method}, this method converges in one step wi
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-\includegraphics[width=0.48\linewidth]{img/optimisation_parabola_newton.pdf}
+\includegraphics{img/optimisation_parabola_newton.pdf}
 	\caption{One-step parabola minimisation with the Newton method.}
 	\label{fig:newton_method}
     \end{minipage}
@@ -628,7 +630,7 @@ Figure \ref{fig:stochastic_loss} illustrates this for $\sigma=1$. The left panel
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_toy_SGD.pdf}
+    \includegraphics{img/optimisation_toy_SGD.pdf}
     \caption{Noisy regression data and the true regression function (left); empirical mean squared error approaching the expected loss $\sigma^2=1$ (right).}
     \label{fig:stochastic_loss}
     \end{minipage}
@@ -699,7 +701,7 @@ The curvature is greater along the $y$ axis. In Figure~\ref{fig:optimisers}, SGD
     \begin{minipage}{\linewidth}
     \captionsetup{type=figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{img/optimisation_optimisers_comparison.pdf}
+    \includegraphics{img/optimisation_optimisers_comparison.pdf}
     \caption{Convergence comparison for different optimisers.}
     \label{fig:optimisers}
     \end{minipage}
@@ -774,7 +776,7 @@ The output layer computes
 \end{equation}
 where $U$ is the weight matrix connecting the final hidden layer to the output layer, $c$ is the output bias row vector, and $g$ is the output activation function.
 
-\begin{mdframed}[style=discusion, frametitle={Intuition for backpropagation}]
+\begin{mdframed}[style=discusion, frametitle={Intuition for backpropagation (the chain rule)}]
 A feedforward network computes a composition of functions. To see how a derivative passes through that composition, consider a scalar chain in which $a=f(s)$, $b=g(a)$, and $J=\ell(b)$.
 
 \begin{center}
