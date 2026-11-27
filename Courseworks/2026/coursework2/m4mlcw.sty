@@ -1,0 +1,53 @@
+% Style for the Mathematics for Machine Learning coursework: handout and report template
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{m4mlcw}[2026/11/02 M4ML coursework style]
+
+\RequirePackage[a4paper,top=2.2cm,bottom=2.2cm,left=1.9cm,right=1.9cm,columnsep=0.8cm]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{mathptmx}
+\RequirePackage{courier}
+\RequirePackage{amsmath,amssymb,bm}
+\RequirePackage{graphicx,booktabs,tabularx,multirow}
+\RequirePackage{enumitem}
+\RequirePackage{xcolor}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage[font=small,labelfont=bf]{caption}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{listings}
+
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\newcommand{\code}[1]{{\small\texttt{#1}}}
+\setlength{\parskip}{4pt}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,showstringspaces=false,
+        frame=none,xleftmargin=6pt,aboveskip=4pt,belowskip=4pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.4em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{2pt}
+
+\setlist{leftmargin=*,itemsep=2pt,topsep=2pt,parsep=1pt}
+
+\newcommand{\cwtitle}[2]{%
+  \twocolumn[{%
+    \vspace*{-0.6cm}\noindent\rule{\textwidth}{0.8pt}\par\vspace{6pt}
+    \centering{\Large\bfseries Mathematics for Machine Learning\\[2pt] #1\par}\vspace{6pt}
+    \noindent\rule{\textwidth}{0.8pt}\par\vspace{8pt}
+    {\normalsize #2\par}\vspace{14pt}}]}
+
+\newcommand{\cwheader}[1]{%
+  \pagestyle{fancy}\fancyhf{}
+  \fancyhead[C]{\small\bfseries Mathematics for Machine Learning -- #1}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.6pt}}
+
+% notation used in the course slides
+\newcommand{\vth}{\bm{\theta}}
+\newcommand{\vX}{\mathbf{X}}
+\newcommand{\vy}{\mathbf{y}}
+\newcommand{\Phim}{\bm{\Phi}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Loss}{\mathcal{L}}

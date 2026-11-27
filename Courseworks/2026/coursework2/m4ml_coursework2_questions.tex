@@ -1,0 +1,115 @@
+\documentclass[10pt]{article}
+\usepackage{m4mlcw}
+\begin{document}
+\cwheader{Second Coursework}
+\cwtitle{Second Coursework}{Lectures: 13--27 November 2026 \quad\textperiodcentered\quad Released: 27 November 2026 \quad\textperiodcentered\quad Deadline: 3 December 2026}
+
+\section*{General Principles and Submission Guidelines}
+\begin{enumerate}
+\item \textbf{Individual work and identification.} All submitted code, analysis and commentary must be your own. Put your College identifier (CID) in the first code cell of your notebook as an eight-digit string, including any leading zeroes:
+\begin{lstlisting}
+CID = "00000000"
+\end{lstlisting}
+Use the CID to identify your submission. Use the given seeds for the first run of Exercise 2.
+
+\item \textbf{Your notebook.} Create your own Jupyter notebook and organise it by exercise and part. Choose how to structure your code and present your results within the instructions in each question.
+
+\item \textbf{Predictions and analysis.} Where asked, record your prediction and reasoning in a Markdown cell before running the experiment. Keep the original prediction and explain afterwards how it compares with your results. Assessment focuses on the reasoning and the evidence you give.
+
+\item \textbf{Use of resources and AI.} You may consult textbooks, documentation and generative AI tools, for example to clarify concepts, syntax or coding. All explanations in your report must be in your own words and must refer to your own numbers and figures. Additionally, you must be able to explain each part of the code submitted in your notebook. Support your conclusions with your notebook outputs.
+
+\item \textbf{AI usage statement.} Every report ends with a short statement of how you used AI tools (code, writing, checking), or \emph{None}. It comes after the references and does not count towards the page limit. Undisclosed significant use of AI can be treated as academic misconduct.
+
+\item \textbf{Code and figures.} Code should be clear, commented and run from top to bottom without errors. Plots need axis labels, units where they apply, and short captions. Keep the calculations and plots that support your report in the notebook.
+
+\item \textbf{Deliverables.}
+\begin{itemize}
+\item One Jupyter notebook (\texttt{.ipynb}) with your code, outputs, predictions and analysis.
+\item One two-page PDF report, written with the provided template: about one page per exercise, with the tables and figures it asks for. References and the AI usage statement do not count towards the two pages; anything else beyond page two will not be marked. Changing the template's font size, margins, column layout or spacing counts as exceeding the limit, and deliberate changes to fit in more content may be treated as an attempt to gain an unfair advantage under the College's academic misconduct procedures.
+\item Figures and tables must be legible at 100\% zoom.
+\end{itemize}
+
+\item \textbf{Assessment.} 100 marks in total. Exercise 1 carries 40 marks and Exercise 2 carries 60 marks. Marks go to
+\begin{itemize}
+\item a stated prediction and the reasoning behind it, where requested;
+\item correct evidence from your own work (implementation, numbers, figures);
+\item an explanation that names the mechanism, using the course's tools;
+\item clear and concise writing.
+\end{itemize}
+
+\item \textbf{Academic integrity.} Submissions are checked for originality. Identical or near-identical reports or code will be treated as academic misconduct, as will missing references or acknowledgements.
+
+You may be asked to attend a short follow-up discussion to explain your results; it will be taken into account in your final mark.
+\end{enumerate}
+
+\clearpage
+\section{Stationary Points (40 marks)}
+
+Consider the function $f\colon\mathbb{R}^2 \to \mathbb{R}$ given by
+\[
+    f(x,y)=\frac{x^3}{3}+xy^2-x.
+\]
+
+\begin{enumerate}[label=\textbf{(\alph*)}]
+\item \textbf{Plot the level sets (6 marks).} Write a Python function that evaluates $f(x,y)$. Use it to plot the level sets over $[-1.5,1.5]^2$. Label the axes and describe the shape of the function and arrangement of the contours.
+
+\item \textbf{Find the stationary points (8 marks).} Derive $\nabla f(x,y)$ and solve $\nabla f(x,y)=\mathbf{0}$ analytically. Show that you have found all the solutions.
+
+\item \textbf{Classify the stationary points (8 marks).} Derive the Hessian and use it to determine whether each stationary point is a local minimum, a local maximum or a saddle point. Mark the points on your contour plot from part (a) and use distinct markers and a legend to identify each type. \textbf{NB:} You can use a single plot for parts (a) and (c).  
+
+\item \textbf{Compare gradient descent and Newton's method (12 marks).} Implement vanilla gradient descent with constant step size $0.1$ and full-step Newton in Python. Use your analytical gradient and Hessian. You may use NumPy to solve the Newton linear system.
+
+\begin{itemize}
+\item \textbf{Starting points.} Use 20 starts distributed across the zero-level ellipse $x^2/3+y^2=1$; the points do not need to be equally spaced, but they should cover all the sides of the ellipse. \textbf{Hint:} That ellipse can be parametrised by $(x,y)=(\sqrt{3}\cos\theta,\sin\theta)$, where $\theta$ goes from $0$ to $2\pi$. These starting points will be used for both methods.
+
+\item \textbf{Stopping rules.} Stop when $\|\nabla f\|_2\leq 10^{-8}$ or after 200 updates. Stop early and record an escape if $\max(|x|,|y|)>10^6$. If the Newton system is singular, stop that run and report it.
+
+\item \textbf{Plots and results.} Make two contour plots over $[-1.9,1.9]\times[-1.5,1.5]$. Overlay all GD trajectories on one and Newton trajectories on the other, highlight the zero-level ellipse. For each run, record its update count and outcome in your notebook. Include both plots in your report. Use your classification from part (c) to identify any stationary point reached.
+\end{itemize}
+
+\item \textbf{Conclude (6 marks).} Based on your results, describe the different behaviour of GD and Newton, and explain why they differ, despite starting from the same location. 
+
+\end{enumerate}
+
+
+
+
+
+\newpage
+\section{Mini-batch Gradient Descent (60 marks)}
+
+Consider the function of time (signal) on $0\le t\le 6$.
+\[
+\begin{aligned}
+s(t)={}&1+0.2t\\
+ &+e^{-t/2}\bigl[2\cos t-\sin(2t)+0.5\cos(3t)\bigr].
+\end{aligned}
+\]
+You will fit the model
+\[
+\hat y_{\vth}(t)=b+ct+e^{-t/2}\sum_{k=1}^{3}
+       \bigl[a_k\cos(kt)+d_k\sin(kt)\bigr]
+\]
+by minimising the half mean squared error
+\[
+\Loss(\vth)=\frac{1}{2N}\sum_{i=1}^N
+           \bigl(\hat y_{\vth}(t_i)-y_i\bigr)^2,
+\]
+where $\{(t_i,y_i)\}_{i=1}^N$ are noisy observations of the function $s(t)$ , and  $\vth=(b,c,a_1,a_2,a_3,d_1,d_2,d_3)^\top$ is the parameter.
+
+\begin{enumerate}[label=\textbf{(\alph*)}]
+\item \textbf{Plot the signal and generate data (8 marks).} Plot $s(t)$ on a fine grid alongside the noisy observations. Use $N=240$ equally spaced observation times on $[0,6]$. Generate $y_i=s(t_i)+\varepsilon_i$, where the $\varepsilon_i$ are independent Gaussian draws with mean zero and standard deviation $0.3$. Use NumPy's \texttt{default\_rng} with seed 42. 
+
+\item \textbf{Implement the mini-batch update (18 marks).} Construct the feature matrix, derive the gradient of $\Loss(\vth)$ over a mini-batch, and implement one update loop. Run it with batch sizes $N$, $N/2$, $N/3$, $N/4$, $N/8$ and $N/16$. Use zero initial coefficients and a constant step size of $0.02$ for every run. For each epoch, permute all $N$ observations using generator with seed 43. Reuse the permutations across batch sizes.
+
+Predict which batches will make faster early progress at equal work and which will give less variable gradients. Explain your reasoning before running.
+
+\item \textbf{Stop and measure (10 marks).} Stop after 200 epochs (sooner if the sequence diverges). Record the number of updates and the elapsed optimisation time. Time the update loop, including indexing and gradient computation. Exclude permutation generation, loss evaluation and plotting.
+
+\item \textbf{Analyse the fits (24 marks).} Find the least-squares solution $\vth^\star$ with \texttt{np.linalg.lstsq}. For all epochs, compute the full-data gap $\Loss(\vth)-\Loss(\vth^\star)$; this will be your performance metric.
+
+In your report, plot all six loss-gap curves against example gradients evaluated and elapsed time in two panels. Compare the rankings at equal work and equal time. Use the results to explain the trade-off between update frequency, gradient variability and runtime.
+
+Repeat with both seeds changed (42 for noise and 43 for shuffling), and report which conclusions hold. In your notebook, overlay the largest- and smallest-batch final fits, the observations and the least-squares fit, and relate the curves to the final loss gaps.
+\end{enumerate}
+\end{document}
